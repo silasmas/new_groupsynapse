@@ -134,7 +134,22 @@
                         </aside>
                     </div>
                 @else
-                    <p class="text-danger">Le panier est vide ou une donnée est manquante.</p>
+
+                    <section class="error-area pt-80 pb-100">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 col-md-10">
+                                    <div class="error-content text-center">
+                                        <div class="error_txt">OUPS!</div>
+                                        <h5>Aucune commande</h5>
+                                        <p class="text-danger">Le panier est vide.</p>
+
+                                        <a href="{{ route('mesAchats') }}" class="btn btn-fill-out">Voir ses commandes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 @endif
 
             </div>
