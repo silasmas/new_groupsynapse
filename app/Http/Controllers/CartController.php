@@ -157,7 +157,7 @@ class CartController extends Controller
                         'phone' => $transactionData['channel'],
                         'updated_at' => now()
                     ]);
-                    $this->clearCartAfterPayment($transactionData['user_id']);
+                    $this->clearCartAfterPayment($transaction->user_id);
                     return response()->json([
                         'reponse' => true,
                         'message' => 'La transaction mis à été fait avec succès.',
