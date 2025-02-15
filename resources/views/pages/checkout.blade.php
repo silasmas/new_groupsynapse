@@ -109,7 +109,7 @@
                                                 <div class="form-grp">
                                                     <label>Numéro de téléphone :</label>
                                                     <input class="custom-select " name="phone" type="text"
-                                                        id="phone">
+                                                        id="phone" placeholder="24382XXXXX">
                                                     <input class="custom-select d-none" value="{{ $panier['total'] }}"
                                                         name="total" type="text" id="total">
                                                     <input class="custom-select d-none"
