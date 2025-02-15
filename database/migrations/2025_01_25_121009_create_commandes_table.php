@@ -11,31 +11,36 @@ return new class extends Migration
      */
     public function up(): void
     {
-		Schema::create('commandes', function (Blueprint $table) {
-        	$table->id();
-        	$table->string('reference')->unique();
-			$table->boolean('livraison')->nullable();
-			$table->string('commune')->nullable();
-			$table->double('prixLivraison')->nullable();
+        Schema::create('commandes', function (Blueprint $table) {
+            $table->id();
+            // $table->string('reference')->unique();
+            // $table->boolean('livraison')->nullable();
+            // $table->string('commune')->nullable();
+            // $table->double('prixLivraison')->nullable();
+            // $table->enum('etat', ['En attente', 'Payée', 'En cours', 'Livrée', 'Annulée'])->default('En attente'); // État de la commande
+            // $table->double('total', 10, 2); // Prix total de la commande
+            // $table->timestamps();
+            $table->string('reference')->unique(); // Référence unique pour la commande
+            $table->string('provider_reference')->nullable(); // Référence fournie par FlexPay
+            $table->double('total', 10, 2); // Montant total de la commande
+            $table->double('amount_customer', 10, 2)->nullable(); // Montant payé par le client (avec frais)
+            $table->string('currency')->default('CDF'); // Devise de paiement
+            $table->enum('channel', ['mobile_money', 'card'])->nullable(); // Canal de paiement
+            $table->string('phone')->nullable(); // Commune pour la livraison
             $table->enum('etat', ['En attente', 'Payée', 'En cours', 'Livrée', 'Annulée'])->default('En attente'); // État de la commande
-            $table->double('total', 10, 2); // Prix total de la commande
-        	$table->timestamps();
+            $table->boolean('livraison')->default(false); // Livraison nécessaire ou non
+            $table->string('commune')->nullable(); // Commune pour la livraison
+            $table->double('prix_livraison', 10, 2)->nullable(); // Frais de livraison
+            $table->text('description')->nullable(); // Description de la commande
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Lien avec l'utilisateur
+            $table->timestamps();
         });
 
-		Schema::table('commandes', function (Blueprint $table) {
+        Schema::table('commandes', function (Blueprint $table) {
             $table->foreignIdFor(\App\Models\User::class)->constrained()->onDelete('cascade');
         });
 
-        Schema::create('commande_produit', function (Blueprint $table) {
-            $table->id(); // ID unique pour la ligne pivot
-            $table->foreignId('commande_id')->constrained()->onDelete('cascade'); // Lien vers la commande
-            $table->foreignId('produit_id')->constrained()->onDelete('cascade'); // Lien vers le produit
 
-            $table->integer('quantite'); // Quantité du produit dans la commande
-            $table->double('prix_unitaire', 10, 2); // Prix unitaire du produit
-            $table->double('prix_total', 10, 2); // Prix total (quantité x prix unitaire)
-            $table->timestamps(); // created_at et updated_at
-        });
     }
     /**
      * Reverse the migrations.

@@ -1,66 +1,78 @@
 @extends('layouts.template')
 
+@section('style')
+    <style>
+        #Contenairephone {
+            display: none;
+            /* Caché par défaut */
+        }
+    </style>
+@endsection
 @section('content')
     @include('parties.banner', ['page' => 'Commande'])
     <section class="checkout-area pt-100 pb-100">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="table-responsive-xl">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="product-thumbnail"></th>
-                                    <th class="product-name">Produit</th>
-                                    <th class="product-price">Prix Unitaire</th>
-                                    <th class="product-quantity">Quantité</th>
-                                    <th class="product-subtotal">Sous total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($panier as $productId => $item)
-                                    {{-- @dd($item) --}}
-                                    <tr id="fav-row-{{ $item->produit->id }}">
-                                        <td class="product-thumbnail">
-                                            <a href="{{ route('cart.remove', ['id' => $item->produit->id, 'qty' => $item->quantite]) }}"
-                                                data-id="{{ $item->produit->id }}" class="wishlist-remove card-remouve">
-                                                <i class="flaticon-cancel-1"></i></a>
-                                            <a href="{{ route('showProduct', ['slug' => $item->produit->slug]) }}">
-                                                <img width="100" src="{{ asset($item->produit->first_image) }}"
-                                                    alt=""></a>
-                                        </td>
-                                        <td class="product-name">
-                                            <h4><a
-                                                    href="{{ route('showProduct', ['slug' => $item->produit->slug]) }}">{{ $item->produit->name }}</a>
-                                            </h4>
-                                            <p>{{ Str::limit($item->produit->description, 20, '...') }}</p>
-                                            {{-- <span>silas</span> --}}
-                                        </td>
-                                        <td class="product-price">
-                                            {{ formatPrix($item->produit->prix,$item->produit->currency) }}
-                                        </td>
-                                        <td class="product-price">
-                                            {{ $item->quantite }}
-                                        </td>
-                                        <td class="product-subtotal"><span>
-                                            {{ formatPrix($item->prixTotal) }}
-
-                                        </span></td>
+                @if (!empty($panier) && isset($panier['data'][0]))
+                    <div class="col-lg-8">
+                        <div class="table-responsive-xl">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="product-thumbnail"></th>
+                                        <th class="product-name">Produit</th>
+                                        <th class="product-price">Prix Unitaire</th>
+                                        <th class="product-quantity">Quantité</th>
+                                        <th class="product-subtotal">Sous total</th>
                                     </tr>
-                                @empty
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @forelse ($panier["data"] as $item)
+                                        {{-- @dd($item) --}}
+                                        <tr id="fav-row-{{ $item->produit->id }}">
+                                            <td class="product-thumbnail">
+                                                <a href="{{ route('cart.remove', ['id' => $item->produit->id, 'qty' => $item->quantite]) }}"
+                                                    data-id="{{ $item->produit->id }}" class="wishlist-remove card-remouve">
+                                                    <i class="flaticon-cancel-1"></i></a>
+                                                <a href="{{ route('showProduct', ['slug' => $item->produit->slug]) }}">
+                                                    <img width="100" src="{{ asset($item->produit->first_image) }}"
+                                                        alt=""></a>
+                                            </td>
+                                            <td class="product-name">
+                                                <h4><a
+                                                        href="{{ route('showProduct', ['slug' => $item->produit->slug]) }}">{{ $item->produit->name }}</a>
+                                                </h4>
+                                                <p>{{ Str::limit($item->produit->description, 20, '...') }}</p>
+                                                {{-- <span>silas</span> --}}
+                                            </td>
+                                            <td class="product-price">
+                                                {{ is_solde($item->produit->isSpecialOffer, $item->produit->prix, $item->produit->soldePrice) }}
+                                                {{-- {{ formatPrix($item->produit->prix,$item->produit->currency) }} --}}
+                                            </td>
+                                            <td class="product-price">
+                                                {{ $item->quantite }}
+                                            </td>
+                                            <td class="product-subtotal"><span>
+                                                    {{ formatPrix($item->prixTotal) }}
+
+                                                </span></td>
+                                        </tr>
+                                    @empty
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-8">
-                    <aside class="shop-cart-sidebar checkout-sidebar">
-                        <div class="shop-cart-widget">
-                            <h6 class="title">Total du panier</h6>
-                            <form action="#">
-                                <ul>
-                                    <li><span>Sous total :</span>{{ formatPrix() }}</li>
-                                    <li>
+                    <div class="col-lg-4 col-md-8">
+                        <aside class="shop-cart-sidebar checkout-sidebar">
+                            <div class="shop-cart-widget">
+                                <h6 class="title">Total du panier</h6>
+                                <form id="formpaie" action="{{ route('caisse') }}" method="POST"
+                                    onsubmit="submitForm(event)">
+                                    @csrf
+                                    <ul>
+                                        <li><span>Sous total :</span>{{ formatPrix($panier['total']) }}</li>
+                                        {{-- <li>
                                         <span>SHIPPING</span>
                                         <div class="shop-check-wrap">
                                             <div class="custom-control custom-checkbox">
@@ -74,126 +86,177 @@
                                                     SHIPPING</label>
                                             </div>
                                         </div>
-                                    </li>
-                                    <li class="cart-total-amount"><span>TOTAL</span> <span class="amount">$ 151.00</span>
-                                    </li>
-                                </ul>
-                                <div class="bank-transfer">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck3">
-                                        <label class="custom-control-label" for="customCheck3">Direct Bank
-                                            Transfer</label>
-                                    </div>
-                                </div>
-                                <div class="bank-transfer">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck4">
-                                        <label class="custom-control-label" for="customCheck4">Cash On Delivery</label>
-                                    </div>
-                                </div>
-                                <div class="paypal-method">
-                                    <div class="paypal-method-flex">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck5">
-                                            <label class="custom-control-label" for="customCheck5">PayPal</label>
+                                    </li> --}}
+                                        <li class="cart-total-amount"><span>TOTAL</span> <span
+                                                class="amount">{{ formatPrix($panier['total']) }}</span>
+                                        </li>
+                                    </ul>
+                                    <div class="container">
+                                        <div class="row justify-content-center">
+                                            <div class="col-sm-12 mb-10">
+                                                <div class="form-grp">
+                                                    <label>Moyen de paiement*</label>
+                                                    <select required class="custom-select" name="channel" id="channel">
+                                                        <option value="" selected>Selectionnez un moyen de paiement
+                                                        </option>
+                                                        <option value="mobile_money">Mobile money</option>
+                                                        <option value="card">Carte bancaire</option>
+                                                        {{-- <option value="California">Cash</option> --}}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12" id="Contenairephone">
+                                                <div class="form-grp">
+                                                    <label>Numéro de téléphone :</label>
+                                                    <input class="custom-select " name="phone" type="text"
+                                                        id="phone">
+                                                    <input class="custom-select d-none" value="{{ $panier['total'] }}"
+                                                        name="total" type="text" id="total">
+                                                    <input class="custom-select d-none"
+                                                        value="{{ $panier['data'][0]->produit->currency }}" name="currency"
+                                                        type="text" id="currency">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="paypal-logo"><img src="img/images/paypal_logo.png" alt="">
+                                        <div class="payment-terms">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" required class="custom-control-input"
+                                                    id="customCheck7">
+                                                <label class="custom-control-label" for="customCheck7">J'ai lu et j'accepte
+                                                    les
+                                                    conditions générales
+                                                    du site Web*</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <p>Pay via PayPal; you can pay with your credit
-                                        card if you don’t have a PayPal account</p>
-                                </div>
-                                <div class="paypal-method">
-                                    <div class="paypal-method-flex">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck6">
-                                            <label class="custom-control-label" for="customCheck6">Payments on
-                                                Card</label>
-                                        </div>
-                                        <div class="paypal-logo"><img src="img/images/payment_card.png" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="payment-terms">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck7">
-                                        <label class="custom-control-label" for="customCheck7">I have read and agree to
-                                            the website terms
-                                            and conditions *</label>
-                                    </div>
-                                </div>
-                                <button class="btn">PROCEED TO CHECKOUT</button>
-                            </form>
-                        </div>
-                    </aside>
-                </div>
+                                        <button type="submit" class="btn">PASSER À LA CAISSE</button>
+                                </form>
+                            </div>
+                        </aside>
+                    </div>
+                @else
+                    <p class="text-danger">Le panier est vide ou une donnée est manquante.</p>
+                @endif
+
             </div>
         </div>
     </section>
 
-            <!-- core-features -->
-            <section class="core-features-area core-features-style-two">
-                <div class="container">
-                    <div class="core-features-border">
-                        <div class="row justify-content-center">
-                            <div class="col-xl-3 col-lg-4 col-sm-6">
-                                <div class="core-features-item mb-50">
-                                    <div class="core-features-icon">
-                                        <img src="{{ asset('assets/img/icon/core_features01.png') }}" alt="">
-                                    </div>
-                                    <div class="core-features-content">
-                                        <h6>Free Shipping On Over $ 50</h6>
-                                        <span>Agricultural mean crops livestock</span>
-                                    </div>
-                                </div>
+    <!-- core-features -->
+    <section class="core-features-area core-features-style-two">
+        <div class="container">
+            <div class="core-features-border">
+                <div class="row justify-content-center">
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="core-features-item mb-50">
+                            <div class="core-features-icon">
+                                <img src="{{ asset('assets/img/icon/core_features01.png') }}" alt="">
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-sm-6">
-                                <div class="core-features-item mb-50">
-                                    <div class="core-features-icon">
-                                        <img src="{{ asset('assets/img/icon/core_features02.png') }}" alt="">
-                                    </div>
-                                    <div class="core-features-content">
-                                        <h6>Membership Discount</h6>
-                                        <span>Only MemberAgricultural livestock</span>
-                                    </div>
-                                </div>
+                            <div class="core-features-content">
+                                <h6>Free Shipping On Over $ 50</h6>
+                                <span>Agricultural mean crops livestock</span>
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-sm-6">
-                                <div class="core-features-item mb-50">
-                                    <div class="core-features-icon">
-                                        <img src="{{ asset('assets/img/icon/core_features03.png') }}" alt="">
-                                    </div>
-                                    <div class="core-features-content">
-                                        <h6>Money Return</h6>
-                                        <span>30 days money back guarantee</span>
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="core-features-item mb-50">
+                            <div class="core-features-icon">
+                                <img src="{{ asset('assets/img/icon/core_features02.png') }}" alt="">
                             </div>
-                            <div class="col-xl-3 col-lg-4 col-sm-6">
-                                <div class="core-features-item mb-50">
-                                    <div class="core-features-icon">
-                                        <img src="{{ asset('assets/img/icon/core_features04.png') }}" alt="">
-                                    </div>
-                                    <div class="core-features-content">
-                                        <h6>Online Support</h6>
-                                        <span>30 days money back guarantee</span>
-                                    </div>
-                                </div>
+                            <div class="core-features-content">
+                                <h6>Membership Discount</h6>
+                                <span>Only MemberAgricultural livestock</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="core-features-item mb-50">
+                            <div class="core-features-icon">
+                                <img src="{{ asset('assets/img/icon/core_features03.png') }}" alt="">
+                            </div>
+                            <div class="core-features-content">
+                                <h6>Money Return</h6>
+                                <span>30 days money back guarantee</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="core-features-item mb-50">
+                            <div class="core-features-icon">
+                                <img src="{{ asset('assets/img/icon/core_features04.png') }}" alt="">
+                            </div>
+                            <div class="core-features-content">
+                                <h6>Online Support</h6>
+                                <span>30 days money back guarantee</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            <!-- core-features-end -->
+            </div>
+        </div>
+    </section>
+    <!-- core-features-end -->
 @endsection
 @section('script')
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+
+            const selectElement = document.getElementById("channel");
+            const extraFieldContainer = document.getElementById("Contenairephone");
+            const extraField = document.getElementById("phone");
+
+            selectElement.addEventListener("change", function() {
+                if (this.value === "mobile_money") {
+                    extraFieldContainer.style.display = "block";
+                    extraField.setAttribute("required", "true");
+                } else {
+                    extraFieldContainer.style.display = "none";
+                    extraField.removeAttribute("required");
+                    extraField.value = ""; // Efface la valeur si caché
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const selectPayment = document.getElementById("channel"); // Sélecteur du moyen de paiement
+            const phoneContainer = document.getElementById("Contenairephone"); // Conteneur de l'input téléphone
+            const phoneInput = document.getElementById("phone"); // Input téléphone
+            const checkboxTerms = document.getElementById("customCheck7"); // Case à cocher des conditions générales
+            const submitButton = document.querySelector("button.btn"); // Bouton de soumission
+
+            // Fonction pour mettre à jour la visibilité de l'input téléphone et l'état du bouton
+            function updateFormState() {
+                // Vérifie si Mobile Money est sélectionné pour afficher ou cacher le champ téléphone
+                if (selectPayment.value === "mobile_money") {
+                    phoneContainer.style.display = "block";
+                    phoneInput.required = true; // Rend le champ obligatoire
+                } else {
+                    phoneContainer.style.display = "none";
+                    phoneInput.required = false; // Retire l'obligation de remplir le champ
+                    phoneInput.value = ""; // Réinitialise la valeur si caché
+                }
+
+                // Active ou désactive le bouton submit en fonction de la case cochée
+                submitButton.disabled = !checkboxTerms.checked;
+            }
+
+            // Vérifier l'état initial au chargement
+            updateFormState();
+
+            // Écoute les changements sur le select (moyen de paiement)
+            selectPayment.addEventListener("change", updateFormState);
+
+            // Écoute les changements sur la case à cocher des conditions générales
+            checkboxTerms.addEventListener("change", updateFormState);
+        });
+
+
+
         $(document).on("click", ".card-remouve", function(e) {
             e.preventDefault();
             let actionUrl = $(this).attr("href"); // URL pour supprimer l'article
             let productId = $(this).data('id');
             let row = $('#fav-row-' + productId);
-
 
             $.ajax({
                 url: actionUrl,
@@ -205,7 +268,7 @@
                             $(this).remove();
                             if ($(".card-remouve").length === 0) {
                                 $(".table tbody").append(
-                                    '<tr id="empty-cart-message"><td colspan="5">Votre panier est vide.</td></tr>'
+                                    '<tr id="empty-cart-message"><td colspan = "5"> Votre panier est vide.</td></tr>'
                                 );
                             }
                         });
@@ -255,4 +318,5 @@
             }
         }
     </script>
+
 @endsection

@@ -10,20 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Commande extends Model
 {
     use HasFactory;
-
-	// public function produits()
-	// {
-
-	// 	return $this->belongsToMany(\App\Models\Produit::class);
-
-	// }
-    public function produits()
-    {
-        return $this->belongsToMany(Produit::class, 'commande_produit')
-            ->withPivot('quantite', 'prix_unitaire', 'prix_total')
-            ->withTimestamps();
-    }
-
+    protected $dates = ['created_at', 'updated_at'];
 	// public function users()
 	// {
 
@@ -38,11 +25,15 @@ class Commande extends Model
 
 	protected $guarded = [];
 
-	public function transaction()
-	{
-
-		return $this->belongsTo(\App\Models\Transaction::class);
-
-	}
+    /**
+     * Relation avec les produits commandés (Une commande contient plusieurs produits)
+     */
+    public function produits()
+    {
+        return $this->belongsToMany(Produit::class, 'commande_produit')
+                    ->withPivot('quantite', 'prix_unitaire', 'prix_total')
+                    ->withTimestamps();
+    }
 
 }
+

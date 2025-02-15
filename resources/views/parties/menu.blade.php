@@ -56,10 +56,28 @@
                                     <a href="{{ route('login') }}">Connexion</a>
                                 </li>
                             @else
+                            <div class="header-top-left">
+                                <ul>
+                                    <li>
+                                        <div class="heder-top-guide">
+                                            <div class="dropdown">
+                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton2"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="flaticon-user"></i> Mon compte
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">Mon profil</a>
+                                                    <a class="dropdown-item" href="{{ route('mesAchats') }}">Mes achats</a>
+                                                    <a class="dropdown-item" href="#">Historiques</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                                 <li>
-                                    <a href="{{ route('register') }}">
-                                        <i class="flaticon-user"></i>Mon compte</a>
                                         <span>/</span>
+
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
@@ -88,7 +106,7 @@
                     <div class="menu-wrap">
                         <nav class="menu-nav show">
                             <div class="logo">
-                                <a href="index.html"><img src="{{ asset('assets/img/logo/logosynapse.png') }}"
+                                <a href="{{ route('home') }}"><img src="{{ asset('assets/img/logo/logosynapse.png') }}"
                                         width="100" alt="Logo"></a>
                             </div>
                             <div class="navbar-wrap main-menu d-none d-lg-flex">
@@ -119,6 +137,9 @@
                                         <a href="{{ route('cart') }}">
                                             <i class="flaticon-shopping-bag"></i>
                                             <span class="cart-count count">
+                                                @if(!Auth::check())
+                                                0
+                                                @endif
                                                 {{-- {{ count(session()->get('cart')['items']) }} --}}
                                             </span>
                                         </a>

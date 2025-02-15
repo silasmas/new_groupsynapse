@@ -335,6 +335,176 @@
         });
     }
 </script>
+<script>
+    function submitForm(event) {
+        event.preventDefault(); // Empêche la soumission par défaut
+
+        const form = event.target; // Récupère le formulaire
+        const submitButton = form.querySelector("button.btn"); // Sélectionne le bouton submit
+        const checkboxTerms = document.getElementById("customCheck7"); // Vérifie la case à cocher
+
+        if (!checkboxTerms.checked) {
+            alert("Veuillez accepter les conditions générales avant de continuer.");
+            return;
+        }
+
+        // Désactive le bouton pour éviter la double soumission
+        submitButton.disabled = true;
+        submitButton.textContent = "Traitement en cours...";
+
+        // Récupération des données du formulaire
+        let formData = new FormData(form);
+
+        // Envoi AJAX avec Fetch API
+        fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest', // Indique que c'est une requête AJAX
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content') // CSRF Token pour Laravel
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.reponse) {
+                    swal({
+                        title: data.message,
+                        icon: 'success'
+                    });
+                    if (data.type == "mobile") {
+                        check(data.orderNumber)
+                    } else {
+                        swal({
+                        title: "Veuillez patienter, vous serez rediriger pour payer par carte bancaire...",
+                        icon: 'warning'
+                    });
+                        window.location.href = data.redirect_url; // Redirection vers la page de confirmation
+                    }
+                } else {
+                    swal({
+                        title: data.message,
+                        icon: 'error'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Erreur AJAX :", error);
+                swal({
+                    title: "Une erreur est survenue. Veuillez réessayer.",
+                    icon: 'error'
+                });
+
+                // alert("Une erreur est survenue. Veuillez réessayer.");
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = "PASSER À LA CAISSE";
+            });
+    }
+
+    function check(reference) {
+        // Déclaration des variables pour la gestion de la vérification
+        const transactionReference = reference; // Référence de la transaction
+        let attempts = 0; // Compteur de tentatives
+        const maxAttempts = 7; // Nombre maximum de tentatives avant arrêt
+
+        // Fonction pour arrêter la vérification et afficher un message
+        const stopChecking = (message, icon = 'info') => {
+            clearInterval(interval); // Arrête l'intervalle de vérification
+            attempts = maxAttempts; // Définit les tentatives au maximum
+
+            // Affiche une alerte avec SweetAlert2
+            swal({
+                title: "État de la transaction",
+                text: message,
+                icon: icon
+            });
+        };
+
+        // Démarrage de l'intervalle pour vérifier le statut de la transaction toutes les 5 secondes
+        const interval = setInterval(() => {
+            attempts++; // Incrémente le compteur de tentatives
+            console.log(`Vérification ${attempts}/${maxAttempts} pour la transaction: ${transactionReference}`);
+
+            // Requête AJAX pour interroger le statut de la transaction
+            $.ajax({
+                url: '/checkTransactionStatus', // Route qui vérifie le statut côté serveur
+                method: 'GET',
+                data: {
+                    reference: transactionReference
+                }, // Envoi de la référence de la transaction
+                success: function(response) {
+                    console.log("Réponse reçue :", response);
+
+                    if (response.reponse === true) {
+                        if (response.status == "0") {
+                            // Paiement validé, arrêter la vérification
+                            stopChecking(response.message || "Achat effectué avec succès !",
+                                'success');
+
+                            // Réinitialiser le formulaire de paiement
+                            $("#formpaie")[0].reset();
+
+                            // Recharge la page pour mettre à jour l'interface utilisateur
+                            location.reload();
+                        } else if (response.status == "2" && attempts >= maxAttempts - 1) {
+                            // Paiement validé, arrêter la vérification
+                            stopChecking(response.message || "", 'warning');
+                            showTransactionPopup(response.orderNumber,response.message, 'warning')
+                            // window.location.href = "{{ route('home') }}";
+                        }
+
+                    } else if (response.reponse === false && response.status == "1") {
+                        // Nombre maximum de tentatives atteint, arrêter la vérification
+                        stopChecking(response.message, 'error');
+                    } else if (!response.reponse && attempts >= maxAttempts) {
+                        // Nombre maximum de tentatives atteint, arrêter la vérification
+                        stopChecking(response.message || "Le paiement n'a pas été confirmé.",
+                            'error');
+                    } else if (response.redirect_url) {
+                        // Redirection vers la page de confirmation si définie dans la réponse
+                        window.location.href = response.redirect_url;
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(`Erreur AJAX: ${textStatus}, ${errorThrown}`);
+
+                    if (attempts >= maxAttempts) {
+                        // Arrêter après plusieurs erreurs consécutives
+                        stopChecking(
+                            "Impossible de vérifier le statut de la transaction. Veuillez réessayer.",
+                            'error');
+                    }
+                }
+            });
+        }, 5000); // Vérification toutes les 5 secondes
+    }
+
+    function showTransactionPopup(orderNumber,message, icon) {
+        swal({
+        title: "État de la transaction",
+        text: message,
+        icon: icon,
+        buttons: {
+            cancel: "Annuler",
+            confirm: {
+                text: "Réessayer",
+                value: "retry",
+            }
+        }
+    }).then((value) => {
+        if (value === "retry") {
+            // L'utilisateur a cliqué sur "Réessayer"
+            check(orderNumber);
+        } else {
+            // L'utilisateur a cliqué sur "Annuler"
+            swal("Annulé", "Vous pouvez réessayer plus tard.", "info");
+        }
+    });
+    }
+</script>
 @yield('script')
 </body>
 

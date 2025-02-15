@@ -57,14 +57,14 @@ class ViewServiceProvider extends ServiceProvider
                 });
             if (Auth::check()) {
                 $user = Auth::user();
-                dd($user->favories()->get());
+                // dd($user->favories()->get());
                 Session::put("favories", $user->favories()->get());
 
 
                 $favoriteService = app(FavoriteService::class);
                 $favoriteService->syncFavoritesFromDatabase();
                 $favoritesDetails = $favoriteService->getFavoritesDetails();
-                  dd(session()->get("favories")[0]->imageUrls[2]);
+                //   dd(session()->get("favories")[0]->imageUrls[2]);
             }
             Session::put("cart", (new CartService())->getCartDetails());
         //    dd( isset($favoritesDetails) && !empty($favoritesDetails) ? $favoritesDetails[1]['favorites_count'] : 0 );

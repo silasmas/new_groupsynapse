@@ -23,7 +23,7 @@
                                 </thead>
                                 <tbody>
                                     @forelse (session()->get("favories") as $fav)
-                                    @dump($fav->imageUrls[1])
+                                 {{-- @dump($fav->imageUrls[1]) --}}
                                         <tr id="fav-row-{{ $fav->id }}">
                                             <td class="product-thumbnail">
                                                 <a href="{{ route('removeFavorie', ['id' => $fav->id]) }}"

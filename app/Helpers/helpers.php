@@ -3,7 +3,9 @@
 use App\Models\Panier;
 use App\Models\Produit;
 use App\Models\Commande;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
@@ -21,6 +23,60 @@ if (!function_exists('createRef')) {
     function createRef()
     {
         return 'REF-' . ((string) random_int(10000000, 99999999));;
+    }
+}
+if (!function_exists('initRequeteFlexPay')) {
+    function initRequeteFlexPay($type, $data, Commande $order)
+    {
+        $responseBody = "";
+        if ($type == "mobile") {
+            $response = Http::withHeaders([
+                "Content-Type" => "application/json",
+                "Authorization" => "Bearer " . env('FLEXPAY_API_TOKEN')
+            ])->post(env('FLEXPAY_GATEWAY_MOBILE'), $data);
+
+            $responseBody = $response->json();
+
+            if ($responseBody['code'] == "0") {
+                $order->update([
+                    'provider_reference' => $responseBody['orderNumber'],
+                    'etat' => 'En cours'
+                ]);
+                return [
+                    "reponse" => true,
+                    "message" => "Paiement en attente",
+                    "reference" => $responseBody['orderNumber'],
+                    "type" => "mobile",
+                    "reference" => $order->reference,
+                    "orderNumber" => $responseBody['orderNumber'],
+                ];
+            } else {
+                return response()->json(
+                    [
+                        "reponse" => false,
+                        "message" => "Échec de la transaction",
+                    ]
+                );
+            }
+        } else {
+            $response = Http::withHeaders([
+                "Content-Type" => "application/json",
+                "Authorization" => "Bearer " . env('FLEXPAY_API_TOKEN')
+            ])->post(env('FLEXPAY_GATEWAY_CARD'), $data);
+
+            $responseBody = $response->json();
+        }
+        return $responseBody;
+    }
+}
+if (!function_exists('generateUniqueReference')) {
+    function generateUniqueReference()
+    {
+        do {
+            $reference = 'ORD-' . strtoupper(Str::random(10));
+        } while (Commande::where('reference', $reference)->exists());
+
+        return $reference;
     }
 }
 if (!function_exists('formatPrix')) {

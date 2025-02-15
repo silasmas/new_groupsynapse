@@ -14,6 +14,9 @@ class HomeController extends Controller
     public function index() {
         return view("pages.home");
     }
+    public function contact() {
+        return view("pages.contact");
+    }
     public function favories() {
         return view("pages.favories");
     }
@@ -21,7 +24,7 @@ class HomeController extends Controller
         return view("pages.about");
     }
     public function branches() {
-        return view("pages.branches");
+        return view("pages.services");
     }
     public function shop(Request $request): View
     {
