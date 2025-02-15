@@ -51,9 +51,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/payment/status', [PaymentController::class, 'checkPaymentStatus']);
     Route::post('/payment/callback', [PaymentController::class, 'paymentCallback'])->name('payment.callback');
 
-    Route::get('/paid/{reference}/{amount}/{currency}/{code}', [CartController::class, 'paid'])->whereNumber(['amount'])->name('paid');
-    Route::get('/commandeStatus', [CartController::class, 'commandeStatus'])->name('commandeStatus');
-
 
 
     Route::get('/profil', [CartController::class, 'commandeStatus'])->name('profil');
@@ -63,9 +60,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/mesAchats', [CommandeController::class, 'mesAchats'])->name('mesAchats');
 
-
-
 });
+
+Route::get('/paid/{reference}/{amount}/{currency}/{code}', [CartController::class, 'paid'])->whereNumber(['amount'])->name('paid');
+Route::get('/commandeStatus', [CartController::class, 'commandeStatus'])->name('commandeStatus');
+
+
 
 Route::get('/dashboard', function () {
     return redirect()->route('home');
