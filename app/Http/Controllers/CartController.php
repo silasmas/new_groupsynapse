@@ -148,7 +148,6 @@ class CartController extends Controller
         switch ($jsonRes['transaction']["status"]) {
             case 0:
                 // Trouver la transaction correspondante
-
                 if ($transaction) {
                     $status = 'Payée';
                     // Mettre à jour l'état des données
@@ -161,8 +160,8 @@ class CartController extends Controller
                     $this->clearCartAfterPayment($transactionData['user_id']);
                     return response()->json([
                         'reponse' => true,
-                        'message' => 'Statut de transaction mis à jour avec succès.',
-                        'status' => $transactionData['status'],
+                        'message' => 'La transaction mis à été fait avec succès.',
+                        'status' => $jsonRes['transaction']["status"],
                     ]);
                 }
                 break;
@@ -174,7 +173,7 @@ class CartController extends Controller
                 ]);
                 return response()->json([
                     'reponse' => false,
-                    'status' => $transactionData['status'],
+                    'status' => $jsonRes['transaction']["status"],
                     'message' => $jsonRes["message"],
                 ]);
                 break;
@@ -189,14 +188,14 @@ class CartController extends Controller
                     'reponse' => true,
                     'message' => $jsonRes["message"],
                     'orderNumber' => $transaction->provider_reference,
-                    'status' => $transactionData['status'],
+                    'status' => $jsonRes['transaction']["status"],
                     'url' => "attente",
                 ]);
                 break;
             default:
                 return response()->json([
                     'reponse' => false,
-                    'status' => $transactionData['status'],
+                    'status' => $jsonRes['transaction']["status"],
                     'message' => $jsonRes["message"],
                 ]);
                 break;

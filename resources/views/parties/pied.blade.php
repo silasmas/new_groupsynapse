@@ -441,8 +441,7 @@
                     if (response.reponse === true) {
                         if (response.status == "0") {
                             // Paiement validé, arrêter la vérification
-                            stopChecking(response.message || "Achat effectué avec succès !",
-                                'success');
+                            stopChecking(response.message || "Achat effectué avec succès !",'success');
 
                             // Réinitialiser le formulaire de paiement
                             $("#formpaie")[0].reset();
