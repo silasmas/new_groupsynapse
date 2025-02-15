@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Commande_produit extends Model
 {
     use HasFactory;
-    protected $table = 'Commande_produit';
+    protected $table = 'commande_produit';
 	protected $guarded = [];
 /**
      * Relation avec la commande
