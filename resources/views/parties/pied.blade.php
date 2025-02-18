@@ -274,7 +274,7 @@
                 <li>
                     <div class="total-price">
                         <span class="f-left">Total:</span>
-                        <span class="f-right">${subTotal.toFixed(2)}${currency} $</span>
+                        <span class="f-right">${subTotal.toFixed(2)}$</span>
                     </div>
                 </li>
                 <li>
