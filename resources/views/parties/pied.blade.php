@@ -229,20 +229,20 @@
                 `);
                     return;
                 }
-
                 // Calcul du total du panier
                 let cartCount = response.data.reduce((total, item) => total + item.quantite, 0);
                 let subTotal = response.data.reduce((total, item) => total + item.prixTotal, 0);
 
                 // Mettre à jour la quantité et le total
                 $(".count").text(response.data.length);
-                $(".cart-total-price").text(subTotal.toFixed(2) + " $");
+                $(".cart-total-price").text(subTotal.toFixed(2) +"$" );
 
                 // Mettre à jour le contenu du panier
                 let $minicart = $(".minicart");
                 $minicart.empty();
 
                 response.data.forEach(function(item) {
+                    var currency=item.produit.curreny=="CDF"?"FC":"$";
                     let produit = item.produit; // Récupération des détails du produit
                     console.log(produit.first_image);
                     $minicart.append(`
@@ -257,7 +257,7 @@
                                 <a href="/showProduct/${produit.slug}">${produit.name}</a>
                             </h4>
                             <div class="cart-price">
-                                <span class="new">${item.prixUnitaire}${item.produit.currency}</span>
+                                <span class="new">${item.prixUnitaire}${currency}</span>
                                 <span> X ${item.quantite} </span>
                             </div>
                         </div>
@@ -274,7 +274,7 @@
                 <li>
                     <div class="total-price">
                         <span class="f-left">Total:</span>
-                        <span class="f-right">${subTotal.toFixed(2)}${item.produit.currency} $</span>
+                        <span class="f-right">${subTotal.toFixed(2)}${currency} $</span>
                     </div>
                 </li>
                 <li>
