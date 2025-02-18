@@ -19,7 +19,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Appeler la méthode pour mettre à jour le panier
-        @if(Auth::check())
+        @if (Auth::check())
             updateCartUI();
             updateFavorite();
         @endif
@@ -163,18 +163,18 @@
                 });
             },
             error: function(xhr) {
-            console.log(xhr)
-            if (xhr.status === 401) {
+                console.log(xhr)
+                if (xhr.status === 401) {
                     swal({
-                    title: "Vous devez être connecté pour accéder à cette page!!",
-                    icon: 'error'
-                });
+                        title: "Vous devez être connecté pour accéder à cette page!!",
+                        icon: 'error'
+                    });
                     window.location.href = '/login'; // Redirection vers la page de connexion
                 } else {
                     swal({
-                    title: "Une erreur est survenue!!",
-                    icon: 'error'
-                });
+                        title: "Une erreur est survenue!!",
+                        icon: 'error'
+                    });
                 }
 
             }
@@ -199,9 +199,9 @@
                     updateCartUI(); // Rafraîchir le panier après l'action
                 } else {
                     swal({
-                    title: "Une erreur est survenue!!",
-                    icon: 'error'
-                });
+                        title: "Une erreur est survenue!!",
+                        icon: 'error'
+                    });
                 }
 
             },
@@ -212,40 +212,40 @@
     });
 
     function updateCartUI() {
-    $.ajax({
-        url: "{{ route('cart.details') }}", // URL pour obtenir les détails du panier
-        method: "GET",
-        success: function(response) {
-            console.log(response);
+        $.ajax({
+            url: "{{ route('cart.details') }}", // URL pour obtenir les détails du panier
+            method: "GET",
+            success: function(response) {
+                console.log(response);
 
-            // Vérification : si le panier est vide
-            if (!response.data || response.data.length === 0) {
-                $(".count").text("0");
-                $(".cart-total-price").text("");
-                $(".minicart").html(`
+                // Vérification : si le panier est vide
+                if (!response.data || response.data.length === 0) {
+                    $(".count").text("0");
+                    $(".cart-total-price").text("");
+                    $(".minicart").html(`
                     <li class="empty-cart">
                         <p>Votre panier est vide.</p>
                     </li>
                 `);
-                return;
-            }
+                    return;
+                }
 
-            // Calcul du total du panier
-            let cartCount = response.data.reduce((total, item) => total + item.quantite, 0);
-            let subTotal = response.data.reduce((total, item) => total + item.prixTotal, 0);
+                // Calcul du total du panier
+                let cartCount = response.data.reduce((total, item) => total + item.quantite, 0);
+                let subTotal = response.data.reduce((total, item) => total + item.prixTotal, 0);
 
-            // Mettre à jour la quantité et le total
-            $(".count").text(response.data.length);
-            $(".cart-total-price").text(subTotal.toFixed(2) + " $");
+                // Mettre à jour la quantité et le total
+                $(".count").text(response.data.length);
+                $(".cart-total-price").text(subTotal.toFixed(2) + " $");
 
-            // Mettre à jour le contenu du panier
-            let $minicart = $(".minicart");
-            $minicart.empty();
+                // Mettre à jour le contenu du panier
+                let $minicart = $(".minicart");
+                $minicart.empty();
 
-            response.data.forEach(function(item) {
-                let produit = item.produit;  // Récupération des détails du produit
-                console.log(produit.first_image);
-                $minicart.append(`
+                response.data.forEach(function(item) {
+                    let produit = item.produit; // Récupération des détails du produit
+                    console.log(produit.first_image);
+                    $minicart.append(`
                     <li class="d-flex align-items-start">
                         <div class="cart-img">
                             <a href="/produit/${produit.id}">
@@ -268,9 +268,9 @@
                         </div>
                     </li>
                 `);
-            });
+                });
 
-            $minicart.append(`
+                $minicart.append(`
                 <li>
                     <div class="total-price">
                         <span class="f-left">Total:</span>
@@ -284,12 +284,12 @@
                     </div>
                 </li>
             `);
-        },
-        error: function(xhr) {
-            console.error("Erreur lors de la mise à jour du panier :", xhr.responseText);
-        }
-    });
-}
+            },
+            error: function(xhr) {
+                console.error("Erreur lors de la mise à jour du panier :", xhr.responseText);
+            }
+        });
+    }
 
 
 
@@ -377,9 +377,9 @@
                         check(data.orderNumber)
                     } else {
                         swal({
-                        title: "Veuillez patienter, vous serez rediriger pour payer par carte bancaire...",
-                        icon: 'warning'
-                    });
+                            title: "Veuillez patienter, vous serez rediriger pour payer par carte bancaire...",
+                            icon: 'warning'
+                        });
                         window.location.href = data.redirect_url; // Redirection vers la page de confirmation
                     }
                 } else {
@@ -441,17 +441,20 @@
                     if (response.reponse === true) {
                         if (response.status == "0") {
                             // Paiement validé, arrêter la vérification
-                            stopChecking(response.message || "Achat effectué avec succès !",'success');
+                            stopChecking(response.message || "Achat effectué avec succès !",
+                                'success');
 
                             // Réinitialiser le formulaire de paiement
                             $("#formpaie")[0].reset();
 
-                            // Recharge la page pour mettre à jour l'interface utilisateur
-                            location.reload();
+                            // Attendre 10 secondes (10000 millisecondes) avant d'actualiser
+                            setTimeout(() => {
+                                location.reload(); // Actualiser la page
+                            }, 10000);
                         } else if (response.status == "2" && attempts >= maxAttempts - 1) {
                             // Paiement validé, arrêter la vérification
                             stopChecking(response.message || "", 'warning');
-                            showTransactionPopup(response.orderNumber,response.message, 'warning')
+                            showTransactionPopup(response.orderNumber, response.message, 'warning')
                             // window.location.href = "{{ route('home') }}";
                         }
 
@@ -481,27 +484,27 @@
         }, 5000); // Vérification toutes les 5 secondes
     }
 
-    function showTransactionPopup(orderNumber,message, icon) {
+    function showTransactionPopup(orderNumber, message, icon) {
         swal({
-        title: "État de la transaction",
-        text: message,
-        icon: icon,
-        buttons: {
-            cancel: "Annuler",
-            confirm: {
-                text: "Réessayer",
-                value: "retry",
+            title: "État de la transaction",
+            text: message,
+            icon: icon,
+            buttons: {
+                cancel: "Annuler",
+                confirm: {
+                    text: "Réessayer",
+                    value: "retry",
+                }
             }
-        }
-    }).then((value) => {
-        if (value === "retry") {
-            // L'utilisateur a cliqué sur "Réessayer"
-            check(orderNumber);
-        } else {
-            // L'utilisateur a cliqué sur "Annuler"
-            swal("Annulé", "Vous pouvez réessayer plus tard.", "info");
-        }
-    });
+        }).then((value) => {
+            if (value === "retry") {
+                // L'utilisateur a cliqué sur "Réessayer"
+                check(orderNumber);
+            } else {
+                // L'utilisateur a cliqué sur "Annuler"
+                swal("Annulé", "Vous pouvez réessayer plus tard.", "info");
+            }
+        });
     }
 </script>
 @yield('script')
