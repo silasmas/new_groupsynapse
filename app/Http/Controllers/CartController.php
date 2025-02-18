@@ -39,7 +39,7 @@ class CartController extends Controller
         $qty = $panier['quantite'];
         //   dd($panier['data']);
         return view('pages.checkout', compact('panier'));
-    } 
+    }
     public function createOrder(Request $request)
     {
         $userId = Auth::id();

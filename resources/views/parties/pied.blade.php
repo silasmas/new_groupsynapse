@@ -257,7 +257,7 @@
                                 <a href="/showProduct/${produit.slug}">${produit.name}</a>
                             </h4>
                             <div class="cart-price">
-                                <span class="new">${item.prixUnitaire+item.currency}</span>
+                                <span class="new">${item.prixUnitaire}${item.produit.currency}</span>
                                 <span> X ${item.quantite} </span>
                             </div>
                         </div>
@@ -274,7 +274,7 @@
                 <li>
                     <div class="total-price">
                         <span class="f-left">Total:</span>
-                        <span class="f-right">${subTotal.toFixed(2)+item.currency} $</span>
+                        <span class="f-right">${subTotal.toFixed(2)}${item.produit.currency} $</span>
                     </div>
                 </li>
                 <li>
