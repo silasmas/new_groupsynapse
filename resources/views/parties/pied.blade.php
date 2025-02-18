@@ -242,7 +242,7 @@
                 $minicart.empty();
 
                 response.data.forEach(function(item) {
-                    var currency=item.produit.curreny=="CDF"?"FC":"$";
+                    var currency=item.produit.currency=="CDF"?"FC":"$";
                     let produit = item.produit; // Récupération des détails du produit
                     console.log(produit.first_image);
                     $minicart.append(`
