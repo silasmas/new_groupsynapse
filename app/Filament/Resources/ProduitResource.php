@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\produit;
+use App\Models\Produit;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -37,7 +37,7 @@ use App\Filament\Resources\ProduitResource\Pages\CreateProduit;
 
 class ProduitResource extends Resource
 {
-    protected static ?string $model = produit::class;
+    protected static ?string $model = Produit::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
