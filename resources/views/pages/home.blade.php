@@ -40,9 +40,9 @@
                         data-background="{{ asset('assets/img/slider/s_slider_bg02.jpg') }}">
                         <div class="slider-content">
                             <h5 data-animation="fadeInUp" data-delay=".3s">Innovation digitale</h5>
-                            <h2 data-animation="fadeInUp" data-delay=".6s">Expériences numériques</h2>
+                            <h2 data-animation="fadeInUp" data-delay=".6s">L'essentiel pour une expérience digitale !</h2>
                             <p data-animation="fadeInUp" data-delay=".9s">
-                                Tout ce dont vous avez besoin pour créer une expérience numérique exceptionnelle !<br>
+                                <br>
                                 Nous aidons votre entreprise à devenir agile, proactive et innovante grâce à la conception d'expériences numériques et à des services digitaux gérés dans le Cloud.
                             </p>
                             <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"

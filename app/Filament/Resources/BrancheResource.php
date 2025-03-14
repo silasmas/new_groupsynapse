@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\branche;
+use App\Models\Branche;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
@@ -37,7 +37,7 @@ use App\Filament\Resources\BrancheResource\RelationManagers\CategorieRelationMan
 
 class BrancheResource extends Resource
 {
-    protected static ?string $model = branche::class;
+    protected static ?string $model = Branche::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -83,14 +83,12 @@ class BrancheResource extends Resource
             ->columns([
                 ImageColumn::make('vignette')
                     ->searchable(),
-                TextColumn::make('nom')
-                    ->searchable(),
-                TextColumn::make('slug')
+                TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('description')
                     ->limit(50)
                     ->searchable(),
-                IconColumn::make('is_active')
+                IconColumn::make('isActive')
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()

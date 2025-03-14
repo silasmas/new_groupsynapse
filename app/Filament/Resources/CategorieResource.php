@@ -94,8 +94,6 @@ class CategorieResource extends Resource
                     ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
                 TextColumn::make('description')
                     ->limit(50)
                     ->searchable(),

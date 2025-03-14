@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Branche;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -12,7 +13,7 @@ class Category extends Model
 	public function branches()
 	{
 
-		return $this->belongsTo(\App\Models\Branche::class);
+		return $this->belongsTo(Branche::class);
 
 	}
 
