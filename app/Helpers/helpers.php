@@ -221,32 +221,53 @@ if (!function_exists('init_commande')) {
         return $commande;
     }
 }
-// if (!function_exists('init_commande')) {
+if (!function_exists('sendSms')) {
 
-//     function init_commande($panier)
-//     {
-//         // dd($panier);
-//         $cmd = "";
-//         $ref = createRef();
-//         for ($i = 0; $i < $panier->count(); $i++) {
-//             $cmd = Commande::updateOrCreate(
-//                 [
-//                     'reference' => $ref, // Condition pour trouver une commande existante
-//                     'produit_id' => $panier[$i]->produit_id,
-//                     'user_id' => $panier[$i]->user_id,
-//                     'etat' => "En attente",
-//                 ],
-//                 [
-//                     'quantite' => $panier[$i]->quantite,
-//                     'prixTotal' => $panier[$i]->prixTotal,
-//                     'livraison' => false,
-//                     'total' => $panier[$i]->prixTotal,
+    function sendSms($phoneNumber, $message)
+    {
+        // URL de l'API de Keccel (remplacez par l'URL réelle)
+        $apiUrl = env('SMS_URL');
 
-//                 ]
-//             );
-//         }
+        // Clé API ou identifiants d'authentification (remplacez par vos informations)
+        $apiKey = env('SMS_TOKEN');
 
+        // Données à envoyer
+        $postData = [
+            "token" => $apiKey,    // taken
+            "to" => $phoneNumber,    // Numéro de téléphone du destinataire
+            "from" => env('SMS_FROM'), // Optionnel : Nom ou numéro de l'expéditeur
+            "message" => $message,   // Contenu du message
+        ];
 
-//         return $cmd;
-//     }
-// }
+        // Initialisation de cURL
+        $ch = curl_init();
+
+        // Configuration de la requête
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData)); // Conversion des données en JSON
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "Authorization: Bearer $apiKey", // Clé API incluse dans les en-têtes
+        ]);
+
+        // Exécuter la requête
+        $response = curl_exec($ch);
+
+        // Vérifier les erreurs
+        if (curl_errno($ch)) {
+            echo "Erreur cURL : " . curl_error($ch);
+        }
+
+        // Décoder la réponse
+        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        // Afficher la réponse pour débogage
+        return [
+            "status_code" => $responseCode,
+            "response" => json_decode($response, true),
+        ];
+    }
+}

@@ -114,8 +114,8 @@
                                     <li class="{{ isActive('home') }} dropdown"><a
                                             href="{{ route('home') }}">Accueil</a></li>
                                     <li class="{{ isActive('about') }}"><a href="{{ route('about') }}">A propos</a></li>
-                                    <li class="{{ isActive('branches') }}"><a href="{{ route('branches') }}">Nos
-                                            branches</a></li>
+                                    {{-- <li class="{{ isActive('branches') }}"><a href="{{ route('branches') }}">Nos
+                                            branches</a></li> --}}
                                     <li class="{{ isActive('shop') }}"><a href="{{ route('shop') }}">Nos produits</a>
                                     </li>
                                     <li class="{{ isActive('contact') }}"><a

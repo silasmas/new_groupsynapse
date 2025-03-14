@@ -14,36 +14,42 @@
                             <div class="single-slider slider-bg"
                                 data-background="{{ asset('assets/img/slider/s_slider_bg01.jpg') }} ">
                                 <div class="slider-content">
-                                    <h5 data-animation="fadeInUp" data-delay=".3s">top deal !</h5>
-                                    <h2 data-animation="fadeInUp" data-delay=".6s">Smart cream</h2>
-                                    <p data-animation="fadeInUp" data-delay=".9s">Get up to <span>50%</span> off Today Only
-                                    </p>
-                                    <a href="shop-left-sidebar.html" class="btn yellow-btn" data-animation="fadeInUp"
-                                        data-delay="1s">Shop Now</a>
+                                    <h5 data-animation="fadeInUp" data-delay=".3s">Bienvenue chez Groupe Synapse </h5>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">La solution à votre portée !!!</h2>
+                                    {{-- <p data-animation="fadeInUp" data-delay=".9s">
+                                        Get up to <span>50%</span> off Today Only
+                                    </p> --}}
+                                    <a href="{{ route('shop') }}" class="btn yellow-btn" data-animation="fadeInUp"
+                                        data-delay="1s">Voir nos produits</a>
                                 </div>
                             </div>
                             <div class="single-slider slider-bg"
-                                data-background="{{ asset('assets/img/slider/s_slider_bg02.jpg') }}">
-                                <div class="slider-content">
-                                    <h5 data-animation="fadeInUp" data-delay=".3s">top deal !</h5>
-                                    <h2 data-animation="fadeInUp" data-delay=".6s">Top headphone</h2>
-                                    <p data-animation="fadeInUp" data-delay=".9s">Get up to <span>50%</span> off Today Only
-                                    </p>
-                                    <a href="shop-left-sidebar.html" class="btn yellow-btn" data-animation="fadeInUp"
-                                        data-delay="1s">Shop Now</a>
-                                </div>
+                            data-background="{{ asset('assets/img/slider/s_slider_bg02.jpg') }}">
+                            <div class="slider-content">
+                                <h5 data-animation="fadeInUp" data-delay=".3s">Nos services</h5>
+                                <h2 data-animation="fadeInUp" data-delay=".6s">Solutions digitales</h2>
+                                <p data-animation="fadeInUp" data-delay=".9s">
+                                    Entreprise spécialisée dans le digital et les services aux clients, opérant dans divers secteurs pour offrir des solutions innovantes et adaptées aux besoins du marché.
+                                </p>
+                                <a href="shop-left-sidebar.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                    data-delay="1s">En savoir plus</a>
                             </div>
-                            <div class="single-slider slider-bg"
-                                data-background="{{ asset('assets/img/slider/s_slider_bg03.jpg') }}">
-                                <div class="slider-content">
-                                    <h5 data-animation="fadeInUp" data-delay=".3s">top deal !</h5>
-                                    <h2 data-animation="fadeInUp" data-delay=".6s">Smart Watch</h2>
-                                    <p data-animation="fadeInUp" data-delay=".9s">Get up to <span>50%</span> off Today Only
-                                    </p>
-                                    <a href="shop-left-sidebar.html" class="btn yellow-btn" data-animation="fadeInUp"
-                                        data-delay="1s">Shop Now</a>
-                                </div>
-                            </div>
+                        </div>
+
+                        <div class="single-slider slider-bg"
+                        data-background="{{ asset('assets/img/slider/s_slider_bg02.jpg') }}">
+                        <div class="slider-content">
+                            <h5 data-animation="fadeInUp" data-delay=".3s">Innovation digitale</h5>
+                            <h2 data-animation="fadeInUp" data-delay=".6s">Expériences numériques</h2>
+                            <p data-animation="fadeInUp" data-delay=".9s">
+                                Tout ce dont vous avez besoin pour créer une expérience numérique exceptionnelle !<br>
+                                Nous aidons votre entreprise à devenir agile, proactive et innovante grâce à la conception d'expériences numériques et à des services digitaux gérés dans le Cloud.
+                            </p>
+                            <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                data-delay="1s">Découvrir nos services</a>
+                        </div>
+                    </div>
+
                         </div>
                     </div>
                 </div>
