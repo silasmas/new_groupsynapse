@@ -235,39 +235,57 @@
 
                 // Mettre à jour la quantité et le total
                 $(".count").text(response.data.length);
-                $(".cart-total-price").text(subTotal.toFixed(2) +"$" );
+                $(".cart-total-price").text(subTotal.toFixed(2) + "$");
 
                 // Mettre à jour le contenu du panier
                 let $minicart = $(".minicart");
                 $minicart.empty();
 
                 response.data.forEach(function(item) {
-                    var currency=item.produit.currency=="CDF"?"FC":"$";
+                    var currency = item.produit.currency === "CDF" ? "FC" : "$";
                     let produit = item.produit; // Récupération des détails du produit
-                    console.log(produit.first_image);
-                    $minicart.append(`
-                    <li class="d-flex align-items-start">
-                        <div class="cart-img">
-                            <a href="/produit/${produit.id}">
-                                <img src="../${produit.first_image}" width="100" height="100" alt="">
-                            </a>
-                        </div>
-                        <div class="cart-content">
-                            <h4>
-                                <a href="/showProduct/${produit.slug}">${produit.name}</a>
-                            </h4>
-                            <div class="cart-price">
-                                <span class="new">${item.prixUnitaire}${currency}</span>
-                                <span> X ${item.quantite} </span>
-                            </div>
-                        </div>
-                        <div class="del-icon">
-                            <a class="remove-from-cart" data-id="${produit.id}" data-quantity="${item.quantite}">
-                                <i class="far fa-trash-alt"></i>
-                            </a>
-                        </div>
-                    </li>
-                `);
+
+                    let images = [];
+
+                    // Vérifier si imageUrls est une chaîne JSON et la convertir en tableau
+                    if (typeof produit.imageUrls === "string") {
+                        try {
+                            images = JSON.parse(produit.imageUrls);
+                        } catch (error) {
+                            console.error("Erreur de parsing JSON pour imageUrls :", error);
+                            images = []; // Si erreur, on utilise un tableau vide
+                        }
+                    } else if (Array.isArray(produit.imageUrls)) {
+                        images = produit.imageUrls; // Déjà un tableau
+                    }
+                    const imageUrl = images.length > 0 ? images[0] :
+                    "assets/img/default.png"; // Récupérer la première image ou une par défaut
+
+                    console.log(imageUrl); // Vérifie dans la console si l'URL est correcte
+
+                    $minicart.append(`<li class="d-flex align-items-start">
+                                <div class="cart-img">
+                                    <a href="/produit/${produit.id}">
+                                        <img src="../${imageUrl}" width="100" height="100" alt="">
+                                    </a>
+                                </div>
+                                <div class="cart-content">
+                                    <h4>
+                                        <a href="/showProduct/${produit.slug}">${produit.name}</a>
+                                    </h4>
+                                    <div class="cart-price">
+                                        <span class="new">${item.prixUnitaire}${currency}</span>
+                                        <span> X ${item.quantite} </span>
+                                    </div>
+                                </div>
+                                <div class="del-icon">
+                                    <a class="remove-from-cart" data-id="${produit.id}" data-quantity="${item.quantite}">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </li>`);
+
+
                 });
 
                 $minicart.append(`

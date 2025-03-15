@@ -698,9 +698,9 @@
   /*=============================================
 	=    		 Cart Active  	         =
 =============================================*/
-  $(".cart-plus-minus").append(
-    '<div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>'
-  );
+//   $(".cart-plus-minus").append(
+//     '<div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>'
+//   );
   $(".qtybuttonb").on("click", function() {
     // alert("ok");
     var $button = $(this);

@@ -10,7 +10,7 @@
                 <div class="col-xl-7 col-lg-6">
                     <div class="shop-details-nav-wrap">
                         <div class="shop-details-nav">
-                            @forelse ($produit->imageUrls() as $p)
+                            @forelse ($produit->getImageUrlsAttribute() as $p)
                                 <div class="shop-nav-item">
                                     <img src="{{ asset($p) }}" alt="">
                                 </div>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="shop-details-img-wrap">
                         <div class="shop-details-active">
-                            @forelse ($produit->imageUrls() as $p)
+                            @forelse ($produit->getImageUrlsAttribute() as $p)
                                 <div class="shop-details-img">
                                     <a href="{{ asset($p) }}" class="popup-image"><img src="{{ asset($p) }}"
                                             alt=""></a>

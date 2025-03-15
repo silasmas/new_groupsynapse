@@ -1,39 +1,28 @@
 <?php
-
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\BrancheResource\Pages;
+use App\Filament\Resources\BrancheResource\RelationManagers\CategorieRelationManager;
 use App\Models\Branche;
-use Filament\Forms\Set;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
-use Filament\Resources\Resource;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Form;
+use Filament\Forms\Set;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Forms\Components\FileUpload;
-use Filament\Tables\Actions\DeleteAction;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\ToggleButtons;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use App\Filament\Resources\BrancheResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\BrancheResource\RelationManagers;
-use App\Filament\Resources\BrancheResource\Pages\EditBranche;
-use App\Filament\Resources\BrancheResource\Pages\ListBranches;
-use App\Filament\Resources\BrancheResource\Pages\CreateBranche;
-use App\Filament\Resources\BrancheResource\RelationManagers\CategorieRelationManager;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class BrancheResource extends Resource
 {
@@ -47,11 +36,12 @@ class BrancheResource extends Resource
             ->schema([
                 Group::make([
                     Section::make('Formulaire')->schema([
-                        TextInput::make('nom')
+                        TextInput::make('name')
                             ->columnSpan(6)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn(string $operation, $state, Set $set) =>
-                            $operation === 'create' ? $set('slug', Str::slug($state)) : null)
+                                $set('slug', Str::slug($state))
+                            )
                             ->maxLength(255),
                         TextInput::make('slug')
                             ->required()
@@ -62,18 +52,22 @@ class BrancheResource extends Resource
                             ->maxLength(255),
                         Textarea::make('description')
                             ->columnSpan(12)
+                            ->required()
                             ->maxLength(255),
 
                         FileUpload::make('vignette')
                             ->label('Image :')
                             ->directory('branches')
                             ->columnSpan(12),
-                        Toggle::make('is_active')
+                        Toggle::make('isActive')
                             ->required()
+                            ->columnSpan(12)
                             ->label('Est active')
+                            ->onColor('success')
+                            ->offColor('danger')
                             ->default(true),
-                    ])
-                ])->columnSpanFull()
+                    ])->columnS(12),
+                ])->columnSpanFull(),
             ]);
     }
 
@@ -107,7 +101,7 @@ class BrancheResource extends Resource
                     ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),
-                ])
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -119,7 +113,7 @@ class BrancheResource extends Resource
     public static function getRelations(): array
     {
         return [
-            CategorieRelationManager::class
+            CategorieRelationManager::class,
         ];
     }
 
@@ -127,8 +121,8 @@ class BrancheResource extends Resource
     {
         return [
             'index' => Pages\ListBranches::route('/'),
-            // 'create' => Pages\CreateBranche::route('/create'),
-            'edit' => Pages\EditBranche::route('/{record}/edit'),
+             'create' => Pages\CreateBranche::route('/create'),
+            'edit'  => Pages\EditBranche::route('/{record}/edit'),
         ];
     }
 }

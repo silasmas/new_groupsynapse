@@ -49,7 +49,7 @@ class CategorieResource extends Resource
                     Section::make('Formulaire')->schema([
                         Select::make('branche_id')
                             ->label(label: 'Catégorie')
-                            ->relationship('branches', 'name')
+                            ->relationship('branche', 'name')
                             ->searchable()
                             ->preload()
                             ->columnSpan(4)
@@ -58,7 +58,7 @@ class CategorieResource extends Resource
                             ->live(onBlur: true)
                             ->columnSpan(4)
                             ->afterStateUpdated(fn(string $operation, $state, Set $set) =>
-                            $operation === 'create' ? $set('slug', Str::slug($state)) : null)
+                            $set('slug', Str::slug($state)))
                             ->maxLength(255),
                         TextInput::make('slug')
                             ->required()
@@ -77,6 +77,8 @@ class CategorieResource extends Resource
                         Toggle::make('isActive')
                             ->columnSpan(4)
                             ->label('Est active')
+                            ->onColor('success')
+                            ->offColor('danger')
                             ->required()
                             ->default(0),
                     ])
@@ -90,7 +92,7 @@ class CategorieResource extends Resource
             ->columns([
                 ImageColumn::make('vignette')
                     ->searchable(),
-                TextColumn::make('branches.name')
+                TextColumn::make('branche.name')
                     ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
@@ -136,8 +138,8 @@ class CategorieResource extends Resource
     {
         return [
             'index' => Pages\ListCategories::route('/'),
-            // 'create' => Pages\CreateCategorie::route('/create'),
-            // 'edit' => Pages\EditCategorie::route('/{record}/edit'),
+            'create' => Pages\CreateCategorie::route('/create'),
+            'edit' => Pages\EditCategorie::route('/{record}/edit'),
         ];
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\CartService;
 use App\Services\PanierService;
 use App\Models\commande_produit;
+use App\Models\User;
 use App\Services\FlexPayService;
 use App\Services\FavoriteService;
 use Illuminate\Contracts\View\View;
@@ -216,8 +217,12 @@ class CartController extends Controller
         // Mettre à jour le statut en fonction de la réponse de FlexPay
         switch ($status) {
             case 'success':
+                $cli=User::find($order->user_id);
+                $message =$cli->name . " votre commande de reference " . $order->reference . " à été soldée !";
+
                 $order->etat = 'Payée'; // Paiement réussi
                 $msg = 'Paiement réussi !';
+                sendSms($phoneNumber, $message);
                 $rep = $this->clearCartAfterPayment($order->user_id);
                 break;
 
@@ -258,6 +263,7 @@ class CartController extends Controller
 
         return response()->json(["reponse" => true, 'message' => 'Le panier a été vidé après le paiement']);
     }
+
 
     public function commandeStatus()
     {

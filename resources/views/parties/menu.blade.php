@@ -240,12 +240,12 @@
                                 <li class="has-dropdown">
                                     <a href="#">
                                         <div class="cat-menu-img">
-                                            <img src="{{ $b->vignette }}" width="38" height="38"
+                                            <img src="{{ asset('storage/'.$b->vignette ) }}" width="38" height="38"
                                                 alt="">
                                         </div> {{ $b->name }}
                                     </a>
                                     <ul class="mega-menu">
-                                        @forelse ($b->category->take(3) as $cat)
+                                        @forelse ($b->categorie->take(3) as $cat)
                                             <li>
                                                 <ul>
                                                     <li class="dropdown-title">{{ $cat->name }}

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Branche extends Model
 {
@@ -11,10 +12,10 @@ class Branche extends Model
 
 	protected $fillable = ['name', 'slug', 'description', 'isActive', 'vignette'];
 
-	public function category()
+	public function categorie()
 	{
 
-		return $this->hasMany(\App\Models\Category::class);
+		return $this->hasMany(Category::class);
 
 	}
 

@@ -1,39 +1,28 @@
 <?php
-
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\ProduitResource\Pages;
 use App\Models\Produit;
-use Filament\Forms\Set;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
-use Filament\Resources\Resource;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Form;
+use Filament\Forms\Set;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Forms\Components\FileUpload;
-use Filament\Tables\Actions\DeleteAction;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Tables\Actions\DeleteBulkAction;
-use App\Filament\Resources\ProduitResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\ProduitResource\RelationManagers;
-use App\Filament\Resources\ProduitResource\Pages\EditProduit;
-use App\Filament\Resources\ProduitResource\Pages\ListProduits;
-use App\Filament\Resources\ProduitResource\Pages\CreateProduit;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class ProduitResource extends Resource
 {
@@ -51,7 +40,7 @@ class ProduitResource extends Resource
                             ->live(onBlur: true)
                             ->columnSpan(6)
                             ->afterStateUpdated(fn(string $operation, $state, Set $set) =>
-                            $operation === 'create' ? $set('slug', Str::slug($state)) : null)
+                                $set('slug', Str::slug($state)))
                             ->maxLength(255),
                         TextInput::make('slug')
                             ->required()
@@ -61,35 +50,42 @@ class ProduitResource extends Resource
                             ->columnSpan(6)
                             ->maxLength(255),
                         MarkdownEditor::make('description')
+                            ->label("Description")
                             ->columnSpan(12)
+                            ->maxLength(255),
+                        MarkdownEditor::make('moreDescription')
+                            ->label("Plus d'information")
+                            ->columnSpan(6)
+                            ->maxLength(255),
+                        MarkdownEditor::make('additionalInfos')
+                            ->label("Informations supplémentaires")
+                            ->columnSpan(6)
                             ->maxLength(255),
                         TextInput::make('prix')
                             ->columnSpan(6)
                             ->required()
                             ->numeric(),
-                        // TextInput::make('monaie')
-                        //     ->maxLength(255),
-                        Select::make('monaie')
+                        Select::make('currency')
                             ->options([
-                                'FC' => 'Franc congolais',
-                                'USD' => 'Dollard',
+                                'CDF'  => 'Franc congolais',
+                                'USD'  => 'Dollard',
                                 'EURO' => 'Euro',
                             ])
-                            ->columnSpan(6)
-                            ->default('FC')
+                            ->label("Monaie")
+                            ->columnSpan(span: 6)
+                            ->default('CDF')
                             ->required(),
-                        Select::make('categorie_id')
+                        Select::make('categories')           // Plutôt que 'categorie_id'
+                            ->relationship('categories', 'name') // Correspond à la relation définie dans le modèle
                             ->columnSpan(6)
                             ->required()
                             ->searchable()
                             ->preload()
-                            ->multiple()
-
-                            ->relationship('categorie', 'nom'),
-                        TextInput::make('qte')
+                            ->multiple(),
+                        TextInput::make('stock')
                             ->columnSpan(6)
                             ->maxLength(255),
-                        FileUpload::make('images')
+                        FileUpload::make('imageUrls')
                             ->label('Photo des image (Vous pouveez de selectioner plusieurs) :')
                             ->directory('produits')
                             ->imageEditor()
@@ -101,24 +97,36 @@ class ProduitResource extends Resource
                             ->maxSize(3024)
                             ->previewable(true)
                             ->columnSpan(12),
-                        Toggle::make('is_active')
+                        Toggle::make('isAvalable')
                             ->columnSpan(3)
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->label("Disponible")
                             ->default(true)
                             ->required(),
-                        Toggle::make('is_featured')
+                        Toggle::make('isFeatured')
                             ->columnSpan(3)
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->label("En vedette")
                             ->default(true)
                             ->required(),
-                        Toggle::make('in_stock')
+                        Toggle::make('isBestseler')
                             ->columnSpan(3)
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->label("Meilleure Vente")
                             ->default(true)
                             ->required(),
-                        Toggle::make('on_sale')
-                            ->default(false)
+                        Toggle::make('isNewArivale')
                             ->columnSpan(3)
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->label("Nouvelle Arrivée")
+                            ->default(true)
                             ->required(),
-                    ])
-                ])->columnSpanFull()
+                    ])->columnS(12),
+                ])->columnSpanFull(),
             ]);
     }
 
@@ -126,15 +134,18 @@ class ProduitResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('imageUlrs')
-                    ->searchable(),
+                ImageColumn::make('imageUrls') // Correspond à la méthode getImageUrlsAttribute()
+                    ->label("Images")
+                    ->getStateUsing(fn ($record) => $record->imageUrls)->stacked() // Affiche plusieurs images sous forme de pile
+                    ->size(50), // Ajuste la taille des images
+
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('slug')
+                TextColumn::make('categories.name')
+                    ->label('Catégories')
+                    ->badge() // Affiche les catégories sous forme de badge
+                    ->sortable()
                     ->searchable(),
-                // TextColumn::make('description')
-                //     ->limit(40)
-                //     ->searchable(),
                 TextColumn::make('prix')
                     ->label('Prix')
                     ->numeric()
@@ -142,23 +153,20 @@ class ProduitResource extends Resource
                 TextColumn::make('currency')
                     ->label('Monaie')
                     ->searchable(),
-                TextColumn::make('qte')
+                TextColumn::make('stock')
                     ->label('Quantité')
                     ->searchable(),
-                IconColumn::make('is_featured')
+                IconColumn::make('isFeatured')
                     ->label('Favoris')
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
-                IconColumn::make('in_stock')
+                IconColumn::make('isAvalable')
                     ->label('Disponible')
-                    ->toggleable(isToggledHiddenByDefault: true)
                     ->boolean(),
-                IconColumn::make('on_sale')
-                    ->label('En vente')
-                    ->toggleable(isToggledHiddenByDefault: true)
+                IconColumn::make('isBestseler')
+                    ->label('Meilleur vente')
                     ->boolean(),
-                IconColumn::make('is_active')
-                    ->label('Activé')
+                IconColumn::make('isNewArivale')
+                    ->label('Nouvelle arrivage')
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -177,7 +185,7 @@ class ProduitResource extends Resource
                     ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),
-                ])
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -197,15 +205,15 @@ class ProduitResource extends Resource
     {
         return static::getModel()::count();
     }
-    public static function getNavigationBadgeColor(): string|array|null
+    public static function getNavigationBadgeColor(): string | array | null
     {
         return static::getModel()::count() > 10 ? "danger" : "success";
-    }    public static function getPages(): array
+    }public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProduits::route('/'),
+            'index'  => Pages\ListProduits::route('/'),
             'create' => Pages\CreateProduit::route('/create'),
-            'edit' => Pages\EditProduit::route('/{record}/edit'),
+            'edit'   => Pages\EditProduit::route('/{record}/edit'),
         ];
     }
 }

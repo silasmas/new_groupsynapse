@@ -89,7 +89,7 @@ class FavoriteService
                     'prix' => $product->prix,
                     'slug' => $product->slug,
                     'soldePrice' => $product->soldePrice,
-                    'imageUrls' => $product->imageUrls(),
+                    'imageUrls' => $product->getImageUrlsAttribute(),
                 ];
             }
         }

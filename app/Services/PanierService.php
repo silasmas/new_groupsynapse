@@ -105,31 +105,82 @@ class PanierService
      * @param int $quantite
      * @return array
      */
-    public function mettreAJourQuantite(int $produitId, int $quantite,string $type = 'plus')
-    {
-        if($quantite < 0) return ['message' => 'La quantité minimum est 1', 'reponse' => false, 'data' => null];
+    // public function mettreAJourQuantite(int $produitId, int $quantite,string $type = 'plus')
+    // {
+    //     if($quantite < 0) return ['message' => 'La quantité minimum est 1', 'reponse' => false, 'data' => null];
 
-        $userId = Auth::id();
-        $panier = Panier::where('user_id', $userId)->where('produit_id', $produitId)->first();
-        if ($panier) {
-            $totalPrix = $panier->sum('prixTotal');
-            $totalQuantite = $panier->sum('quantite');
-            $type=="plus"?$panier->quantite += $quantite:$panier->quantite -= $quantite;
+    //     $userId = Auth::id();
+    //     $panier = Panier::where('user_id', $userId)->where('produit_id', $produitId)->first();
+    //     if ($panier) {
+    //         $totalPrix = $panier->sum('prixTotal');
+    //         $totalQuantite = $panier->sum('quantite');
+    //         $type=="plus"?$panier->quantite += $quantite:$panier->quantite -= $quantite;
 
-            $panier->prixTotal = $totalQuantite * $panier->prixUnitaire;
-            $panier->save();
-            $panier->load('produit');
+    //         $panier->prixTotal = $totalQuantite * $panier->prixUnitaire;
+    //         $panier->save();
+    //         $panier->load('produit');
 
-              // Recalculer le grand total après mise à jour
-              $grandTotal = Panier::where('user_id', $userId)->sum('prixTotal');
-            // dd($grandTotal);
-              return ['message' => 'Quantité mise à jour', 'reponse' => true, 'data' => $panier, 'grandTotal' => $grandTotal,'total' => $totalPrix,
-            'quantite' => $totalQuantite];
+    //           // Recalculer le grand total après mise à jour
+    //           $grandTotal = Panier::where('user_id', $userId)->sum('prixTotal');
+    //         // dd($grandTotal);
+    //           return ['message' => 'Quantité mise à jour', 'reponse' => true, 'data' => $panier, 'grandTotal' => $grandTotal,'total' => $totalPrix,
+    //         'quantite' => $totalQuantite];
 
+    //     }
+
+    //     return ['message' => 'Produit non trouvé dans le panier', 'reponse' => false, 'data' => null];
+    // }
+    public function mettreAJourQuantite(int $produitId, int $quantite, string $type = 'plus')
+{
+    if ($quantite <= 0) {
+        return [
+            'message' => 'La quantité minimum est 1',
+            'reponse' => false,
+            'data' => null
+        ];
+    }
+
+    $userId = Auth::id();
+    $panier = Panier::where('user_id', $userId)
+                    ->where('produit_id', $produitId)
+                    ->first();
+
+    if ($panier) {
+        // Mettre à jour la quantité en fonction du type ('plus' ou 'moins')
+        if ($type === "plus") {
+            $panier->quantite += $quantite;
+        } else {
+            $panier->quantite -= $quantite;
+
+            // Assurer que la quantité ne tombe pas en dessous de 1
+            if ($panier->quantite < 1) {
+                $panier->quantite = 1;
+            }
         }
 
-        return ['message' => 'Produit non trouvé dans le panier', 'reponse' => false, 'data' => null];
+        // Recalculer le prix total pour cet article
+        $panier->prixTotal = $panier->quantite * $panier->prixUnitaire;
+        $panier->save();
+        $panier->load('produit');
+
+        // Recalculer le total général du panier
+        $grandTotal = Panier::where('user_id', $userId)->sum('prixTotal');
+
+        return [
+            'message' => 'Quantité mise à jour',
+            'reponse' => true,
+            'data' => $panier,
+            'grandTotal' => $grandTotal
+        ];
     }
+
+    return [
+        'message' => 'Produit non trouvé dans le panier',
+        'reponse' => false,
+        'data' => null
+    ];
+}
+
 
     /**
      * Vider le panier de l'utilisateur connecté.

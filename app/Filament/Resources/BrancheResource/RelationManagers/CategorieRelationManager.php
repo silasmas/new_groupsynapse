@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BrancheResource\RelationManagers;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Set;
+use App\Models\Category;
 use Filament\Forms\Form;
 use App\Models\categorie;
 use Filament\Tables\Table;
@@ -16,6 +17,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -32,7 +34,7 @@ class CategorieRelationManager extends RelationManager
                 Section::make('Formulaire')->schema([
                     Select::make('branche_id')
                         ->label(label: 'Catégorie')
-                        ->relationship('branche', 'nom')
+                        ->relationship('branche', 'name')
                         ->searchable()
                         ->preload()
                         ->columnSpan(4)
@@ -47,7 +49,7 @@ class CategorieRelationManager extends RelationManager
                         ->required()
                         ->disabled()
                         ->dehydrated()
-                        ->unique(categorie::class, 'slug', ignoreRecord: true)
+                        ->unique(Category::class, 'slug', ignoreRecord: true)
                         ->columnSpan(4)
                         ->maxLength(255),
                     Textarea::make('description')
@@ -71,21 +73,31 @@ class CategorieRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('nom')
             ->columns([
-                TextColumn::make('nom'),
+                ImageColumn::make('vignette')
+                    ->searchable(),
+                TextColumn::make('name'),
                 TextColumn::make('description')
                 ->limit(50)
-                ->label('Est active'),
+                ->label('Description'),
                 IconColumn::make('is_active')
+                ->label('Est active')
+
                     ->boolean(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->form([]) // Désactive le formulaire du modal
+                ->url(fn () => route('filament.admin.resources.categories.create')) // Redirige vers la création des branches
+                ->openUrlInNewTab(false),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->form([]) // Désactive le formulaire du modal
+                ->url(fn ($record) => route('filament.admin.resources.categories.edit', $record->id)) // Redirige vers l'édition des branches
+                ->openUrlInNewTab(false),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

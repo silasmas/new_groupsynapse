@@ -1,12 +1,13 @@
 @php
     $currentProduit = $produitSingle ?? $p ?? null;
+    // dd($currentProduit->imageUrls)
 @endphp
     <div class="col-xl-4 col-lg-6 col-md-4 col-sm-6" id="product-{{  $currentProduit->id }}">
         <div class="exclusive-item exclusive-item-three text-center mb-50">
             <div class="exclusive-item-thumb">
                 <a href="{{ route('showProduct', ['slug' => $currentProduit->slug]) }}">
-                    <img src="{{ asset($currentProduit->imageUrls()[3]) }}" alt="">
-                    <img class="overlay-product-thumb" src="{{ asset($currentProduit->imageUrls()[4]) }}" alt="">
+                    <img src="{{ asset($currentProduit->imageUrls[0]) }}" alt="">
+                    <img class="overlay-product-thumb" src="{{ asset($currentProduit->imageUrls[1]) }}" alt="">
                 </a>
                 <ul class="action">
                     <li>

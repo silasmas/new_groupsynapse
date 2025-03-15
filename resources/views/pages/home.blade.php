@@ -112,14 +112,15 @@
                 <div class="row exclusive-active">
                     @foreach ($groupedProducts as $groupe => $products)
                         @foreach ($products->take(6) as $produit)
+                        {{-- @dd($produit->getImageUrlsAttribute()); --}}
                             <div
                                 class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer {{ Str::replaceFirst(' ', '-', $groupe) }}">
                                 <div class="mb-40 exclusive-item exclusive-item-two">
                                     <div class="exclusive-item-thumb">
                                         <a href="{{ route('showProduct', ['slug' => $produit->slug]) }}">
-                                            <img src="{{ asset($produit->imageUrls()[0]) }}" alt="" width="278"
+                                            <img src="{{ asset($produit->getImageUrlsAttribute()[0]) }}" alt="" width="278"
                                                 height="290">
-                                            <img class="overlay-product-thumb" src="{{ asset($produit->imageUrls()[1]) }}"
+                                            <img class="overlay-product-thumb" src="{{ asset($produit->getImageUrlsAttribute()[1]) }}"
                                                 alt="" width="278" height="290">
 
                                         </a>
@@ -163,8 +164,9 @@
                 <div class="row">
                     <div class="custom-col-4">
                         <div class="deal-of-day-banner mb-30">
-                            <a href="shop-left-sidebar.html"><img src="assets/img/product/deal_banner.jpg"
-                                    alt=""></a>
+                            <a href="shop-left-sidebar.html">
+                                <img src="{{ asset('assets/img/product/promo.jpg') }}" alt="">
+                                </a>
                         </div>
                     </div>
                     <div class="custom-col-8">
@@ -181,7 +183,7 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="assets/img/product/most_popular_01.jpg"
+                                            <a href="shop-details.html"><img src="{{ asset('assets/img/product/promo1.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">
@@ -209,7 +211,8 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="assets/img/product/most_popular_02.jpg"
+                                            <a href="shop-details.html">
+                                                <img src="{{ asset('assets/img/product/promo1.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">
@@ -237,7 +240,8 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="assets/img/product/most_popular_03.jpg"
+                                            <a href="shop-details.html">
+                                                <img src="{{ asset('assets/img/product/promo2.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">
@@ -265,7 +269,7 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="assets/img/product/most_popular_01.jpg"
+                                            <a href="shop-details.html"><img src="{{ asset('assets/img/product/promo3.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">
@@ -293,7 +297,7 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="assets/img/product/most_popular_02.jpg"
+                                            <a href="shop-details.html"><img src="{{ asset('assets/img/product/promo2.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">

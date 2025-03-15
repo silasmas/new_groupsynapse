@@ -40,7 +40,7 @@
                                                     href="{{ route('showProduct', ['slug' => $item->produit->slug]) }}">{{ $item->produit->name }}</a>
                                             </h4>
                                             <p>{{ Str::limit($item->produit->desc, 50, '...') }}</p>
-                                            <span>65% poly, 35% rayon</span>
+                                            {{-- <span>65% poly, 35% rayon</span> --}}
                                         </td>
                                         <td class="product-price">
                                             {{ formatPrix($item->produit->prix,$item->produit->currency) }}
@@ -179,7 +179,7 @@
     <!-- core-features-end -->
 
     <!-- limited-offer-area -->
-    <section class="limited-offer-area" data-background="assets/img/bg/limited_offer_bg.jpg">
+    {{-- <section class="limited-offer-area" data-background="{{ asset('assets/img/bg/limited_offer_bg.jpg') }}">
         <div class="container">
             <div class="row align-items-center justify-content-between">
                 <div class="col-xl-5 col-lg-6 col-md-7">
@@ -206,8 +206,8 @@
             </div>
         </div>
         <h2 class="limited-overlay-title">Vanam Top Sale 35<span>%</span></h2>
-        <div class="limited-overlay-img"><img src="img/images/limited_offer_img.png" alt=""></div>
-    </section>
+        <div class="limited-overlay-img"><img src="{{ asset('asstes/img/images/limited_offer_img.png') }}" alt=""></div>
+    </section> --}}
 @endsection
 @section('script')
     <script>
@@ -253,6 +253,7 @@
         });
         $(document).on("click", ".add-to-cart-btn", function(e) {
             e.preventDefault();
+
             let type = $(this).data("type");
             let qty = $(this).data("qty");
             if (type == "moins" && qty - 1 < 1) {
@@ -262,13 +263,14 @@
                 });
                 return;
             }
-            handleCartUpdate($(this));
+             handleCartUpdate($(this));
 
 
         });
 
         function handleCartUpdate(button) {
             let actionUrl = button.attr("href");
+            console.log(" valeur :" + actionUrl )
             $.ajax({
                 url: actionUrl,
                 method: "GET",
@@ -298,6 +300,7 @@
 
         function updateCartRow(button, response) {
             let productId = button.closest("tr").attr("id").split("-")[2];
+
             let row = $('#fav-row-' + productId);
             let grt = $('#grantTotale');
             let grt1 = $('#grantTotale1');
@@ -308,6 +311,7 @@
             let subtotalCell = row.find(".product-subtotal span");
             console.log(" valeur update :" + response.qty)
             quantityInput.val(response.qty);
+            console.log(" valeur subtotal :" + response.total.toFixed(2))
             subtotalCell.text(response.total.toFixed(2) + " $");
             updateCartTotal(response);
         }
