@@ -8,7 +8,7 @@
         <div class="row align-items-xl-center">
             <div class="col-lg-6">
                 <div class="about-img">
-                    <img src="{{ asset('assets/img/images/about_img.jpg') }}" alt="">
+                    <img src="{{ asset('assets/img/images/585x44.jpg') }}" alt="">
                 </div>
             </div>
             <div class="col-lg-6">

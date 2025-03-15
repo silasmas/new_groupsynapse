@@ -64,19 +64,19 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="top-cat-banner-item mt-30">
                             <a href="shop-left-sidebar.html"><img
-                                    src="{{ asset('assets/img/images/top_cat_banner01.jpg') }}" alt=""></a>
+                                    src="{{ asset('assets/img/images/446x240-1.jpg') }}" alt=""></a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="top-cat-banner-item mt-30">
                             <a href="shop-left-sidebar.html"><img
-                                    src="{{ asset('assets/img/images/top_cat_banner02.jpg') }}" alt=""></a>
+                                    src="{{ asset('assets/img/images/446x240-2.jpg') }}" alt=""></a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="top-cat-banner-item mt-30">
                             <a href="shop-left-sidebar.html"><img
-                                    src="{{ asset('assets/img/images/top_cat_banner03.jpg') }}" alt=""></a>
+                                    src="{{ asset('assets/img/images/446x240.jpg') }}" alt=""></a>
                         </div>
                     </div>
                 </div>

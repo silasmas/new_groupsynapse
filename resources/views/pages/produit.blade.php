@@ -117,11 +117,11 @@
                             <div class="tab-pane fade show active" id="details" role="tabpanel"
                                 aria-labelledby="details-tab">
                                 <div class="product-desc-content">
-                                    <h4 class="title">Product Details</h4>
+                                    <h4 class="title">Details d produit</h4>
                                     <div class="row">
                                         <div class="col-xl-3 col-md-4">
                                             <div class="product-desc-img">
-                                                <img src="img/product/desc_img.jpg" alt="">
+                                                <img src="{{ asset('assets/img/product/585x444-.jpg') }}" alt="">
                                             </div>
                                         </div>
                                         <div class="col-xl-9 col-md-8">
