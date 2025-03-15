@@ -96,6 +96,7 @@ class ProduitResource extends Resource
                             ->multiple()
                             ->maxSize(3024)
                             ->previewable(true)
+                            ->default(fn ($record) => $record ? $record->imageUrls : []) // Charge les images existantes
                             ->columnSpan(12),
                         Toggle::make('isAvalable')
                             ->columnSpan(3)

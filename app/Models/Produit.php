@@ -12,7 +12,7 @@ class Produit extends Model
     use HasFactory;
     protected $casts = [
         'prix' => 'double',
-        // 'imageUrl' => 'array',
+         'imageUrls' => 'array',
     ];
 
     public function getFirstImageAttribute()
@@ -44,27 +44,54 @@ class Produit extends Model
 
     //     return json_decode($this->imageUrls);
     // }
+    // public function getImageUrlsAttribute()
+    // {
+    //     if (!isset($this->attributes['imageUrls']) || empty($this->attributes['imageUrls'])) {
+    //         return [];
+    //     }
+
+    //     // Décoder le JSON en tableau PHP
+    //     $images = json_decode($this->attributes['imageUrls'], true);
+
+    //     // Vérifier que c'est bien un tableau
+    //     if (!is_array($images)) {
+    //         return [];
+    //     }
+
+    //     return array_map(function ($path) {
+    //         // Vérifier si l'image est stockée dans "assets/" ou dans "produits/"
+    //         return str_starts_with($path, 'assets/')
+    //             ? asset($path) // Image stockée dans public/assets/
+    //             : asset("storage/{$path}"); // Image stockée dans storage/app/public/produits/
+    //     }, $images);
+    // }
     public function getImageUrlsAttribute()
-    {
-        if (!isset($this->attributes['imageUrls']) || empty($this->attributes['imageUrls'])) {
-            return [];
-        }
-
-        // Décoder le JSON en tableau PHP
-        $images = json_decode($this->attributes['imageUrls'], true);
-
-        // Vérifier que c'est bien un tableau
-        if (!is_array($images)) {
-            return [];
-        }
-
-        return array_map(function ($path) {
-            // Vérifier si l'image est stockée dans "assets/" ou dans "produits/"
-            return str_starts_with($path, 'assets/')
-                ? asset($path) // Image stockée dans public/assets/
-                : asset("storage/{$path}"); // Image stockée dans storage/app/public/produits/
-        }, $images);
+{
+    if (!isset($this->attributes['imageUrls']) || empty($this->attributes['imageUrls'])) {
+        return [];
     }
+
+    // Décoder le JSON en tableau PHP
+    $images = json_decode($this->attributes['imageUrls'], true);
+
+    // Vérifier que c'est bien un tableau
+    if (!is_array($images)) {
+        return [];
+    }
+
+    // Si on est dans Filament (édition), on retourne directement les chemins bruts
+    if (request()->is('admin/*')) {
+        return $images; // Ne pas transformer en URLs pour éviter les problèmes avec FileUpload
+    }
+
+    // Si c'est pour affichage sur le site, transformer en URLs complètes
+    return array_map(function ($path) {
+        return str_starts_with($path, 'assets/')
+            ? asset($path)
+            : asset("storage/{$path}");
+    }, $images);
+}
+
 
 
 
