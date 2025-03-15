@@ -63,7 +63,8 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-4 col-md-6">
                         <div class="top-cat-banner-item mt-30">
-                            <a href="shop-left-sidebar.html"><img
+                            <a href="shop-left-sidebar.html">
+                                <img
                                     src="{{ asset('assets/img/images/446x240-1.jpg') }}" alt=""></a>
                         </div>
                     </div>

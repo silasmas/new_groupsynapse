@@ -244,7 +244,7 @@
                                                 alt="">
                                         </div> {{ $b->name }}
                                     </a>
-                                    @if(!$b->categorie->isNotEmpty())
+                                    @if($b->categorie->isNotEmpty())
                                     <ul class="mega-menu">
                                         @forelse ($b->categorie->take(3) as $cat)
                                             <li>
@@ -262,7 +262,6 @@
                                         @endforelse
 
                                     </ul>
-
                                     @endif
                                 </li>
                             @empty
