@@ -78,6 +78,30 @@
                                         data-delay="1s">Voir nos produits</a>
                                 </div>
                             </div>
+                            <div class="single-slider slider-bg" data-background="{{ asset('assets/img/slider/rep.jpg') }}">
+                                <div class="slider-content">
+                                    <h5 data-animation="fadeInUp" data-delay=".3s">Réparation Express</h5>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">Donnez une seconde vie à votre smartphone !</h2>
+                                    <p data-animation="fadeInUp" data-delay=".9s">
+                                        Écran cassé, batterie faible ou problème de performance ?
+                                        Nos experts réparent votre téléphone rapidement avec des pièces de qualité, pour une utilisation optimale.
+                                    </p>
+                                    <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                        data-delay="1s">Voir nos services</a>
+                                </div>
+                            </div>
+                            <div class="single-slider slider-bg" data-background="{{ asset('assets/img/slider/telp.jpg') }}">
+                                <div class="slider-content">
+                                    <h5 data-animation="fadeInUp" data-delay=".3s">Smartphones & Accessoires</h5>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">Les meilleures marques, aux meilleurs prix !</h2>
+                                    <p data-animation="fadeInUp" data-delay=".9s">
+                                        Découvrez notre sélection de smartphones dernier cri et d’accessoires indispensables.
+                                        Qualité, performance et prix imbattables pour une expérience mobile sans compromis.
+                                    </p>
+                                    <a href="shop.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                        data-delay="1s">Voir nos produits</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
