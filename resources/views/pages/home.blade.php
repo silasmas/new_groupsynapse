@@ -12,7 +12,7 @@
                     <div class="col-xl-10">
                         <div class="slider-active">
                             <div class="single-slider slider-bg"
-                                data-background="{{ asset('assets/img/slider/s_slider_bg01.jpg') }} ">
+                                data-background="{{ asset('assets/img/slider/slide1.jpg') }} ">
                                 <div class="slider-content">
                                     <h5 data-animation="fadeInUp" data-delay=".3s">Bienvenue chez Groupe Synapse </h5>
                                     <h2 data-animation="fadeInUp" data-delay=".6s">La solution à votre portée !!!</h2>
@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <div class="single-slider slider-bg"
-                            data-background="{{ asset('assets/img/slider/s_slider_bg02.jpg') }}">
+                            data-background="{{ asset('assets/img/slider/slide2.jpg') }}">
                             <div class="slider-content">
                                 <h5 data-animation="fadeInUp" data-delay=".3s">Nos services</h5>
                                 <h2 data-animation="fadeInUp" data-delay=".6s">Solutions digitales</h2>
@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="single-slider slider-bg"
-                        data-background="{{ asset('assets/img/slider/s_slider_bg02.jpg') }}">
+                        data-background="{{ asset('assets/img/slider/slide3.jpg') }}">
                         <div class="slider-content">
                             <h5 data-animation="fadeInUp" data-delay=".3s">Innovation digitale</h5>
                             <h2 data-animation="fadeInUp" data-delay=".6s">L'essentiel pour une expérience digitale !</h2>
