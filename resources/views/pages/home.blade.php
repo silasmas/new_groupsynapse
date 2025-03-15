@@ -11,45 +11,73 @@
                 <div class="row justify-content-end">
                     <div class="col-xl-10">
                         <div class="slider-active">
+                            <div class="single-slider slider-bg" data-background="{{ asset('assets/img/slider/4.jpg') }}">
+                                <div class="slider-content">
+                                    <h5 data-animation="fadeInUp" data-delay=".3s">Agent Bancaire</h5>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">Des services bancaires à la pointe !</h2>
+                                    <p data-animation="fadeInUp" data-delay=".9s">
+                                        Profitez de solutions bancaires modernes avec nos cartes VISA, en partenariat avec
+                                        ECOBANK.
+                                        Sécurisées, accessibles et adaptées à vos besoins, elles simplifient vos
+                                        transactions au quotidien.
+                                    </p>
+                                    <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                        data-delay="1s">Découvrir nos services</a>
+                                </div>
+                            </div>
                             <div class="single-slider slider-bg"
                                 data-background="{{ asset('assets/img/slider/slide1.jpg') }} ">
                                 <div class="slider-content">
                                     <h5 data-animation="fadeInUp" data-delay=".3s">Bienvenue chez Groupe Synapse </h5>
-                                    <h2 data-animation="fadeInUp" data-delay=".6s">La solution à votre portée !!!</h2>
-                                    {{-- <p data-animation="fadeInUp" data-delay=".9s">
-                                        Get up to <span>50%</span> off Today Only
-                                    </p> --}}
+                                    <h2 data-animation="fadeInUp" data-delay=".6s" class="mt-10">La solution à votre portée
+                                        !!!</h2>
                                     <a href="{{ route('shop') }}" class="btn yellow-btn" data-animation="fadeInUp"
                                         data-delay="1s">Voir nos produits</a>
                                 </div>
                             </div>
                             <div class="single-slider slider-bg"
-                            data-background="{{ asset('assets/img/slider/slide2.jpg') }}">
-                            <div class="slider-content">
-                                <h5 data-animation="fadeInUp" data-delay=".3s">Nos services</h5>
-                                <h2 data-animation="fadeInUp" data-delay=".6s">Solutions digitales</h2>
-                                <p data-animation="fadeInUp" data-delay=".9s">
-                                    Entreprise spécialisée dans le digital et les services aux clients, opérant dans divers secteurs pour offrir des solutions innovantes et adaptées aux besoins du marché.
-                                </p>
-                                <a href="shop-left-sidebar.html" class="btn yellow-btn" data-animation="fadeInUp"
-                                    data-delay="1s">En savoir plus</a>
+                                data-background="{{ asset('assets/img/slider/slide2.jpg') }}">
+                                <div class="slider-content">
+                                    <h5 data-animation="fadeInUp" data-delay=".3s">Nos services</h5>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">Solutions digitales</h2>
+                                    <p data-animation="fadeInUp" data-delay=".9s">
+                                        Entreprise spécialisée dans le digital et les services aux clients,
+                                        opérant dans divers secteurs pour offrir des solutions innovantes et
+                                        adaptées aux besoins du marché.
+                                    </p>
+                                    <a href="shop-left-sidebar.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                        data-delay="1s">En savoir plus</a>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="single-slider slider-bg"
-                        data-background="{{ asset('assets/img/slider/slide3.jpg') }}">
-                        <div class="slider-content">
-                            <h5 data-animation="fadeInUp" data-delay=".3s">Innovation digitale</h5>
-                            <h2 data-animation="fadeInUp" data-delay=".6s">L'essentiel pour une expérience digitale !</h2>
-                            <p data-animation="fadeInUp" data-delay=".9s">
-                                <br>
-                                Nous aidons votre entreprise à devenir agile, proactive et innovante grâce à la conception d'expériences numériques et à des services digitaux gérés dans le Cloud.
-                            </p>
-                            <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"
-                                data-delay="1s">Découvrir nos services</a>
-                        </div>
-                    </div>
-
+                            <div class="single-slider slider-bg"
+                                data-background="{{ asset('assets/img/slider/slide3.jpg') }}">
+                                <div class="slider-content">
+                                    <h5 data-animation="fadeInUp" data-delay=".3s">Innovation digitale</h5>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">L’essentiel du digital !</h2>
+                                    <p data-animation="fadeInUp" data-delay=".9s">
+                                        Nous aidons votre entreprise à devenir agile,
+                                        proactive et innovante grâce à la conception d'expériences numériques
+                                        et à des services digitaux gérés dans le Cloud.
+                                    </p>
+                                    <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                        data-delay="1s">Découvrir nos services</a>
+                                </div>
+                            </div>
+                            <div class="single-slider slider-bg" data-background="{{ asset('assets/img/slider/5.jpg') }}">
+                                <div class="slider-content">
+                                    <h5 data-animation="fadeInUp" data-delay=".3s">Technologie & Innovation</h5>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">Le meilleur de l'informatique et de la
+                                        téléphonie !</h2>
+                                    <p data-animation="fadeInUp" data-delay=".9s">
+                                        Découvrez une large gamme d’ordinateurs, d’accessoires high-tech et de smartphones.
+                                        Des produits de qualité aux meilleurs prix pour booster votre productivité et votre
+                                        connectivité.
+                                    </p>
+                                    <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"
+                                        data-delay="1s">Voir nos produits</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -64,20 +92,19 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="top-cat-banner-item mt-30">
                             <a href="shop-left-sidebar.html">
-                                <img
-                                    src="{{ asset('assets/img/images/1.jpg') }}" alt=""></a>
+                                <img src="{{ asset('assets/img/images/1.jpg') }}" alt=""></a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="top-cat-banner-item mt-30">
-                            <a href="shop-left-sidebar.html"><img
-                                    src="{{ asset('assets/img/images/2.jpg') }}" alt=""></a>
+                            <a href="shop-left-sidebar.html"><img src="{{ asset('assets/img/images/2.jpg') }}"
+                                    alt=""></a>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="top-cat-banner-item mt-30">
-                            <a href="shop-left-sidebar.html"><img
-                                    src="{{ asset('assets/img/images/3.jpg') }}" alt=""></a>
+                            <a href="shop-left-sidebar.html"><img src="{{ asset('assets/img/images/3.jpg') }}"
+                                    alt=""></a>
                         </div>
                     </div>
                 </div>
@@ -113,16 +140,17 @@
                 <div class="row exclusive-active">
                     @foreach ($groupedProducts as $groupe => $products)
                         @foreach ($products->take(6) as $produit)
-                        {{-- @dd($produit->getImageUrlsAttribute()); --}}
+                            {{-- @dd($produit->getImageUrlsAttribute()); --}}
                             <div
                                 class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer {{ Str::replaceFirst(' ', '-', $groupe) }}">
                                 <div class="mb-40 exclusive-item exclusive-item-two">
                                     <div class="exclusive-item-thumb">
                                         <a href="{{ route('showProduct', ['slug' => $produit->slug]) }}">
-                                            <img src="{{ asset($produit->getImageUrlsAttribute()[0]) }}" alt="" width="278"
-                                                height="290">
-                                            <img class="overlay-product-thumb" src="{{ asset($produit->getImageUrlsAttribute()[1]) }}"
-                                                alt="" width="278" height="290">
+                                            <img src="{{ asset($produit->getImageUrlsAttribute()[0]) }}" alt=""
+                                                width="278" height="290">
+                                            <img class="overlay-product-thumb"
+                                                src="{{ asset($produit->getImageUrlsAttribute()[1]) }}" alt=""
+                                                width="278" height="290">
 
                                         </a>
                                         <span class="discount"{{ $produit->isSpecialOffer ? '' : ' hidden' }}>Solde</span>
@@ -138,15 +166,16 @@
                                                     href="{{ route('showProduct', ['slug' => $produit->slug]) }}">{{ $produit->categories->pluck('name')->join(', ') }}</a>
                                             </div>
                                             <del class="old-price">
-                                                {{ is_solde($produit->isSpecialOffer,$produit->prix ,$produit->soldePrice ,$produit->currency,"solde")}}
+                                                {{ is_solde($produit->isSpecialOffer, $produit->prix, $produit->soldePrice, $produit->currency, 'solde') }}
                                             </del>
                                         </div>
                                         <div class="exclusive--content--bottom">
                                             <h5>
-                                                <a href="{{ route('showProduct', ['slug' => $produit->slug]) }}">{{ $produit->name }}</a>
+                                                <a
+                                                    href="{{ route('showProduct', ['slug' => $produit->slug]) }}">{{ $produit->name }}</a>
                                             </h5>
                                             <span>
-                                                {{ is_solde($produit->isSpecialOffer,$produit->prix ,$produit->soldePrice ,$produit->currency,"normal")}}
+                                                {{ is_solde($produit->isSpecialOffer, $produit->prix, $produit->soldePrice, $produit->currency, 'normal') }}
                                             </span>
                                         </div>
                                     </div>
@@ -167,7 +196,7 @@
                         <div class="deal-of-day-banner mb-30">
                             <a href="shop-left-sidebar.html">
                                 <img src="{{ asset('assets/img/product/promo.jpg') }}" alt="">
-                                </a>
+                            </a>
                         </div>
                     </div>
                     <div class="custom-col-8">
@@ -184,7 +213,8 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="{{ asset('assets/img/product/promo1.jpg') }}"
+                                            <a href="shop-details.html"><img
+                                                    src="{{ asset('assets/img/product/promo1.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">
@@ -270,7 +300,8 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="{{ asset('assets/img/product/promo3.jpg') }}"
+                                            <a href="shop-details.html"><img
+                                                    src="{{ asset('assets/img/product/promo3.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">
@@ -298,7 +329,8 @@
                                 <div class="most-popular-viewed-item mb-30">
                                     <div class="viewed-item-top">
                                         <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img src="{{ asset('assets/img/product/promo2.jpg') }}"
+                                            <a href="shop-details.html"><img
+                                                    src="{{ asset('assets/img/product/promo2.jpg') }}"
                                                     alt=""></a>
                                         </div>
                                         <div class="super-deal-content">
