@@ -31,7 +31,7 @@ class ViewServiceProvider extends ServiceProvider
         // Synchroniser les favoris depuis la DB si l'utilisateur est connecté
         $favoriteService->syncFavoritesFromDatabase();
         View::composer('*', function ($view) use ($favoriteService) {
-            $branches = Branche::where('isActive', true)->get();
+            $branches = Branche::orderBy('position')->where('isActive', true)->get();
             $categories = Category::where('isActive', true)->get();
             $favoritesDetails="";
 

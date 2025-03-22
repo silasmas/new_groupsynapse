@@ -4,16 +4,16 @@ namespace App\Observers;
 
 use App\Models\User;
 use App\Models\Message;
-use App\Models\Requete;
+use App\Models\Commande;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageNotificationMail;
 
-class RequeteObserver
+class CommandeObserver
 {
     /**
      * Handle the Message "created" event.
      */
-    public function created(Requete $message): void
+    public function created(Commande $message): void
     {
         $this->notifyUsers($message, 'envoyée');
     }
@@ -21,7 +21,7 @@ class RequeteObserver
     /**
      * Handle the Message "updated" event.
      */
-    public function updated(Requete $message): void
+    public function updated(Commande $message): void
     {
         $this->notifyUsers($message, 'modifiée');
     }
@@ -29,7 +29,7 @@ class RequeteObserver
     /**
      * Handle the Message "deleted" event.
      */
-    public function deleted(Requete $message): void
+    public function deleted(Commande $message): void
     {
         $this->notifyUsers($message, 'supprimer');
     }
@@ -37,7 +37,7 @@ class RequeteObserver
     /**
      * Handle the Message "restored" event.
      */
-    public function restored(Requete $message): void
+    public function restored(Commande $message): void
     {
         //
     }
@@ -45,11 +45,11 @@ class RequeteObserver
     /**
      * Handle the Message "force deleted" event.
      */
-    public function forceDeleted(Requete $message): void
+    public function forceDeleted(Commande $message): void
     {
         //
     }
-    protected function notifyUsers(Requete $message, string $action): void
+    protected function notifyUsers(Commande $message, string $action): void
     {
         // Récupérer tous les utilisateurs notifiables
         $users = User::where('notifiable', 1)->get();

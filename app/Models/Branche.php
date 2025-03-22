@@ -10,7 +10,7 @@ class Branche extends Model
 {
     use HasFactory;
 
-	protected $fillable = ['name', 'slug', 'description', 'isActive', 'vignette'];
+	protected $fillable = ['name', 'slug', 'description', 'isActive', 'vignette','position'];
 
 	public function categorie()
 	{

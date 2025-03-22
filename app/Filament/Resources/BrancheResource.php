@@ -61,11 +61,18 @@ class BrancheResource extends Resource
                             ->columnSpan(12),
                         Toggle::make('isActive')
                             ->required()
-                            ->columnSpan(12)
+                            ->columnSpan(6)
                             ->label('Est active')
                             ->onColor('success')
                             ->offColor('danger')
                             ->default(true),
+                            TextInput::make('position')
+                            ->label("La position de la branche sur le menu")
+                            ->numeric()
+                            ->unique(branche::class, 'position', ignoreRecord: true)
+                            ->required()
+                            ->columnSpan(6)
+                            ->maxLength(255),
                     ])->columnS(12),
                 ])->columnSpanFull(),
             ]);
@@ -79,9 +86,11 @@ class BrancheResource extends Resource
                     ->searchable(),
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('description')
+                    TextColumn::make('description')
                     ->limit(50)
                     ->searchable(),
+                    TextColumn::make('position')
+                        ->searchable(),
                 IconColumn::make('isActive')
                     ->boolean(),
                 TextColumn::make('created_at')

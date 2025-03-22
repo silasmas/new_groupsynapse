@@ -15,6 +15,7 @@ return new class extends Migration
         	$table->id();
         	$table->string('name');
 			$table->string('slug');
+			$table->integer('position');
 			$table->text('description');
 			$table->boolean('isActive')->nullable();
 			$table->string('vignette');
