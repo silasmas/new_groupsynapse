@@ -48,7 +48,7 @@ class CategorieResource extends Resource
                 Group::make([
                     Section::make('Formulaire')->schema([
                         Select::make('branche_id')
-                            ->label(label: 'Catégorie')
+                            ->label(label: 'Branche')
                             ->relationship('branche', 'name')
                             ->searchable()
                             ->preload()
