@@ -252,7 +252,7 @@
                                                     <li class="dropdown-title">{{ $cat->name }}
                                                     </li>
                                                     @forelse ($cat->produits as $p)
-                                                        <li><a href="#">{{ $p->name }}</a></li>
+                                                        <li><a href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
                                                     @empty
                                                     @endforelse
                                                 </ul>

@@ -96,7 +96,7 @@ class Produit extends Model
 
 
 
-	protected $fillable = ['name', 'slug', 'description', 'moreDescription', 'additionalInfos', 'stock', 'prix', 'currency', 'soldePrice', 'imageUrls', 'brand', 'isAvalable', 'isBestseler', 'isNewArivale', 'isFeatured', 'isSpecialOffer', 'category'];
+	protected $fillable = ['isProduct','name', 'slug', 'description', 'moreDescription', 'additionalInfos', 'stock', 'prix', 'currency', 'soldePrice', 'imageUrls', 'brand', 'isAvalable', 'isBestseler', 'isNewArivale', 'isFeatured', 'isSpecialOffer', 'category'];
 
 	public function favories()
 	{

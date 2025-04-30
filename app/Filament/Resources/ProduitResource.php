@@ -21,6 +21,8 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
@@ -96,34 +98,41 @@ class ProduitResource extends Resource
                             ->multiple()
                             ->maxSize(3024)
                             ->previewable(true)
-                            ->default(fn ($record) => $record ? $record->imageUrls : []) // Charge les images existantes
+                            ->default(fn($record) => $record ? $record->imageUrls : []) // Charge les images existantes
                             ->columnSpan(12),
                         Toggle::make('isAvalable')
-                            ->columnSpan(3)
+                            ->columnSpan(4)
                             ->onColor('success')
                             ->offColor('danger')
                             ->label("Disponible")
                             ->default(true)
                             ->required(),
                         Toggle::make('isFeatured')
-                            ->columnSpan(3)
+                            ->columnSpan(4)
                             ->onColor('success')
                             ->offColor('danger')
                             ->label("En vedette")
                             ->default(true)
                             ->required(),
                         Toggle::make('isBestseler')
-                            ->columnSpan(3)
+                            ->columnSpan(4)
                             ->onColor('success')
                             ->offColor('danger')
                             ->label("Meilleure Vente")
                             ->default(true)
                             ->required(),
                         Toggle::make('isNewArivale')
-                            ->columnSpan(3)
+                            ->columnSpan(4)
                             ->onColor('success')
                             ->offColor('danger')
                             ->label("Nouvelle Arrivée")
+                            ->default(true)
+                            ->required(),
+                        Toggle::make('isProduct')
+                            ->columnSpan(4)
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->label("Est-ce un produit ?")
                             ->default(true)
                             ->required(),
                     ])->columnS(12),
@@ -137,8 +146,8 @@ class ProduitResource extends Resource
             ->columns([
                 ImageColumn::make('imageUrls') // Correspond à la méthode getImageUrlsAttribute()
                     ->label("Images")
-                    ->getStateUsing(fn ($record) => $record->imageUrls)->stacked() // Affiche plusieurs images sous forme de pile
-                    ->size(50), // Ajuste la taille des images
+                    ->getStateUsing(fn($record) => $record->imageUrls)->stacked() // Affiche plusieurs images sous forme de pile
+                    ->size(50),                                                   // Ajuste la taille des images
 
                 TextColumn::make('name')
                     ->searchable(),
@@ -179,8 +188,35 @@ class ProduitResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('isFeatured')
+                    ->label('Favoris')
+                    ->options([
+                        '1' => 'OUI',
+                        '0' => 'NON',
+                    ]),
+                SelectFilter::make('isAvalable')
+                    ->label('Disponible')
+                    ->options([
+                        '1' => 'OUI',
+                        '0' => 'NON',
+                    ]),
+                SelectFilter::make('isBestseler')
+                    ->label('Meilleur vente')
+                    ->options([
+                        '1' => 'OUI',
+                        '0' => 'NON',
+                    ]),
+                SelectFilter::make('isNewArivale')
+                    ->label('Nouvelle arrivage')
+                    ->options([
+                        '1' => 'OUI',
+                        '0' => 'NON',
+                    ]),
+                SelectFilter::make('categories')
+                    ->label('Catégorie')
+                    ->relationship('categories', 'name') // 'categories' est le nom de la relation dans le modèle Product
+                    ->multiple(),
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 ActionGroup::make([
                     ViewAction::make(),
