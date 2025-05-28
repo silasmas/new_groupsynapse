@@ -23,8 +23,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::get('branches', [HomeController::class, 'branches'])->name('branches');
 Route::get('shop', [HomeController::class, 'shop'])->name('shop');
+Route::get('services', [HomeController::class, 'shop'])->name('services');
 Route::get('contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('showProduct/{slug}', [HomeController::class, 'show'])->name('showProduct');
+Route::get('showService/{slug}', [HomeController::class, 'show'])->name('showService');
 
 Route::get('favories', [HomeController::class, 'favories'])->name('favories');
 Route::get('/checkTransactionStatus', [CartController::class, 'checkTransactionStatus'])->name('checkTransactionStatus');

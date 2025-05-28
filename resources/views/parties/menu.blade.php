@@ -56,27 +56,30 @@
                                     <a href="{{ route('login') }}">Connexion</a>
                                 </li>
                             @else
-                            <div class="header-top-left">
-                                <ul>
-                                    <li>
-                                        <div class="heder-top-guide">
-                                            <div class="dropdown">
-                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton2"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="flaticon-user"></i> Mon compte
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">Mon profil</a>
-                                                    <a class="dropdown-item" href="{{ route('mesAchats') }}">Mes achats</a>
-                                                    <a class="dropdown-item" href="#">Historiques</a>
+                                <div class="header-top-left">
+                                    <ul>
+                                        <li>
+                                            <div class="heder-top-guide">
+                                                <div class="dropdown">
+                                                    <button class="dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton2" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="flaticon-user"></i> Mon compte
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">Mon
+                                                            profil</a>
+                                                        <a class="dropdown-item" href="{{ route('mesAchats') }}">Mes
+                                                            achats</a>
+                                                        <a class="dropdown-item" href="#">Historiques</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                                 <li>
-                                        <span>/</span>
+                                    <span>/</span>
 
                                     <a href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
@@ -113,7 +116,8 @@
                                 <ul class="navigation">
                                     <li class="{{ isActive('home') }} dropdown"><a
                                             href="{{ route('home') }}">Accueil</a></li>
-                                    <li class="{{ isActive('about') }}"><a href="{{ route('about') }}">A propos</a></li>
+                                    <li class="{{ isActive('about') }}"><a href="{{ route('about') }}">A propos</a>
+                                    </li>
                                     {{-- <li class="{{ isActive('branches') }}"><a href="{{ route('branches') }}">Nos
                                             branches</a></li> --}}
                                     <li class="{{ isActive('shop') }}"><a href="{{ route('shop') }}">Nos produits</a>
@@ -137,8 +141,8 @@
                                         <a href="{{ route('cart') }}">
                                             <i class="flaticon-shopping-bag"></i>
                                             <span class="cart-count count">
-                                                @if(!Auth::check())
-                                                0
+                                                @if (!Auth::check())
+                                                    0
                                                 @endif
                                                 {{-- {{ count(session()->get('cart')['items']) }} --}}
                                             </span>
@@ -238,30 +242,81 @@
                         <ul class="category-menu">
                             @forelse ($branches as $b)
                                 <li class="has-dropdown">
-                                    <a href="#">
-                                        <div class="cat-menu-img">
-                                            <img src="{{ asset('storage/'.$b->vignette ) }}" width="38" height="38"
-                                                alt="">
-                                        </div> {{ $b->name }}
-                                    </a>
-                                    @if($b->categorie->isNotEmpty())
-                                    <ul class="mega-menu">
-                                        @forelse ($b->categorie->take(3) as $cat)
+                                    @php
+                                        $firstCategorie = $b->categorie->first();
+                                    @endphp
+
+                                    @if ($firstCategorie && $firstCategorie->type == 2)
+                                        <a href="{{ route('services') }}">
+                                            <div class="cat-menu-img">
+                                                <img src="{{ asset('storage/' . $b->vignette) }}" width="38"
+                                                    height="38" alt="">
+                                            </div> {{ $b->name }}
+                                        </a>
+                                    @else
+                                        <a href="#">
+                                            <div class="cat-menu-img">
+                                                <img src="{{ asset('storage/' . $b->vignette) }}" width="38"
+                                                    height="38" alt="">
+                                            </div> {{ $b->name }}
+                                        </a>
+                                    @endif
+
+                                    @if ($b->categorie->isNotEmpty())
+                                        {{-- <ul class="mega-menu">
+                                        @forelse ($b->categorie->where('isActive', true) as $cat)
                                             <li>
                                                 <ul>
-                                                    <li class="dropdown-title">{{ $cat->name }}
-                                                    </li>
-                                                    @forelse ($cat->produits as $p)
+                                                    <li class="dropdown-title">{{ $cat->name }}</li>
+                                                    @if ($cat->type == 1)
+                                                           @forelse ($cat->produits->where('isAvalable', 1) as $p)
                                                         <li><a href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
                                                     @empty
                                                     @endforelse
+                                                    @else
+                                                        @forelse ($cat->services->where('disponible', true)->where('active', true) as $p)
+                                                        <li><a href="{{ route('showService', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
+                                                    @empty
+                                                    @endforelse
+                                                    @endif
+
                                                 </ul>
                                             </li>
 
                                         @empty
                                         @endforelse
 
-                                    </ul>
+                                    </ul> --}}
+                                        <ul class="mega-menu">
+                                            @forelse ($b->categorie->where('isActive', true) as $cat)
+                                                <li class="mega-menu-column">
+                                                    <span class="dropdown-title">{{ $cat->name }}</span>
+                                                    <ul class="category-items">
+                                                        @if ($cat->type == 1)
+                                                            @foreach ($cat->produits as $p)
+                                                                {{-- @if ($p->categorie_id == $cat->id) --}}
+                                                                    {{-- 🔐 sécurité --}}
+                                                                    <li><a
+                                                                            href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a>
+                                                                    </li>
+                                                                {{-- @endif --}}
+                                                            @endforeach
+                                                        @elseif ($cat->type == 2)
+                                                            @foreach ($cat->services as $s)
+                                                                {{-- 🔐 sécurité --}}
+                                                                <li><a
+                                                                        href="{{ route('showService', ['slug' => $s->slug]) }}">{{ $s->name }}</a>
+                                                                </li>
+                                                            @endforeach
+                                                        @else
+                                                            <li><em>Aucun élément disponible</em></li>
+                                                        @endif
+                                                    </ul>
+                                                </li>
+                                            @empty
+                                                <li><em>Pas de catégories disponibles</em></li>
+                                            @endforelse
+                                        </ul>
                                     @endif
                                 </li>
                             @empty

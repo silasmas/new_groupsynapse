@@ -39,6 +39,52 @@
 
 */
 
+/* Appliquer une disposition en colonnes */
+.mega-columns {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 30px;
+    padding: 20px;
+    background-color: #fff;
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Une colonne par catégorie */
+.mega-column {
+    min-width: 200px;
+}
+
+/* Titre de chaque catégorie */
+.dropdown-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Liste des éléments dans chaque colonne */
+.dropdown-items {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.dropdown-items li a {
+    display: block;
+    padding: 5px 0;
+    color: #555;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.dropdown-items li a:hover {
+    color: #000;
+}
+
+.mega-menu {
+    transition: all 0.3s ease-in-out;
+}
 
 
 /* 1. Theme default css */
