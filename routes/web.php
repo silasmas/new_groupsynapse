@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\FavoriteController;
 
@@ -26,7 +27,7 @@ Route::get('shop', [HomeController::class, 'shop'])->name('shop');
 Route::get('services', [HomeController::class, 'shop'])->name('services');
 Route::get('contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('showProduct/{slug}', [HomeController::class, 'show'])->name('showProduct');
-Route::get('showService/{slug}', [HomeController::class, 'show'])->name('showService');
+Route::get('showService/{slug}', [ServiceController::class, 'show'])->name('showService');
 
 Route::get('favories', [HomeController::class, 'favories'])->name('favories');
 Route::get('/checkTransactionStatus', [CartController::class, 'checkTransactionStatus'])->name('checkTransactionStatus');
