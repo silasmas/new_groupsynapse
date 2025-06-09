@@ -82,7 +82,7 @@ class ViewServiceProvider extends ServiceProvider
             }
             Session::put("cart", (new CartService())->getCartDetails());
             //    dd( isset($favoritesDetails) && !empty($favoritesDetails) ? $favoritesDetails[1]['favorites_count'] : 0 );
-
+        //    dd( $categories->where('type',2));
             $view->with('groupedProducts', $groupedProducts);
             $view->with('branches', $branches);
             $view->with('categories', $categories);

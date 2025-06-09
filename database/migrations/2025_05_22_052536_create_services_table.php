@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->integer('form_view')->default("default-form");
             $table->string('description')->nullable();
             $table->integer('active')->default(0);
             $table->string('image')->nullable();

@@ -118,9 +118,9 @@
                                             href="{{ route('home') }}">Accueil</a></li>
                                     <li class="{{ isActive('about') }}"><a href="{{ route('about') }}">A propos</a>
                                     </li>
-                                    {{-- <li class="{{ isActive('branches') }}"><a href="{{ route('branches') }}">Nos
-                                            branches</a></li> --}}
-                                    <li class="{{ isActive('shop') }}"><a href="{{ route('shop') }}">Nos produits</a>
+                                    <li class="{{ isActive('branches') }}"><a href="{{ route('shop') }}">Nos
+                                            Produit</a></li>
+                                    <li class="{{ isActive('services') }}"><a href="{{ route('services') }}">Services bancaire</a>
                                     </li>
                                     <li class="{{ isActive('contact') }}"><a
                                             href="{{ route('contact') }}">contacts</a></li>

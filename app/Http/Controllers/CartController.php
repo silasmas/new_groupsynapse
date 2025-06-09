@@ -1,21 +1,17 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Commande;
+use App\Models\commande_produit;
 use App\Models\Panier;
 use App\Models\Produit;
-use App\Models\Commande;
-use Illuminate\Http\Request;
-use App\Services\CartService;
-use App\Services\PanierService;
-use App\Models\commande_produit;
+use App\Models\service_user;
 use App\Models\User;
 use App\Services\FlexPayService;
-use App\Services\FavoriteService;
+use App\Services\PanierService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
@@ -32,12 +28,11 @@ class CartController extends Controller
         // Récupérer les détails du panier via le service PanierService
         $panier = $cartService->obtenirPanier();
 
-
         // Extraire les valeurs de la réponse
 
-        $data = $panier['data'];
+        $data  = $panier['data'];
         $total = $panier['total'];
-        $qty = $panier['quantite'];
+        $qty   = $panier['quantite'];
         //   dd($panier['data']);
         return view('pages.checkout', compact('panier'));
     }
@@ -48,33 +43,58 @@ class CartController extends Controller
         // Validation des données
         $request->validate([
             'channel' => 'required|in:mobile_money,card',
-            'phone' => 'required_if:payment_method,mobile_money'
+            'phone'   => 'required_if:payment_method,mobile_money',
         ]);
 
         // Génération de la référence unique
         $reference = generateUniqueReference();
         // Création de la commande
         $order = Commande::create([
-            'user_id' => $userId,
+            'user_id'   => $userId,
             'reference' => $reference,
-            'total' => $request->total,
-            'channel' => $request->channel,
-            'currency' => $request->currency,
+            'total'     => $request->total,
+            'channel'   => $request->channel,
+            'currency'  => $request->currency,
         ]);
 
         $cartService = new PanierService();
-        $panier = $panier = $cartService->obtenirPanier();
+        $panier      = $panier      = $cartService->obtenirPanier();
         // Ajout des produits
         foreach ($panier["data"] as $product) {
             // dd($product->prixUnitaire);
             Commande_produit::create([
-                'commande_id' => $order->id,
-                'produit_id' => $product['produit_id'],
-                'quantite' => $product['quantite'],
+                'commande_id'   => $order->id,
+                'produit_id'    => $product['produit_id'],
+                'quantite'      => $product['quantite'],
                 'prix_unitaire' => $product->prixUnitaire,
-                'prix_total' => $product['quantite'] * $product->prixUnitaire,
+                'prix_total'    => $product['quantite'] * $product->prixUnitaire,
             ]);
         }
+        // Lancement du paiement FlexPay
+        return $this->initiatePayment($order, $request->phone);
+    }
+    public function createOrderService(Request $request)
+    {
+        $userId = Auth::id();
+        // dd($request->all());
+        // Validation des données
+        $request->validate([
+            'channel' => 'required|in:mobile_money,card',
+            'phone'   => 'required_if:payment_method,mobile_money',
+        ]);
+
+        // Génération de la référence unique
+        $reference = $request->referenceCreate;
+        // Création de la commande
+        $order = Commande::create([
+            'user_id'     => $userId,
+            'reference'   => $reference,
+            'total'       => $request->total,
+            'channel'     => $request->channel,
+            'currency'    => $request->currency,
+            'description' => $request->slug,
+        ]);
+
         // Lancement du paiement FlexPay
         return $this->initiatePayment($order, $request->phone);
     }
@@ -84,12 +104,12 @@ class CartController extends Controller
         $data = [];
         if ($order->channel === 'mobile_money') {
             $data = [
-                "merchant" => env("FLEXPAY_MARCHAND"),
-                "type" => $order->channel === 'mobile_money' ? "1" : "2",
-                "phone" => $phone,
-                "reference" => $order->reference,
-                "amount" => $order->total,
-                "currency" => $order->currency,
+                "merchant"    => env("FLEXPAY_MARCHAND"),
+                "type"        => $order->channel === 'mobile_money' ? "1" : "2",
+                "phone"       => $phone,
+                "reference"   => $order->reference,
+                "amount"      => $order->total,
+                "currency"    => $order->currency,
                 "callbackUrl" => env('APP_URL') . '/payment.callback',
             ];
             $rep = initRequeteFlexPay("mobile", $data, $order);
@@ -102,7 +122,7 @@ class CartController extends Controller
             if ($retour['rep']) {
                 $order->update([
                     'provider_reference' => $retour['orderNumber'],
-                    'etat' => 'En cours'
+                    'etat'               => 'En cours',
                 ]);
                 return response()->json(["reponse" => $retour['rep'], "redirect_url" => $retour['url']], 200);
             } else {
@@ -145,7 +165,8 @@ class CartController extends Controller
         // // Journaliser la réponse pour le débogage
 
         $transactionData = $jsonRes['transaction'];
-        $transaction = Commande::where('reference', $transactionData['reference'])->first();
+        $transaction     = Commande::where('reference', $transactionData['reference'])->first();
+        $service         = service_user::where('reference', $transactionData['reference'])->first();
         switch ($jsonRes['transaction']["status"]) {
             case 0:
                 // Trouver la transaction correspondante
@@ -153,50 +174,61 @@ class CartController extends Controller
                     $status = 'Payée';
                     // Mettre à jour l'état des données
                     $transaction->update([
-                        'etat' => $status,
+                        'etat'            => $status,
                         'amount_customer' => $transactionData['amountCustomer'],
-                        'phone' => $transactionData['channel'],
-                        'updated_at' => now()
+                        'phone'           => $transactionData['channel'],
+                        'updated_at'      => now(),
+                    ]);
+                    $service->update([
+                        'etat'       => $status,
+                        'updated_at' => now(),
                     ]);
                     $this->clearCartAfterPayment($transaction->user_id);
                     return response()->json([
                         'reponse' => true,
                         'message' => 'La transaction mis à été fait avec succès.',
-                        'status' => $jsonRes['transaction']["status"],
+                        'status'  => $jsonRes['transaction']["status"],
                     ]);
                 }
                 break;
             case 1:
                 $status = 'Annulée';
                 $transaction->update([
-                    'etat' => $status,
-                    'updated_at' => now()
+                    'etat'       => $status,
+                    'updated_at' => now(),
+                ]);
+                $service->update([
+                    'etat'       => $status,
+                    'updated_at' => now(),
                 ]);
                 return response()->json([
                     'reponse' => false,
-                    'status' => $jsonRes['transaction']["status"],
+                    'status'  => $jsonRes['transaction']["status"],
                     'message' => $jsonRes["message"],
                 ]);
                 break;
             case 2:
                 $status = 'En attente';
                 $transaction->update([
-                    'etat' => $status,
-                    'updated_at' => now()
+                    'etat'       => $status,
+                    'updated_at' => now(),
                 ]);
-
+                $service->update([
+                    'etat'       => $status,
+                    'updated_at' => now(),
+                ]);
                 return response()->json([
-                    'reponse' => true,
-                    'message' => $jsonRes["message"],
+                    'reponse'     => true,
+                    'message'     => $jsonRes["message"],
                     'orderNumber' => $transaction->provider_reference,
-                    'status' => $jsonRes['transaction']["status"],
-                    'url' => "attente",
+                    'status'      => $jsonRes['transaction']["status"],
+                    'url'         => "attente",
                 ]);
                 break;
             default:
                 return response()->json([
                     'reponse' => false,
-                    'status' => $jsonRes['transaction']["status"],
+                    'status'  => $jsonRes['transaction']["status"],
                     'message' => $jsonRes["message"],
                 ]);
                 break;
@@ -209,31 +241,31 @@ class CartController extends Controller
     {
         // Vérifier si la commande existe
         $order = Commande::where('reference', $reference)->first();
-        $msg = "";
-        if (!$order) {
+        $msg   = "";
+        if (! $order) {
             return response()->json(['error' => 'Commande non trouvée'], 404);
         }
 
         // Mettre à jour le statut en fonction de la réponse de FlexPay
         switch ($status) {
             case 'success':
-                $cli=User::find($order->user_id);
-                $message =$cli->name . " votre commande de reference " . $order->reference . " à été soldée !";
+                $cli     = User::find($order->user_id);
+                $message = $cli->name . " votre commande de reference " . $order->reference . " à été soldée !";
 
                 $order->etat = 'Payée'; // Paiement réussi
-                $msg = 'Paiement réussi !';
+                $msg         = 'Paiement réussi !';
                 sendSms($phoneNumber, $message);
                 $rep = $this->clearCartAfterPayment($order->user_id);
                 break;
 
             case 'cancel':
                 $order->etat = 'Annulée'; // Paiement annulé par l'utilisateur
-                $msg = 'Paiement annulé !';
+                $msg         = 'Paiement annulé !';
                 break;
 
             case 'decline':
                 $order->etat = 'Annulée'; // Paiement refusé
-                $msg = 'Paiement refusé !';
+                $msg         = 'Paiement refusé !';
                 break;
 
             default:
@@ -244,17 +276,16 @@ class CartController extends Controller
         $order->save();
         return redirect()->route('commandeStatus')->with([
             'order_details' => [
-                'message' => $msg,
+                'message'         => $msg,
                 'order_reference' => $reference,
-                'amount' => $amount,
-                'currency' => $currency,
-                'status' => $order->etat,
-                'order' => $order->provider_reference,
-                'channel' => $order->channel
-            ]
+                'amount'          => $amount,
+                'currency'        => $currency,
+                'status'          => $order->etat,
+                'order'           => $order->provider_reference,
+                'channel'         => $order->channel,
+            ],
         ]);
     }
-
 
     public function clearCartAfterPayment($userId)
     {
@@ -264,15 +295,12 @@ class CartController extends Controller
         return response()->json(["reponse" => true, 'message' => 'Le panier a été vidé après le paiement']);
     }
 
-
     public function commandeStatus()
     {
         $order_details = session('order_details');
         //    dd($order_details);
         return view('pages.paid', compact('order_details'));
     }
-
-
 
     public function index(PanierService $cartService): View
     {
@@ -283,11 +311,11 @@ class CartController extends Controller
         //  dd($result);
 
         // Extraire les valeurs de la réponse
-        $rep = $result['reponse'];
-        $msg = $result['message'];
-        $data = $result['data'];
+        $rep   = $result['reponse'];
+        $msg   = $result['message'];
+        $data  = $result['data'];
         $total = $result['total'];
-        $qty = $result['quantite'];
+        $qty   = $result['quantite'];
 
         // Retourner la vue avec les données du panier
         return view("pages.cart", compact("rep", "msg", "data", "total", "qty"));
@@ -296,25 +324,25 @@ class CartController extends Controller
     public function addToCart(PanierService $cartService, $id, $quantity = 1)
     {
         $produit = Produit::find($id);
-        $prix = is_solde2($produit->isSpecialOffer, $produit->prix, (float) $produit->soldePrice);
+        $prix    = is_solde2($produit->isSpecialOffer, $produit->prix, (float) $produit->soldePrice);
 
         if ($produit) {
             $result = $cartService->ajouterAuPanier($id, $quantity, $prix);
 
             return response()->json([
-                'reponse' => $result['reponse'],
-                'message' => $result['message'],
-                'data' => $result['data'],
-                "total" => $result['total'],
+                'reponse'    => $result['reponse'],
+                'message'    => $result['message'],
+                'data'       => $result['data'],
+                "total"      => $result['total'],
                 'grandTotal' => $result['grandTotal'],
-                "qty" => $result['quantite']
+                "qty"        => $result['quantite'],
             ]);
         }
 
         return response()->json([
             'reponse' => false,
             'message' => "Ce produit n'existe pas!!",
-            'data' => null
+            'data'    => null,
 
         ]);
     }
@@ -327,15 +355,14 @@ class CartController extends Controller
 
         // Retourner la réponse JSON avec le message et le statut
         return response()->json([
-            'reponse' => $result['reponse'],
-            'message' => $result['message'],
-            'total' => $result['data']->prixTotal,  // Total calculé pour l'article mis à jour
-            'qty' => $result['data']->quantite,      // Quantité mise à jour
+            'reponse'    => $result['reponse'],
+            'message'    => $result['message'],
+            'total'      => $result['data']->prixTotal, // Total calculé pour l'article mis à jour
+            'qty'        => $result['data']->quantite,  // Quantité mise à jour
             'grandTotal' => $result['grandTotal'],      // Quantité mise à jour
-            'qty' => $result['data']->quantite       // Quantité mise à jour
+            'qty'        => $result['data']->quantite,  // Quantité mise à jour
         ]);
     }
-
 
     public function details(PanierService $panierService)
     {
@@ -346,14 +373,14 @@ class CartController extends Controller
         session()->put('cart_detail', [
             'reponse' => $result['reponse'],
             'message' => $result['message'],
-            'data' => $result['data']
+            'data'    => $result['data'],
         ]);
         // dd($result['data']);
         // Retourner le panier sous forme de JSON
         return response()->json([
             'reponse' => $result['reponse'],
             'message' => $result['message'],
-            'data' => $result['data']
+            'data'    => $result['data'],
         ]);
     }
 
@@ -365,20 +392,19 @@ class CartController extends Controller
         if (isset($result['data'])) {
             // Retourner la réponse JSON avec le message et le statut
             return response()->json([
-                'reponse' => $result['reponse'],
-                'message' => $result['message'],
-                'total' => $result['data']->prixTotal,  // Total calculé pour l'article mis à jour
-                'qty' => $result['data']->quantite,      // Quantité mise à jour
+                'reponse'    => $result['reponse'],
+                'message'    => $result['message'],
+                'total'      => $result['data']->prixTotal, // Total calculé pour l'article mis à jour
+                'qty'        => $result['data']->quantite,  // Quantité mise à jour
                 'grandTotal' => $result['grandTotal'],      // Quantité mise à jour
-                'qty' => $result['data']->quantite       // Quantité mise à jour
+                'qty'        => $result['data']->quantite,  // Quantité mise à jour
             ]);
         } else {
             // Retourner la réponse JSON avec le message et le statut
             return response()->json([
                 'reponse' => $result['reponse'],
-                'message' => $result['message']
+                'message' => $result['message'],
             ]);
         }
     }
 }
-

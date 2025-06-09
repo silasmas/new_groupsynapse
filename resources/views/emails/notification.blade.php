@@ -75,24 +75,24 @@
     <div class="email-container">
         <!-- En-tête avec le logo -->
         <div class="email-headerlg">
-            <img src="{{ asset('storage/'.$site->site_logo) }}" alt="Logo de l'entreprise">
+            <img src="{{ asset("assets/img/logo/logosynapse.png") }}" alt="Logo de l'entreprise">
 
         </div>
         <div class="email-header">
-            <h1>Notification sur les requêtes de prière</h1>
+            <h1>Notification sur le service bancaire</h1>
         </div>
 
         <!-- Contenu principal -->
         <div class="email-content">
             <h2>Bonjour {{ $userName }},</h2>
-            <p>Nous tenons à vous informer qure le service <strong>{{ $action }}</strong> :</p>
+            <p>Nous tenons à vous informer que le service <strong>{{ $action }}</strong> à été sollicité.</p>
             <blockquote style="border-left: 4px solid #650F1C; padding-left: 10px; margin: 10px 0; color: #555;">
                 {{ $messageContent }}
             </blockquote>
             <p>Si vous avez des questions ou des préoccupations, n'hésitez pas à contacter l'administrateur.</p>
 
             <!-- Bouton de connexion -->
-            <a href="{{ url(config('app.url').'/administrateur') }}" class="btn">Aller sur la partie admin</a>
+            <a href="{{ url(config('app.url').'/admin') }}" class="btn">Aller sur la partie admin</a>
 
             <p>Cordialement,</p>
             <p><strong>L'équipe de {{ config('app.name') }}</strong></p>

@@ -3,10 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Service;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -51,7 +52,10 @@ class User extends Authenticatable
         ->withPivot('created_at', 'updated_at');
 
 	}
-
+public function service()
+    {
+        return $this->belongsToMany(Service::class, 'service_users', 'user_id', 'service_id')->withPivot('created_at', 'updated_at');
+    }
 
 	public function paniers()
 	{

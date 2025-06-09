@@ -18,6 +18,8 @@
 <script src="{{ asset('assets/js/sweetalert/sweetalert.min.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+
+
         // Appeler la méthode pour mettre à jour le panier
         @if (Auth::check())
             updateCartUI();
@@ -259,7 +261,7 @@
                         images = produit.imageUrls; // Déjà un tableau
                     }
                     const imageUrl = images.length > 0 ? images[0] :
-                    "assets/img/default.png"; // Récupérer la première image ou une par défaut
+                        "assets/img/default.png"; // Récupérer la première image ou une par défaut
 
                     console.log(imageUrl); // Vérifie dans la console si l'URL est correcte
 
@@ -423,17 +425,26 @@
     }
 
     function check(reference) {
-        // Déclaration des variables pour la gestion de la vérification
-        const transactionReference = reference; // Référence de la transaction
-        let attempts = 0; // Compteur de tentatives
-        const maxAttempts = 7; // Nombre maximum de tentatives avant arrêt
+        const transactionReference = reference; // Référence de la transaction à surveiller
+        let attempts = 0; // Nombre de tentatives effectuées
+        const maxAttempts = 7; // Maximum de tentatives avant arrêt automatique
+        let isStopped = false; // Drapeau pour éviter les exécutions multiples
+        let logSent = false; // 🛡️ Empêche les logs multiples
+        let successTriggered = false;
 
-        // Fonction pour arrêter la vérification et afficher un message
+
+        // Préparation de la notification sonore
+        const audioSuccess = new Audio('/sounds/success.mp3');
+        const audioerror = new Audio('/sounds/error.mp3');
+
+        /**
+         * Arrête les vérifications et affiche un message visuel (SweetAlert)
+         */
         const stopChecking = (message, icon = 'info') => {
-            clearInterval(interval); // Arrête l'intervalle de vérification
-            attempts = maxAttempts; // Définit les tentatives au maximum
+            if (isStopped) return;
+            isStopped = true;
+            clearInterval(interval);
 
-            // Affiche une alerte avec SweetAlert2
             swal({
                 title: "État de la transaction",
                 text: message,
@@ -441,65 +452,112 @@
             });
         };
 
-        // Démarrage de l'intervalle pour vérifier le statut de la transaction toutes les 5 secondes
-        const interval = setInterval(() => {
-            attempts++; // Incrémente le compteur de tentatives
-            console.log(`Vérification ${attempts}/${maxAttempts} pour la transaction: ${transactionReference}`);
+        /**
+         * Fonction pour journaliser chaque tentative côté serveur (optionnelle mais utile)
+         */
+        const logAttempt = (status, message) => {
+            if (logSent) return; // 🛑 Ne log qu’une seule fois
+            logSent = true;
 
-            // Requête AJAX pour interroger le statut de la transaction
+            $.post('/logTransactionAttempt', {
+                reference: transactionReference,
+                status: status,
+                message: message,
+                _token: document.querySelector('meta[name="csrf-token"]').content
+            });
+        };
+
+
+        /**
+         * Démarre la boucle de vérification toutes les 5 secondes
+         */
+        const interval = setInterval(() => {
+            if (isStopped) return;
+
+            attempts++;
+            console.log(`🔁 Tentative ${attempts}/${maxAttempts} pour ${transactionReference}`);
+
             $.ajax({
-                url: '/checkTransactionStatus', // Route qui vérifie le statut côté serveur
+                url: '/checkTransactionStatus',
                 method: 'GET',
                 data: {
                     reference: transactionReference
-                }, // Envoi de la référence de la transaction
+                },
                 success: function(response) {
-                    console.log("Réponse reçue :", response);
+                    console.log("✅ Réponse :", response);
+
+                    // Enregistrement d'une tentative côté serveur (utile pour audit)
+                    logAttempt(response.status, response.message || 'Réponse sans message');
 
                     if (response.reponse === true) {
                         if (response.status == "0") {
-                            // Paiement validé, arrêter la vérification
-                            stopChecking(response.message || "Achat effectué avec succès !",
-                                'success');
+                            if (successTriggered) return; // ✅ Stoppe tout si déjà traité
+                            successTriggered = true; // 🛡️ Active la protection
 
-                            // Réinitialiser le formulaire de paiement
+                            stopChecking(response.message || "Transaction effectuée avec succès !",
+                                'success');
+                            toastr.success("✅ Transaction effectuée avec succès !");
+
+                            // 🔊 Lecture du son une seule fois
+                            audioSuccess.currentTime = 0;
+                            audioSuccess.play();
+
                             $("#formpaie")[0].reset();
 
-                            // Attendre 10 secondes (10000 millisecondes) avant d'actualiser
                             setTimeout(() => {
-                                location.reload(); // Actualiser la page
+                                location.reload();
                             }, 10000);
-                        } else if (response.status == "2" && attempts >= maxAttempts - 1) {
-                            // Paiement validé, arrêter la vérification
-                            stopChecking(response.message || "", 'warning');
-                            showTransactionPopup(response.orderNumber, response.message, 'warning')
-                            // window.location.href = "{{ route('home') }}";
+                            return;
                         }
 
-                    } else if (response.reponse === false && response.status == "1") {
-                        // Nombre maximum de tentatives atteint, arrêter la vérification
-                        stopChecking(response.message, 'error');
-                    } else if (!response.reponse && attempts >= maxAttempts) {
-                        // Nombre maximum de tentatives atteint, arrêter la vérification
+
+                        if (response.status == "2" && attempts >= maxAttempts - 1) {
+                            audioerror.currentTime = 0; // redémarre le son si déjà joué
+                            audioerror.play();
+                            // ⚠️ Paiement en attente trop longtemps
+                            stopChecking(response.message || "Transaction non confirmée.",
+                                'warning');
+                            showTransactionPopup(response.orderNumber, response.message, 'warning');
+                            return;
+                        }
+                    }
+
+                    if (response.reponse === false && response.status == "1") {
+                        audioerror.currentTime = 0; // redémarre le son si déjà joué
+                        audioerror.play();
+                        // ❌ Paiement refusé
+                        stopChecking(response.message || "Paiement refusé.", 'error');
+                        return;
+                    }
+
+                    if (!response.reponse && attempts >= maxAttempts) {
+                        audioerror.currentTime = 0; // redémarre le son si déjà joué
+                        audioerror.play();
+                        // ❌ Paiement non confirmé après N tentatives
                         stopChecking(response.message || "Le paiement n'a pas été confirmé.",
                             'error');
-                    } else if (response.redirect_url) {
-                        // Redirection vers la page de confirmation si définie dans la réponse
+                        return;
+                    }
+
+                    if (response.redirect_url) {
+                        // 🔁 Redirection immédiate
+                        clearInterval(interval);
+                        isStopped = true;
                         window.location.href = response.redirect_url;
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.error(`Erreur AJAX: ${textStatus}, ${errorThrown}`);
+                    console.error(`❌ Erreur AJAX: ${textStatus}, ${errorThrown}`);
 
                     if (attempts >= maxAttempts) {
-                        // Arrêter après plusieurs erreurs consécutives
                         stopChecking(
                             "Impossible de vérifier le statut de la transaction. Veuillez réessayer.",
                             'error');
                     }
+
                 }
             });
-        }, 5000); // Vérification toutes les 5 secondes
+        }, 5000);
     }
 
     function showTransactionPopup(orderNumber, message, icon) {
@@ -524,8 +582,35 @@
             }
         });
     }
+    // Fonction pour gérer la logique du paiement (Mobile money, CGU)
+    function paiement() {
+        const selectPayment = document.getElementById("channel");
+        const phoneContainer = document.getElementById("Contenairephone");
+        const phoneInput = document.getElementById("phone");
+        const checkboxTerms = document.getElementById("customCheck7");
+        const submitButton = document.querySelector("button.btn");
+
+        function updateFormState() {
+            if (selectPayment.value === "mobile_money") {
+                phoneContainer.style.display = "block";
+                phoneInput.required = true;
+            } else {
+                phoneContainer.style.display = "none";
+                phoneInput.required = false;
+                phoneInput.value = "";
+            }
+            submitButton.disabled = !checkboxTerms.checked;
+        }
+
+        updateFormState();
+        selectPayment.addEventListener("change", updateFormState);
+        checkboxTerms.addEventListener("change", updateFormState);
+    }
 </script>
 @yield('script')
+
+
+
 </body>
 
 </html>

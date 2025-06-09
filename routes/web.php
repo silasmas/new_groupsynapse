@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\CommandeController;
-use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ServiceUserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,10 @@ Route::get('services', [HomeController::class, 'shop'])->name('services');
 Route::get('contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('showProduct/{slug}', [HomeController::class, 'show'])->name('showProduct');
 Route::get('showService/{slug}', [ServiceController::class, 'show'])->name('showService');
+Route::get('services', [ServiceController::class, 'index'])->name('services');
 
 Route::get('favories', [HomeController::class, 'favories'])->name('favories');
-Route::get('/checkTransactionStatus', [CartController::class, 'checkTransactionStatus'])->name('checkTransactionStatus');
+// Route::get('/checkTransactionStatus', [CartController::class, 'checkTransactionStatus'])->name('checkTransactionStatus');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -38,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/favorit/details', [FavoriteController::class, 'getFavorites'])->name('favorit.details');
     Route::get('removeFavorie/{id}', [FavoriteController::class, 'removeFavorite'])->name('removeFavorie');
     Route::get('/favorie/update-block/{id}', [FavoriteController::class, 'updateProductBlock'])->name('favorie.updateBlock');
+
+    Route::get('getService/{slug}', [ServiceUserController::class, 'getService'])->name('getService');
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::get('/cart/add/{id}/{qty}', [CartController::class, 'addToCart'])->name('cart.add');
@@ -49,17 +53,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkTransactionStatus', [CartController::class, 'checkTransactionStatus'])->name('checkTransactionStatus');
     // Route::post("/caisse", [PaymentController::class, 'initiatePayment'])->name('caisse');
     Route::post("/caisse", [CartController::class, "createOrder"])->name('caisse');
+    Route::post("/caisseService", [CartController::class, "createOrderService"])->name('caisseService');
 
     Route::post('/payment/initiate', [PaymentController::class, 'initiatePayment']);
     Route::post('/payment/status', [PaymentController::class, 'checkPaymentStatus']);
     Route::post('/payment/callback', [PaymentController::class, 'paymentCallback'])->name('payment.callback');
 
+    Route::post('/init-service', [ServiceUserController::class, 'init'])->name('init.service');
+    Route::post('/init.recharge', [ServiceUserController::class, 'initrecharge'])->name('init.recharge');
+    Route::post('/edit-service', [ServiceUserController::class, 'modifier'])->name('edit.service');
+
+    Route::post('/logTransactionAttempt', [ServiceUserController::class, 'store']);
 
 
     Route::get('/profil', [CartController::class, 'commandeStatus'])->name('profil');
     Route::patch('/editProfil', [CartController::class, 'commandeStatus'])->name('editProfil');
     Route::get('/Updateprofil', [CartController::class, 'commandeStatus'])->name('Updateprofil');
-
 
     Route::get('/mesAchats', [CommandeController::class, 'mesAchats'])->name('mesAchats');
 
@@ -67,8 +76,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/paid/{reference}/{amount}/{currency}/{code}', [CartController::class, 'paid'])->whereNumber(['amount'])->name('paid');
 Route::get('/commandeStatus', [CartController::class, 'commandeStatus'])->name('commandeStatus');
-
-
 
 Route::get('/dashboard', function () {
     return redirect()->route('home');

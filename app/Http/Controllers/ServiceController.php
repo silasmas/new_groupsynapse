@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Service;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
+use App\Models\Service;
+
 
 class ServiceController extends Controller
 {
@@ -13,9 +13,11 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        //
+        $services = Service::all();
+        return view("pages.allServices", compact("services"));
     }
 
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -37,8 +39,8 @@ class ServiceController extends Controller
      */
     public function show($slug)
     {
-       $services=Service::where("slug", $slug)->first();
-        return view("pages.detailServeice",compact("services"));
+        $services = Service::where("slug", $slug)->first();
+        return view("pages.detailServeice", compact("services"));
     }
 
     /**

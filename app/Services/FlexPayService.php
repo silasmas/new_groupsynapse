@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
@@ -15,11 +14,11 @@ class FlexPayService
 
     public function __construct()
     {
-        $this->baseUrl = config('services.flexpay.base_url');
+        $this->baseUrl  = config('services.flexpay.base_url');
         $this->merchant = config('services.flexpay.merchant');
-        $this->token = config('services.flexpay.token');
+        $this->token    = config('services.flexpay.token');
 
-        $this->apiUrl = env('FLEXPAY_GATEWAY_CARD');
+        $this->apiUrl   = env('FLEXPAY_GATEWAY_CARD');
         $this->checkUrl = env('FLEXPAY_GATEWAY_CHECK');
     }
 
@@ -30,17 +29,16 @@ class FlexPayService
     {
         $url = "{$this->baseUrl}/paymentService";
 
-
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$this->token}",
-            'Content-Type' => 'application/json',
+            'Content-Type'  => 'application/json',
         ])->post($url, [
-            'merchant' => $this->merchant,
-            'type' => $type,
-            'phone' => $phone,
-            'reference' => $reference,
-            'amount' => $amount,
-            'currency' => $currency,
+            'merchant'    => $this->merchant,
+            'type'        => $type,
+            'phone'       => $phone,
+            'reference'   => $reference,
+            'amount'      => $amount,
+            'currency'    => $currency,
             'callbackUrl' => $callbackUrl,
         ]);
 
@@ -49,46 +47,49 @@ class FlexPayService
     public function initiatePayment1($amount, $currency, $reference, $description)
     {
         $data = [
-            'merchant' => $this->merchant,
-            'reference' => $reference,
-            'amount' => 50,
-            'currency' => "USD",
-            'language' => 'fr',
-            'description' => $description,
+            'merchant'     => $this->merchant,
+            'reference'    => $reference,
+            'amount'       => 50,
+            'currency'     => "USD",
+            'language'     => 'fr',
+            'description'  => $description,
             'callback_url' => env('APP_URL') . 'storeTransaction',
-            'approve_url' =>  env('APP_URL') . 'paid/' . $reference . '/' . $amount . '/' . $currency . '/success',
-            'cancel_url' =>  env('APP_URL') . 'paid/' . $reference . '/' . $amount . '/' . $currency . '/cancel',
-            'decline_url' =>  env('APP_URL') . 'paid/' . $reference . '/' . $amount . '/' . $currency . '/decline',
-            'home_url' =>  env('APP_URL') . 'home',
+            'approve_url'  => env('APP_URL') . 'paid/' . $reference . '/' . $amount . '/' . $currency . '/success',
+            'cancel_url'   => env('APP_URL') . 'paid/' . $reference . '/' . $amount . '/' . $currency . '/cancel',
+            'decline_url'  => env('APP_URL') . 'paid/' . $reference . '/' . $amount . '/' . $currency . '/decline',
+            'home_url'     => env('APP_URL') . 'home',
         ];
         //  dd($data);
         $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Authorization' => "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzkxOTk0Njg5LCJzdWIiOiJkMWQzNmEyZWYwNDE1NjA1ZTBkODkzZDZjZDk3OGQxZiJ9.B6JZxeFpJW8SN0sQRxMIeWe1c9qfCFkEDE7_lz4Yh3U"
+            'Content-Type'  => 'application/json',
+            'Authorization' => "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzkxOTk0Njg5LCJzdWIiOiJkMWQzNmEyZWYwNDE1NjA1ZTBkODkzZDZjZDk3OGQxZiJ9.B6JZxeFpJW8SN0sQRxMIeWe1c9qfCFkEDE7_lz4Yh3U",
         ])->post($this->apiUrl, $data);
 
         return $response->json();
     }
 
-    public function initiatePayment($amount, $currency, $reference, $description)
+    public function initiatePayment($amount, $currency, $reference, $description, $type = "produit")
     {
-        $token = $this->token; // Récupération du token depuis l'ENV
-        $merchant = $this->merchant;  // Récupération du code marchand
-        $apiUrl = $this->apiUrl;     // URL de l'API FlexPay
+        $token    = $this->token;    // Récupération du token depuis l'ENV
+        $merchant = $this->merchant; // Récupération du code marchand
+        $apiUrl   = $this->apiUrl;   // URL de l'API FlexPay
 
-        $body = json_encode([
-            'authorization' => "Bearer $token",
-            'merchant' => $merchant,
-            'reference' => $reference,
-            'amount' => $amount,
-            'currency' => $currency,
-            'description' => $description,
-            'callback_url' => env('APP_URL') . '/storeTransaction',
-            'approve_url' => env('APP_URL') . "/paid/$reference/$amount/$currency/success",
-            'cancel_url' => env('APP_URL') . "/paid/$reference/$amount/$currency/cancel",
-            'decline_url' => env('APP_URL') . "/paid/$reference/$amount/$currency/decline",
-            'home_url' =>  env('APP_URL') . 'home',
-        ]);
+        $callbackUrl     = $type=="produit"?env('APP_URL') . '/storeTransaction':env('APP_URL') . '/storeTransactionService';
+        $baseRedirectUrl = env('APP_URL') . "/paid/$reference/$amount/$currency";
+
+        // Construction du corps de la requête
+        $body = [
+            'merchant'     => $merchant,
+            'reference'    => $reference,
+            'amount'       => $amount,
+            'currency'     => $currency,
+            'description'  => $description,
+            'callback_url' => $callbackUrl,
+            'approve_url'  => $type=="produit"?"$baseRedirectUrl/success":"$baseRedirectUrl/declineService",
+            'cancel_url'   => $type=="produit"?"$baseRedirectUrl/cancel":"$baseRedirectUrl/declineService",
+            'decline_url'  => $type=="produit"?"$baseRedirectUrl/decline":"$baseRedirectUrl/declineService",
+            'home_url'     => env('APP_URL') . '/home',
+        ];
 
         // Initialisation de cURL
         $curl = curl_init($apiUrl);
@@ -108,9 +109,9 @@ class FlexPayService
         // dd($json);
         if (isset($json['code']) && $json['code'] === "0") {
             // Redirection vers la page de paiement FlexPay
-            return ["rep"=>true, "url"=>$json['url'],"orderNumber"=>$json['orderNumber'],"data"=>$json];
-        }else{
-            return ["rep"=>false, "message"=>$json['message'],'error' => 'Échec de l’initiation du paiement : '];
+            return ["rep" => true, "url" => $json['url'], "orderNumber" => $json['orderNumber'], "data" => $json];
+        } else {
+            return ["rep" => false, "message" => $json['message'], 'error' => 'Échec de l’initiation du paiement : '];
             // return back()->withErrors(['error' => 'Échec de l’initiation du paiement : ' . ($json['message'] ?? 'Erreur inconnue')]);
         }
 
