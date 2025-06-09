@@ -433,6 +433,7 @@
         let successTriggered = false;
 
 
+
         // Préparation de la notification sonore
         const audioSuccess = new Audio('/sounds/success.mp3');
         const audioerror = new Audio('/sounds/error.mp3');
@@ -440,6 +441,7 @@
         /**
          * Arrête les vérifications et affiche un message visuel (SweetAlert)
          */
+
         const stopChecking = (message, icon = 'info') => {
             if (isStopped) return;
             isStopped = true;

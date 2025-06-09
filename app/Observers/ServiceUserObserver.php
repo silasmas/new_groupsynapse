@@ -5,6 +5,7 @@ use App\Mail\ServiceNotificationMail;
 use App\Models\Service;
 use App\Models\service_user;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ServiceUserObserver
@@ -25,17 +26,25 @@ class ServiceUserObserver
      */
     public function updated(service_user $serviceUser): void
     {
-        \Log::info('Info service update :', $serviceUser);
-        if ($serviceUser->isDirty('etat')) {
-            $nouvelEtat = $serviceUser->etat;
-            \Log::info('Info service etat :', $nouvelEtat);
+          if (!$serviceUser->isDirty('etat')) {
+        return; // Aucun changement de statut
+    }
 
-            if ($nouvelEtat === 'Payée') {
-                $this->notifierSucces($serviceUser);
-            } else {
-                $this->notifierEchec($serviceUser);
-            }
+    $nouvelEtat = $serviceUser->etat;
+   // Vérifie si on n’a pas déjà notifié ce statu
+        if ($nouvelEtat === 'Payée' && !$serviceUser->notified_success) {
+            //  Log::info('Transaction validée', $serviceUser->toArray());
+            $this->notifierSucces($serviceUser);
+            // Marquer comme notifié
+        $serviceUser->notified_success = true;
+        $serviceUser->saveQuietly(); // évite de relancer l'observer
+        } else {
+            //  Log::info('Transaction échouée', ['ref' => $serviceUser->reference]);
+            $this->notifierEchec($serviceUser);
+             $serviceUser->notified_failure = true;
+        $serviceUser->saveQuietly();
         }
+        // }
     }
 
     /**
@@ -64,28 +73,50 @@ class ServiceUserObserver
     protected function notifierSucces(service_user $serviceUser)
     {
         try {
-            \Log::info('Info service :', $serviceUser);
             $service = Service::find($serviceUser->service_id);
-            \Log::info('service :', $service);
 
-            if ($service->slug == "recharge-carte") {
-                $sms = $service->name . ", merci de faire passé la commande. ID de la carte : " . $serviceUser->idCarte . " 4 derniers chiffres : " . $serviceUser->numero_carte . "Montant : " . $serviceUser->montantRecharge . $serviceUser->numero_carte .
-                "Montant : " . $serviceUser->currency;
-                $usersSms = User::where([['notifiable', true], ['phone', "!=", ""]])->get();
-                foreach ($usersSms as $user) {
-                    sendSms($$user->phone, $sms);
+            if (! $service) {
+                throw new \Exception("Service introuvable pour l'ID : " . $serviceUser->service_id);
+            }
+
+            // Récupération des utilisateurs à notifier
+            $notifiables = User::where('notifiable', true)->get();
+
+            if ($service->slug === "recharge-carte") {
+                $sms = $service->name . ", merci de faire passer la commande. " .
+                "ID carte : " . $serviceUser->idCarte .
+                " | 4 derniers chiffres : " . $serviceUser->numero_carte .
+                " | Montant : " . $serviceUser->montantRecharge . " " . $serviceUser->currency;
+
+                foreach ($notifiables as $user) {
+                    if (! empty($user->phone)) {
+                        try {
+                            sendSms($user->phone, $sms);
+                        } catch (\Exception $ex) {
+                            Log::error("Erreur envoi SMS à {$user->phone} : " . $ex->getMessage());
+                        }
+                    }
                 }
             } else {
-                // Récupérer tous les utilisateurs notifiables
-                $users = User::where('notifiable', true)->get();
+                $subject = $service->name;
+                $message = "Merci de bien vouloir vous connecter pour en savoir plus.";
 
-                foreach ($users as $user) {
-                    $message = "Merci de bien vouloir vous connecter pour en savoir plus.";
-                    Mail::to($user->email)->send(new ServiceNotificationMail($user, $message, $service->name));
+                foreach ($notifiables as $user) {
+                    if (! empty($user->email)) {
+                        try {
+                            Mail::to($user->email)->send(new ServiceNotificationMail($user, $message, $subject));
+                        } catch (\Exception $ex) {
+                            Log::error("Erreur envoi email à {$user->email} : " . $ex->getMessage());
+                        }
+                    }
                 }
             }
+
         } catch (\Throwable $e) {
-            \Log::info('info :', $e->getMessage());
+            Log::error('Erreur dans la notification de service : ' . $e->getMessage(), [
+                'service_user_id' => $serviceUser->id ?? null,
+                'context'         => $serviceUser->toArray(),
+            ]);
         }
 
     }
@@ -93,7 +124,6 @@ class ServiceUserObserver
     protected function notifierEchec(service_user $serviceUser)
     {
         try {
-            \Log::info('Info service :', $serviceUser);
             // Mail d’échec
             // Récupérer tous les utilisateurs notifiables
             $users = User::where([["id", $serviceUser->user_id], ['notifiable', true]])->get();
@@ -103,7 +133,6 @@ class ServiceUserObserver
                 Mail::to($user->email)->send(new ServiceNotificationMail($user, $message, $serviceUser->service->name));
             }
         } catch (\Throwable $e) {
-            \Log::info('info :', $e->getMessage());
         }
     }
 }
