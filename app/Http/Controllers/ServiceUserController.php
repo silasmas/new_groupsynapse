@@ -92,7 +92,7 @@ class ServiceUserController extends Controller
             'service_id'     => $service->id,
         ]);
 
-        $livraison    = $request->has('livraison') ? 50 : 0;
+        $livraison    = $request->has('livraison') ? 5 : 0;
         $premierDepot = $validated['premierDepos'];
         $coutService  = $service->prix + $livraison + $premierDepot;
 
@@ -144,7 +144,7 @@ class ServiceUserController extends Controller
                 'numero_carte'    => $validated['rnumCarte'],
 
                 'etat'            => 'init',
-                'currency'        => 'CDF',
+                'currency'        => $service->currency,
                 'user_id'         => Auth::user()->id,
                 'service_id'      => $service->id,
             ]);
