@@ -179,11 +179,15 @@ class CartController extends Controller
                         'phone'           => $transactionData['channel'],
                         'updated_at'      => now(),
                     ]);
-                    $service->update([
-                        'etat'       => $status,
-                        'updated_at' => now(),
-                    ]);
-                    $this->clearCartAfterPayment($transaction->user_id);
+                    if($service){
+                        $service->update([
+                            'etat'       => $status,
+                            'updated_at' => now(),
+                        ]);
+                    }else{
+
+                        $this->clearCartAfterPayment($transaction->user_id);
+                    }
                     return response()->json([
                         'reponse' => true,
                         'message' => 'La transaction mis à été fait avec succès.',
@@ -197,10 +201,12 @@ class CartController extends Controller
                     'etat'       => $status,
                     'updated_at' => now(),
                 ]);
-                $service->update([
-                    'etat'       => $status,
-                    'updated_at' => now(),
-                ]);
+                if($service){
+                        $service->update([
+                            'etat'       => $status,
+                            'updated_at' => now(),
+                        ]);
+                    }
                 return response()->json([
                     'reponse' => false,
                     'status'  => $jsonRes['transaction']["status"],
@@ -213,10 +219,12 @@ class CartController extends Controller
                     'etat'       => $status,
                     'updated_at' => now(),
                 ]);
-                $service->update([
-                    'etat'       => $status,
-                    'updated_at' => now(),
-                ]);
+                if($service){
+                        $service->update([
+                            'etat'       => $status,
+                            'updated_at' => now(),
+                        ]);
+                    }
                 return response()->json([
                     'reponse'     => true,
                     'message'     => $jsonRes["message"],
