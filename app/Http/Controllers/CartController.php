@@ -86,14 +86,25 @@ class CartController extends Controller
         // Génération de la référence unique
         $reference = $request->referenceCreate;
         // Création de la commande
-        $order = Commande::create([
-            'user_id'     => $userId,
-            'reference'   => $reference,
-            'total'       => $request->total,
-            'channel'     => $request->channel,
-            'currency'    => $request->currency,
-            'description' => $request->slug,
-        ]);
+        // $order = Commande::create([
+        //     'user_id'     => $userId,
+        //     'reference'   => $reference,
+        //     'total'       => $request->total,
+        //     'channel'     => $request->channel,
+        //     'currency'    => $request->currency,
+        //     'description' => $request->slug,
+        // ]);
+        $order = Commande::updateOrCreate(
+    ['reference' => $reference], // Critère d’unicité
+    [
+        'user_id'     => $userId,
+        'total'       => $request->total,
+        'channel'     => $request->channel,
+        'currency'    => $request->currency,
+        'description' => $request->slug,
+    ]
+);
+
 
         // Lancement du paiement FlexPay
         return $this->initiatePayment($order, $request->phone);
@@ -262,7 +273,7 @@ class CartController extends Controller
 
                 $order->etat = 'Payée'; // Paiement réussi
                 $msg         = 'Paiement réussi !';
-                sendSms($phoneNumber, $message);
+                // sendSms($phoneNumber, $message);
                 $rep = $this->clearCartAfterPayment($order->user_id);
                 break;
 

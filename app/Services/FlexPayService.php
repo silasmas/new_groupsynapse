@@ -69,30 +69,31 @@ class FlexPayService
         return $response->json();
     }
 
-    public function initiatePayment($amount, $currency, $reference, $description, $type = "produit")
+    public function initiatePayment2($amount, $currency, $reference, $description, $type = "produit")
     {
 
-        // $token    = $this->token;    // Récupération du token depuis l'ENV
-        $token    = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzkxOTk0Njg5LCJzdWIiOiJkMWQzNmEyZWYwNDE1NjA1ZTBkODkzZDZjZDk3OGQxZiJ9.B6JZxeFpJW8SN0sQRxMIeWe1c9qfCFkEDE7_lz4Yh3U";    // Récupération du token depuis l'ENV
-        $merchant = $this->merchant; // Récupération du code marchand
-        $apiUrl   = $this->apiUrl;   // URL de l'API FlexPay
+                                                                                                                                                                                                                                         // $token    = $this->token;    // Récupération du token depuis l'ENV
+        // $token    = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzkxOTk0Njg5LCJzdWIiOiJkMWQzNmEyZWYwNDE1NjA1ZTBkODkzZDZjZDk3OGQxZiJ9.B6JZxeFpJW8SN0sQRxMIeWe1c9qfCFkEDE7_lz4Yh3U"; // Récupération du token depuis l'ENV
+        $token    = $this->apiUrl; // Récupération du token depuis l'ENV
+        $merchant = $this->merchant;                                                                                                                                                                                                     // Récupération du code marchand
+        $apiUrl   = $this->apiUrl;                                                                                                                                                                                                       // URL de l'API FlexPay
 
-        $callbackUrl     = $type=="produit"?env('APP_URL') . '/storeTransaction':env('APP_URL') . '/storeTransactionService';
+        $callbackUrl     = $type == "produit" ? env('APP_URL') . '/storeTransaction' : env('APP_URL') . '/storeTransactionService';
         $baseRedirectUrl = env('APP_URL') . "/paid/$reference/$amount/$currency";
 
         // Construction du corps de la requête
         $body = [
-             'authorization' => "Bearer $token",
-            'merchant'     => $merchant,
-            'reference'    => $reference,
-            'amount'       => $amount,
-            'currency'     => $currency,
-            'description'  => $description,
-            'callback_url' => $callbackUrl,
-            'approve_url'  => $type=="produit"?"$baseRedirectUrl/success":"$baseRedirectUrl/declineService",
-            'cancel_url'   => $type=="produit"?"$baseRedirectUrl/cancel":"$baseRedirectUrl/declineService",
-            'decline_url'  => $type=="produit"?"$baseRedirectUrl/decline":"$baseRedirectUrl/declineService",
-            'home_url'     => env('APP_URL') . '/home',
+            'Authorization' => "Bearer ".$token,
+            'merchant'      => $merchant,
+            'reference'     => $reference,
+            'amount'        => $amount,
+            'currency'      => $currency,
+            'description'   => $description,
+            'callback_url'  => $callbackUrl,
+            'approve_url'   => $type == "produit" ? "$baseRedirectUrl/success" : "$baseRedirectUrl/declineService",
+            'cancel_url'    => $type == "produit" ? "$baseRedirectUrl/cancel" : "$baseRedirectUrl/declineService",
+            'decline_url'   => $type == "produit" ? "$baseRedirectUrl/decline" : "$baseRedirectUrl/declineService",
+            'home_url'      => env('APP_URL') . '/home',
         ];
         // dd($body);
         // Initialisation de cURL
@@ -110,7 +111,7 @@ class FlexPayService
 
         // Décodage de la réponse JSON
         $json = json_decode($curlResponse, true);
-        dd($json);
+
         if (isset($json['code']) && $json['code'] === "0") {
             // dd($body);
             // Redirection vers la page de paiement FlexPay
@@ -122,6 +123,67 @@ class FlexPayService
         }
 
     }
+public function initiatePayment($amount, $currency, $reference, $description, $type = "produit")
+{
+    $token    = env('FLEXPAY_API_TOKEN'); // récupère le token depuis .env
+    $merchant = $this->merchant;
+    $apiUrl   = $this->apiUrl;
+
+    if (empty($token)) {
+        throw new \Exception("Le token FlexPay est vide. Vérifiez votre .env ou votre configuration.");
+    }
+
+    $callbackUrl     = $type == "produit" ? env('APP_URL') . '/storeTransaction' : env('APP_URL') . '/storeTransactionService';
+    $baseRedirectUrl = env('APP_URL') . "/paid/$reference/$amount/$currency";
+
+    // Corps de la requête JSON (sans Authorization ici !)
+    $body = [
+        'authorization' => "Bearer " . env('FLEXPAY_API_TOKEN'),
+        'merchant'      => $merchant,
+        'reference'     => $reference,
+        'amount'        => $amount,
+        'currency'      => $currency,
+        'description'   => $description,
+        'callback_url'  => $callbackUrl,
+        'approve_url'   => $type == "produit" ? "$baseRedirectUrl/success" : "$baseRedirectUrl/declineService",
+        'cancel_url'    => $type == "produit" ? "$baseRedirectUrl/cancel" : "$baseRedirectUrl/declineService",
+        'decline_url'   => $type == "produit" ? "$baseRedirectUrl/decline" : "$baseRedirectUrl/declineService",
+        'home_url'      => env('APP_URL') . '/home',
+    ];
+
+     $jsonBody = json_encode($body);
+
+    // $curl = curl_init($apiUrl);
+    // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    // curl_setopt($curl, CURLOPT_POST, true);
+    // curl_setopt($curl, CURLOPT_HTTPHEADER, [
+    //     'Content-Type: application/json',
+    //     'authorization: Bearer ' . $token,
+    // ]);
+    // curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonBody);
+
+    // $curlResponse = curl_exec($curl);
+    // curl_close($curl);
+
+     $curl = curl_init(env('FLEXPAY_GATEWAY_CARD'));
+
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonBody);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $curlResponse = curl_exec($curl);
+curl_close($curl);
+    $json = json_decode($curlResponse, true);
+
+    if (isset($json['code']) && $json['code'] === "0") {
+        return ["rep" => true, "url" => $json['url'], "orderNumber" => $json['orderNumber'], "data" => $json];
+    } else {
+        return [
+            "rep" => false,
+            "message" => $json['message'] ?? 'Réponse invalide de l’API',
+            'error' => 'Échec de l’initiation du paiement : '
+        ];
+    }
+}
 
     /**
      * Vérifie l'état d'une transaction.
