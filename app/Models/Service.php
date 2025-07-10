@@ -32,4 +32,8 @@ class Service extends Model
     {
         return $this->belongsToMany(User::class, 'service_users', 'user_id', 'service_id')->withPivot('created_at', 'updated_at');
     }
+    public function comments()
+{
+    return $this->morphMany(\App\Models\Comment::class, 'commentable');
+}
 }

@@ -1,342 +1,458 @@
 <div class="col-lg-8">
-                            <div class="checkout-wrap">
-                                <h5 class="title">Veuillez remplir le formulaire ci-dessous pour ?Renouveler votre carte</h5>
-                                <form action="#" class="checkout-form">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-grp">
-                                                <label for="fName">FIRST NAME <span>*</span></label>
-                                                <input type="text" id="fName">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-grp">
-                                                <label for="lName">Last NAME <span>*</span></label>
-                                                <input type="text" id="lName">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-grp">
-                                                <label for="cName">COMPANY NAME <small>(OPTIONAL)</small></label>
-                                                <input type="text" id="cName">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-grp">
-                                                <label>COUNTRY / REGION *</label>
-                                                <select class="custom-select">
-                                                    <option value="Afganistan">Afghanistan</option>
-                                                    <option value="Albania">Albania</option>
-                                                    <option value="Algeria">Algeria</option>
-                                                    <option value="American Samoa">American Samoa</option>
-                                                    <option value="Andorra">Andorra</option>
-                                                    <option value="Angola">Angola</option>
-                                                    <option value="Anguilla">Anguilla</option>
-                                                    <option value="Antigua & Barbuda">Antigua & Barbuda</option>
-                                                    <option value="Argentina">Argentina</option>
-                                                    <option value="Armenia">Armenia</option>
-                                                    <option value="Aruba">Aruba</option>
-                                                    <option value="Australia">Australia</option>
-                                                    <option value="Austria">Austria</option>
-                                                    <option value="Azerbaijan">Azerbaijan</option>
-                                                    <option value="Bahamas">Bahamas</option>
-                                                    <option value="Bahrain">Bahrain</option>
-                                                    <option value="Bangladesh">Bangladesh</option>
-                                                    <option value="Barbados">Barbados</option>
-                                                    <option value="Belarus">Belarus</option>
-                                                    <option value="Belgium">Belgium</option>
-                                                    <option value="Belize">Belize</option>
-                                                    <option value="Benin">Benin</option>
-                                                    <option value="Bermuda">Bermuda</option>
-                                                    <option value="Bhutan">Bhutan</option>
-                                                    <option value="Bolivia">Bolivia</option>
-                                                    <option value="Bonaire">Bonaire</option>
-                                                    <option value="Bosnia & Herzegovina">Bosnia & Herzegovina</option>
-                                                    <option value="Botswana">Botswana</option>
-                                                    <option value="Brazil">Brazil</option>
-                                                    <option value="British Indian Ocean Ter">British Indian Ocean Ter</option>
-                                                    <option value="Brunei">Brunei</option>
-                                                    <option value="Bulgaria">Bulgaria</option>
-                                                    <option value="Burkina Faso">Burkina Faso</option>
-                                                    <option value="Burundi">Burundi</option>
-                                                    <option value="Cambodia">Cambodia</option>
-                                                    <option value="Cameroon">Cameroon</option>
-                                                    <option value="Canada">Canada</option>
-                                                    <option value="Canary Islands">Canary Islands</option>
-                                                    <option value="Cape Verde">Cape Verde</option>
-                                                    <option value="Cayman Islands">Cayman Islands</option>
-                                                    <option value="Central African Republic">Central African Republic</option>
-                                                    <option value="Chad">Chad</option>
-                                                    <option value="Channel Islands">Channel Islands</option>
-                                                    <option value="Chile">Chile</option>
-                                                    <option value="China">China</option>
-                                                    <option value="Christmas Island">Christmas Island</option>
-                                                    <option value="Cocos Island">Cocos Island</option>
-                                                    <option value="Colombia">Colombia</option>
-                                                    <option value="Comoros">Comoros</option>
-                                                    <option value="Congo">Congo</option>
-                                                    <option value="Cook Islands">Cook Islands</option>
-                                                    <option value="Costa Rica">Costa Rica</option>
-                                                    <option value="Cote DIvoire">Cote DIvoire</option>
-                                                    <option value="Croatia">Croatia</option>
-                                                    <option value="Cuba">Cuba</option>
-                                                    <option value="Curaco">Curacao</option>
-                                                    <option value="Cyprus">Cyprus</option>
-                                                    <option value="Czech Republic">Czech Republic</option>
-                                                    <option value="Denmark">Denmark</option>
-                                                    <option value="Djibouti">Djibouti</option>
-                                                    <option value="Dominica">Dominica</option>
-                                                    <option value="Dominican Republic">Dominican Republic</option>
-                                                    <option value="East Timor">East Timor</option>
-                                                    <option value="Ecuador">Ecuador</option>
-                                                    <option value="Egypt">Egypt</option>
-                                                    <option value="El Salvador">El Salvador</option>
-                                                    <option value="Equatorial Guinea">Equatorial Guinea</option>
-                                                    <option value="Eritrea">Eritrea</option>
-                                                    <option value="Estonia">Estonia</option>
-                                                    <option value="Ethiopia">Ethiopia</option>
-                                                    <option value="Falkland Islands">Falkland Islands</option>
-                                                    <option value="Faroe Islands">Faroe Islands</option>
-                                                    <option value="Fiji">Fiji</option>
-                                                    <option value="Finland">Finland</option>
-                                                    <option value="France">France</option>
-                                                    <option value="French Guiana">French Guiana</option>
-                                                    <option value="French Polynesia">French Polynesia</option>
-                                                    <option value="French Southern Ter">French Southern Ter</option>
-                                                    <option value="Gabon">Gabon</option>
-                                                    <option value="Gambia">Gambia</option>
-                                                    <option value="Georgia">Georgia</option>
-                                                    <option value="Germany">Germany</option>
-                                                    <option value="Ghana">Ghana</option>
-                                                    <option value="Gibraltar">Gibraltar</option>
-                                                    <option value="Great Britain">Great Britain</option>
-                                                    <option value="Greece">Greece</option>
-                                                    <option value="Greenland">Greenland</option>
-                                                    <option value="Grenada">Grenada</option>
-                                                    <option value="Guadeloupe">Guadeloupe</option>
-                                                    <option value="Guam">Guam</option>
-                                                    <option value="Guatemala">Guatemala</option>
-                                                    <option value="Guinea">Guinea</option>
-                                                    <option value="Guyana">Guyana</option>
-                                                    <option value="Haiti">Haiti</option>
-                                                    <option value="Hawaii">Hawaii</option>
-                                                    <option value="Honduras">Honduras</option>
-                                                    <option value="Hong Kong">Hong Kong</option>
-                                                    <option value="Hungary">Hungary</option>
-                                                    <option value="Iceland">Iceland</option>
-                                                    <option value="Indonesia">Indonesia</option>
-                                                    <option value="India">India</option>
-                                                    <option value="Iran">Iran</option>
-                                                    <option value="Iraq">Iraq</option>
-                                                    <option value="Ireland">Ireland</option>
-                                                    <option value="Isle of Man">Isle of Man</option>
-                                                    <option value="Israel">Israel</option>
-                                                    <option value="Italy">Italy</option>
-                                                    <option value="Jamaica">Jamaica</option>
-                                                    <option value="Japan">Japan</option>
-                                                    <option value="Jordan">Jordan</option>
-                                                    <option value="Kazakhstan">Kazakhstan</option>
-                                                    <option value="Kenya">Kenya</option>
-                                                    <option value="Kiribati">Kiribati</option>
-                                                    <option value="Korea North">Korea North</option>
-                                                    <option value="Korea Sout">Korea South</option>
-                                                    <option value="Kuwait">Kuwait</option>
-                                                    <option value="Kyrgyzstan">Kyrgyzstan</option>
-                                                    <option value="Laos">Laos</option>
-                                                    <option value="Latvia">Latvia</option>
-                                                    <option value="Lebanon">Lebanon</option>
-                                                    <option value="Lesotho">Lesotho</option>
-                                                    <option value="Liberia">Liberia</option>
-                                                    <option value="Libya">Libya</option>
-                                                    <option value="Liechtenstein">Liechtenstein</option>
-                                                    <option value="Lithuania">Lithuania</option>
-                                                    <option value="Luxembourg">Luxembourg</option>
-                                                    <option value="Macau">Macau</option>
-                                                    <option value="Macedonia">Macedonia</option>
-                                                    <option value="Madagascar">Madagascar</option>
-                                                    <option value="Malaysia">Malaysia</option>
-                                                    <option value="Malawi">Malawi</option>
-                                                    <option value="Maldives">Maldives</option>
-                                                    <option value="Mali">Mali</option>
-                                                    <option value="Malta">Malta</option>
-                                                    <option value="Marshall Islands">Marshall Islands</option>
-                                                    <option value="Martinique">Martinique</option>
-                                                    <option value="Mauritania">Mauritania</option>
-                                                    <option value="Mauritius">Mauritius</option>
-                                                    <option value="Mayotte">Mayotte</option>
-                                                    <option value="Mexico">Mexico</option>
-                                                    <option value="Midway Islands">Midway Islands</option>
-                                                    <option value="Moldova">Moldova</option>
-                                                    <option value="Monaco">Monaco</option>
-                                                    <option value="Mongolia">Mongolia</option>
-                                                    <option value="Montserrat">Montserrat</option>
-                                                    <option value="Morocco">Morocco</option>
-                                                    <option value="Mozambique">Mozambique</option>
-                                                    <option value="Myanmar">Myanmar</option>
-                                                    <option value="Nambia">Nambia</option>
-                                                    <option value="Nauru">Nauru</option>
-                                                    <option value="Nepal">Nepal</option>
-                                                    <option value="Netherland Antilles">Netherland Antilles</option>
-                                                    <option value="Netherlands">Netherlands (Holland, Europe)</option>
-                                                    <option value="Nevis">Nevis</option>
-                                                    <option value="New Caledonia">New Caledonia</option>
-                                                    <option value="New Zealand">New Zealand</option>
-                                                    <option value="Nicaragua">Nicaragua</option>
-                                                    <option value="Niger">Niger</option>
-                                                    <option value="Nigeria">Nigeria</option>
-                                                    <option value="Niue">Niue</option>
-                                                    <option value="Norfolk Island">Norfolk Island</option>
-                                                    <option value="Norway">Norway</option>
-                                                    <option value="Oman">Oman</option>
-                                                    <option value="Pakistan">Pakistan</option>
-                                                    <option value="Palau Island">Palau Island</option>
-                                                    <option value="Palestine">Palestine</option>
-                                                    <option value="Panama">Panama</option>
-                                                    <option value="Papua New Guinea">Papua New Guinea</option>
-                                                    <option value="Paraguay">Paraguay</option>
-                                                    <option value="Peru">Peru</option>
-                                                    <option value="Phillipines">Philippines</option>
-                                                    <option value="Pitcairn Island">Pitcairn Island</option>
-                                                    <option value="Poland">Poland</option>
-                                                    <option value="Portugal">Portugal</option>
-                                                    <option value="Puerto Rico">Puerto Rico</option>
-                                                    <option value="Qatar">Qatar</option>
-                                                    <option value="Republic of Montenegro">Republic of Montenegro</option>
-                                                    <option value="Republic of Serbia">Republic of Serbia</option>
-                                                    <option value="Reunion">Reunion</option>
-                                                    <option value="Romania">Romania</option>
-                                                    <option value="Russia">Russia</option>
-                                                    <option value="Rwanda">Rwanda</option>
-                                                    <option value="St Barthelemy">St Barthelemy</option>
-                                                    <option value="St Eustatius">St Eustatius</option>
-                                                    <option value="St Helena">St Helena</option>
-                                                    <option value="St Kitts-Nevis">St Kitts-Nevis</option>
-                                                    <option value="St Lucia">St Lucia</option>
-                                                    <option value="St Maarten">St Maarten</option>
-                                                    <option value="St Pierre & Miquelon">St Pierre & Miquelon</option>
-                                                    <option value="St Vincent & Grenadines">St Vincent & Grenadines</option>
-                                                    <option value="Saipan">Saipan</option>
-                                                    <option value="Samoa">Samoa</option>
-                                                    <option value="Samoa American">Samoa American</option>
-                                                    <option value="San Marino">San Marino</option>
-                                                    <option value="Sao Tome & Principe">Sao Tome & Principe</option>
-                                                    <option value="Saudi Arabia">Saudi Arabia</option>
-                                                    <option value="Senegal">Senegal</option>
-                                                    <option value="Seychelles">Seychelles</option>
-                                                    <option value="Sierra Leone">Sierra Leone</option>
-                                                    <option value="Singapore">Singapore</option>
-                                                    <option value="Slovakia">Slovakia</option>
-                                                    <option value="Slovenia">Slovenia</option>
-                                                    <option value="Solomon Islands">Solomon Islands</option>
-                                                    <option value="Somalia">Somalia</option>
-                                                    <option value="South Africa">South Africa</option>
-                                                    <option value="Spain">Spain</option>
-                                                    <option value="Sri Lanka">Sri Lanka</option>
-                                                    <option value="Sudan">Sudan</option>
-                                                    <option value="Suriname">Suriname</option>
-                                                    <option value="Swaziland">Swaziland</option>
-                                                    <option value="Sweden">Sweden</option>
-                                                    <option value="Switzerland">Switzerland</option>
-                                                    <option value="Syria">Syria</option>
-                                                    <option value="Tahiti">Tahiti</option>
-                                                    <option value="Taiwan">Taiwan</option>
-                                                    <option value="Tajikistan">Tajikistan</option>
-                                                    <option value="Tanzania">Tanzania</option>
-                                                    <option value="Thailand">Thailand</option>
-                                                    <option value="Togo">Togo</option>
-                                                    <option value="Tokelau">Tokelau</option>
-                                                    <option value="Tonga">Tonga</option>
-                                                    <option value="Trinidad & Tobago">Trinidad & Tobago</option>
-                                                    <option value="Tunisia">Tunisia</option>
-                                                    <option value="Turkey">Turkey</option>
-                                                    <option value="Turkmenistan">Turkmenistan</option>
-                                                    <option value="Turks & Caicos Is">Turks & Caicos Is</option>
-                                                    <option value="Tuvalu">Tuvalu</option>
-                                                    <option value="Uganda">Uganda</option>
-                                                    <option value="United Kingdom">United Kingdom</option>
-                                                    <option value="Ukraine">Ukraine</option>
-                                                    <option value="United Arab Erimates">United Arab Emirates</option>
-                                                    <option value="United States of America">United States of America</option>
-                                                    <option value="Uraguay">Uruguay</option>
-                                                    <option value="Uzbekistan">Uzbekistan</option>
-                                                    <option value="Vanuatu">Vanuatu</option>
-                                                    <option value="Vatican City State">Vatican City State</option>
-                                                    <option value="Venezuela">Venezuela</option>
-                                                    <option value="Vietnam">Vietnam</option>
-                                                    <option value="Virgin Islands (Brit)">Virgin Islands (Brit)</option>
-                                                    <option value="Virgin Islands (USA)">Virgin Islands (USA)</option>
-                                                    <option value="Wake Island">Wake Island</option>
-                                                    <option value="Wallis & Futana Is">Wallis & Futana Is</option>
-                                                    <option value="Yemen">Yemen</option>
-                                                    <option value="Zaire">Zaire</option>
-                                                    <option value="Zambia">Zambia</option>
-                                                    <option value="Zimbabwe">Zimbabwe</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-grp">
-                                                <label for="address">STREET ADDRESS *</label>
-                                                <input type="text" id="address">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-grp">
-                                                <label>TOWN / CITY *</label>
-                                                <select class="custom-select">
-                                                    <option value="Illinois">Illinois</option>
-                                                    <option value="New York">New York</option>
-                                                    <option value="California">California</option>
-                                                    <option value="Los Angeles">Los Angeles</option>
-                                                    <option value="Chicago">Chicago</option>
-                                                    <option value="Houston">Houston</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-grp">
-                                                <label>STATE *</label>
-                                                <select class="custom-select">
-                                                    <option value="New York">New York</option>
-                                                    <option value="California">California</option>
-                                                    <option value="Los Angeles">Los Angeles</option>
-                                                    <option value="Chicago">Chicago</option>
-                                                    <option value="Illinois">Illinois</option>
-                                                    <option value="Houston">Houston</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-grp">
-                                                <label for="zip">postal ZIP <span>*</span></label>
-                                                <input type="text" id="zip">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-grp">
-                                                <label for="phone">Your PHONE <span>*</span></label>
-                                                <input type="text" id="phone">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-grp">
-                                                <label for="email">EMAIL ADDRESS <span>*</span></label>
-                                                <input type="email" id="email">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="different-address custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="stda">
-                                                <label class="custom-control-label" for="stda">SHIP TO A DIFFERENT ADDRESS?</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-grp mb-0">
-                                                <label for="message">ORDER you have NOTES <small>(OPTIONAL)</small></label>
-                                                <textarea name="message" id="message" placeholder="About Your Special Delivery Notes"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+    <div class="checkout-wrap">
+        <h5 class="title">Veuillez remplir le formulaire ci-dessous pour renouveler votre carte</h5>
+        <small>
+            <b>Note :</b> Les champs marqués d'un <span class="text-danger">*</span> sont obligatoires. Assurez-vous de
+            fournir des informations
+            valides pour éviter des retards dans le traitement de votre demande.
+            <p class="text-danger">Le frais du renouvelement de la carte est de {{ $serv->prix . '' . $serv->currency }}</p>
+        </small>
+        <form action="#" class="checkout-form" id="formpaie">
+            <div class="row">
+                <div class="col-sm-6" hidden>
+                    <div class="form-grp">
+                        <label for="fName">Service <span>*</span></label>
+                        <input type="text" value="{{ $page }}" required id="cservice" name="service">
+                    </div>
+                </div>
+                <div class="col-sm-6" hidden>
+                    <div class="form-grp">
+                        <label for="fName">reference </label>
+                        <input type="text" value="" id="creference" name="reference">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-grp">
+                        <label for="fName">Nom et Prenom <span>*</span></label>
+                        <input type="text" required id="cnom" name="nom">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-grp">
+                        <label for="lName">Email <span>*</span></label>
+                        <input type="email" required id="cemail" name="email">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-grp">
+                        <label for="phone">Numero de telephon <span>*</span></label>
+                        <input type="text" required id="cphone" name="phone" placeholder="Ex : 24382XXXXX">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-grp">
+                        <label for="phone">Premier depos (ce montant est obligatoire et doit être minumum 5$)
+                            <span>*</span></label>
+                        <input type="text" required id="cpremier" name="premierDepos"
+                            placeholder="Ecrivez que le montant (Ex : 5,10,20...)">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-grp">
+                        <label for="cName">Pièce d’identité valide <span>*</span> <small>lisible (CNI, passeport ou
+                                permis)</small></label>
+                        <input type="file" id="cpiece" name="piece">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-grp">
+                        <label for="cName">Photo d’identité <span>*</span></label>
+                        <input type="file" id="cphoto" name="photo">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="different-address custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="clivraison" name="livraison">
+                        <label class="custom-control-label" for="clivraison">livraison à domicile?</label>
+                    </div>
+                </div>
+                <div class="col-9 mb-20" id="adresse-group">
+                    <label class="mb-10">Frais de livraison : 5$</label>
+                    <div class="form-grp mb-0">
+                        <label for="address"> Adresse de livraison <small>(Optionel)</small></label>
+                        <textarea name="adresse" id="cadresse" placeholder="Votre adresse de livraison"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="btnSoumisson" class="btn">Soumettre la demande</button>
+            <button type="submit" id="btnModifier" class="btn btn-warning d-none">Modifier la demande</button>
+        </form>
+    </div>
+</div>
+
+@section('script')
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // ============================================================
+            // 1. Initialisation des éléments DOM et des variables globales
+            // ============================================================
+            const livraisonCheckbox = document.getElementById('clivraison');
+            const adresseGroup = document.getElementById('adresse-group');
+            const cpremier = document.getElementById('cpremier');
+            const adresseField = document.getElementById('cadresse').closest('.form-grp');
+            const formInfo = document.querySelector('.checkout-form');
+            const paiementSection = document.getElementById('paiement-section');
+            const btnPaiement = document.getElementById('btn-paiement');
+            const fileInputs = ['cpiece', 'cphoto'];
+
+            // 1.1 Configuration de Toastr
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+
+            // 1.2 Création dynamique du loader (masqué par défaut)
+            const overlay = document.createElement('div');
+            overlay.id = 'overlay-blurer';
+            overlay.innerHTML = `<div class="loaderer"></div>`;
+
+
+            // ========================================
+            // 2. Gestion de l'affichage de l'adresse
+            // ========================================
+            function toggleAdresseDisplay() {
+                const adresseInput = document.getElementById('cadresse');
+
+                if (livraisonCheckbox.checked) {
+                    adresseGroup.style.display = 'block';
+                    adresseInput.setAttribute('required', 'required'); // rendre obligatoire
+                } else {
+                    adresseGroup.style.display = 'none';
+                    adresseInput.removeAttribute('required'); // retirer l'obligation
+                    adresseInput.value = ''; // optionnel : vider le champ
+                }
+            }
+
+            toggleAdresseDisplay(); // 2.1 Initialisation au chargement
+            livraisonCheckbox.addEventListener('change', toggleAdresseDisplay); // 2.2 Réactivité
+
+            // ============================================
+            // 3. Drag & Drop : gestion des fichiers upload
+            // ============================================
+            fileInputs.forEach(id => {
+                const input = document.getElementById(id);
+                const dropZone = document.createElement('div');
+                dropZone.className = 'drop-zone';
+                dropZone.innerHTML = `
+            <p>Glissez votre fichier ici ou cliquez pour sélectionner</p>
+            <div class="preview"></div>`;
+
+                input.style.display = 'none';
+                input.parentNode.insertBefore(dropZone, input);
+                dropZone.appendChild(input);
+
+                // 3.1 Clic = ouvrir le file input
+                dropZone.addEventListener('click', () => input.click());
+
+                // 3.2 Drag / Drop
+                dropZone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    dropZone.classList.add('dragover');
+                });
+                dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+                dropZone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    dropZone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    validateAndPreview(file, input, dropZone);
+                });
+
+                // 3.3 Changement normal
+                input.addEventListener('change', () => {
+                    const file = input.files[0];
+                    validateAndPreview(file, input, dropZone);
+                });
+            });
+
+            // ======================================
+            // 4. Soumission du formulaire principal
+            // ======================================
+            formInfo.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // 4.1 Nettoyage visuel
+                document.querySelectorAll('.is-invalid, .input-error, .label-error, .error-bubble').forEach(
+                    el => {
+                        el.classList.remove('is-invalid', 'input-error', 'label-error');
+                        if (el.classList.contains('error-bubble')) el.remove();
+                    });
+
+                // 4.2 Validation des champs requis
+                const requiredFields = ['cnom', 'cemail', 'cphone', 'cpiece', "cpremier"];
+                let valid = true;
+                let messages = [];
+
+                requiredFields.forEach(id => {
+                    const field = document.getElementById(id);
+                    const value = field?.value?.trim();
+                    if (!value) {
+                        valid = false;
+                        messages.push(`Le champ "${field.name}" est requis.`);
+
+                        if (field.type === 'file') {
+                            field.closest('.drop-zone')?.classList.add('input-error');
+                            const labelEl = field.closest('.form-grp')?.querySelector('label');
+                            labelEl?.classList.add('label-error');
+                            insertBubble(field, 'Ce champ est requis.');
+                        } else {
+                            field.classList.add('is-invalid');
+                            insertBubble(field, 'Ce champ est requis.');
+                        }
+                    }
+                });
+
+                // 4.3 Validation e-mail
+                const email = document.getElementById('cemail');
+                if (email.value && !/\S+@\S+\.\S+/.test(email.value)) {
+                    valid = false;
+                    email.classList.add('is-invalid');
+                    insertBubble(email, 'Adresse email invalide.');
+                    messages.push("Adresse email invalide.");
+                }
+
+                // 4.4 Stop si invalide
+                if (!valid) {
+                    toastr.warning("Corrigez les erreurs du formulaire.");
+                    return;
+                }
+
+                // 4.5 Envoi du formulaire via AJAX
+                const formData = new FormData(formInfo);
+                fetch("{{ route('init.service') }}", {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // 5. Réponse success
+                            paiementSection.style.opacity = 1;
+                            paiementSection.style.pointerEvents = 'auto';
+                            btnPaiement.removeAttribute('disabled');
+
+                            document.getElementById('total').value = data.total;
+                            document.getElementById('slug').value = data.slug;
+                            document.getElementById('currency').value = data.currency;
+                            document.getElementById('totalAff').textContent = data.total + data
+                                .currency;
+                            document.getElementById('afficheLivraison').textContent = data.livraison +
+                                data.currency;
+                            document.getElementById('afficheDepos').textContent = data.premier + data
+                                .currency;
+                            document.getElementById('sousTotal').textContent = data.total + data
+                                .currency;
+                            document.getElementById('creference').value = data.id;
+                            document.getElementById('referenceCreate').value = data.reference;
+
+                            // 5.1 Afficher le bouton Modifier
+                            const btnModifier = document.getElementById('btnModifier');
+                            btnModifier.classList.remove('d-none');
+                            btnModifier.dataset.userId = data.id;
+
+                            // 5.2 Initialiser le bloc paiement
+                            paiement();
+
+                            toastr.success(
+                                "✅ Informations enregistrées. Vous pouvez passer à la caisse.");
+                        } else {
+                            // 6. Réponse avec erreurs
+                            let messages = [];
+                            const fieldLabels = {
+                                nom: "Nom et prénom",
+                                email: "Adresse e-mail",
+                                phone: "Numéro de téléphone",
+                                piece: "Pièce d’identité",
+                                photo: "Photo d’identité",
+                                adresse: "Adresse de livraison",
+                                livraison: "Livraison",
+                                service: "Service",
+                                premierDepos: "Premier dépôt"
+                            };
+
+                            if (data.errors) {
+                                for (const field in data.errors) {
+                                    const label = fieldLabels[field] || field;
+                                    const input = document.querySelector(`[name="${field}"]`);
+                                    const msg = data.errors[field].join(', ');
+                                    messages.push(`<b>${label}</b> : ${msg}`);
+
+                                    if (input) {
+                                        if (input.type === 'file') {
+                                            input.closest('.drop-zone')?.classList.add('input-error');
+                                            input.closest('.form-grp')?.querySelector('label')
+                                                ?.classList.add('label-error');
+                                            insertBubble(input, msg);
+                                        } else {
+                                            input.classList.add('is-invalid');
+                                            insertBubble(input, msg);
+                                        }
+                                    }
+                                }
+                            } else {
+                                messages.push(data.message || "Erreur inconnue.");
+                            }
+                            toastr.error(messages.join('<br>'));
+                        }
+                    })
+                    .catch(err => {
+                        toastr.error("Erreur serveur ou réseau.");
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        // Nettoyage du loader
+                        document.getElementById('overlay-blurer')?.remove();
+                    });
+            });
+
+            // ==================================================
+            // 7. Fonctions utilitaires
+            // ==================================================
+
+            // 7.1 Affiche une bulle rouge sous le champ en erreur
+            function insertBubble(input, message) {
+                const bubble = document.createElement('div');
+                bubble.className = 'error-bubble';
+                bubble.style.color = 'red';
+                bubble.style.fontSize = '0.8rem';
+                bubble.style.marginTop = '4px';
+                bubble.innerText = message;
+
+                const parent = input.closest('.form-grp') || input.parentNode;
+                parent.appendChild(bubble);
+            }
+
+            // 7.2 Fonction pour gérer la logique du paiement (Mobile money, CGU)
+            function paiement() {
+                const selectPayment = document.getElementById("channel");
+                const phoneContainer = document.getElementById("Contenairephone");
+                const phoneInput = document.getElementById("phone");
+                const checkboxTerms = document.getElementById("customCheck7");
+                const submitButton = document.querySelector("button.btn");
+
+                function updateFormState() {
+                    if (selectPayment.value === "mobile_money") {
+                        phoneContainer.style.display = "block";
+                        phoneInput.required = true;
+                    } else {
+                        phoneContainer.style.display = "none";
+                        phoneInput.required = false;
+                        phoneInput.value = "";
+                    }
+                    submitButton.disabled = !checkboxTerms.checked;
+                }
+
+                updateFormState();
+                selectPayment.addEventListener("change", updateFormState);
+                checkboxTerms.addEventListener("change", updateFormState);
+            }
+
+            // 7.3 Valide et affiche l'aperçu du fichier uploadé
+            function validateAndPreview(file, input, container) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                const maxSize = 2 * 1024 * 1024;
+                const preview = container.querySelector('.preview');
+
+                preview.innerHTML = '';
+
+                if (file) {
+                    if (!allowedTypes.includes(file.type)) {
+                        toastr.warning("Format non supporté (JPG, PNG, PDF)");
+                        input.value = '';
+                        return;
+                    }
+
+                    if (file.size > maxSize) {
+                        toastr.warning("Fichier trop volumineux (max 2 Mo)");
+                        input.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        let content = '';
+                        if (file.type.startsWith('image/')) {
+                            content = `<img src="${e.target.result}" alt="aperçu fichier">`;
+                        } else {
+                            content = `<div class="file-name">${file.name}</div>`;
+                        }
+
+                        preview.innerHTML = `
+                    <div class="preview-container">
+                        ${content}
+                        <span class="remove-icon" title="Supprimer">×</span>
+                    </div>
+                `;
+
+                        preview.querySelector('.remove-icon').addEventListener('click', () => {
+                            input.value = '';
+                            preview.innerHTML = '';
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            // 8. Réinitialisation dynamique du formulaire
+            function resetForm() {
+
+                // 🧼 Réinitialise le formulaire HTML natif
+                formInfo.reset();
+
+                // 🔄 Réinitialise l’affichage de l’adresse
+                toggleAdresseDisplay();
+
+                // 🔄 Vide les aperçus des fichiers
+                fileInputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    const preview = input.closest('.drop-zone')?.querySelector('.preview');
+                    if (preview) preview.innerHTML = '';
+                });
+
+                // 🧽 Supprime les erreurs visuelles
+                document.querySelectorAll('.is-invalid, .input-error, .label-error, .error-bubble')
+                    .forEach(el => {
+                        el.classList.remove('is-invalid', 'input-error', 'label-error');
+                        if (el.classList.contains('error-bubble')) el.remove();
+                    });
+
+                // 🔒 Réinitialise la section paiement
+                paiementSection.style.opacity = 0.5;
+                paiementSection.style.pointerEvents = 'none';
+                btnPaiement.setAttribute('disabled', true);
+
+                // ❌ Masque le bouton modifier
+                document.getElementById('btnModifier')?.classList.add('d-none');
+
+                // 🔄 Vide les champs cachés de paiement
+                ['total', 'slug', 'currency'].forEach(id => {
+                    const field = document.getElementById(id);
+                    if (field) field.value = '';
+                });
+
+                // 🧾 Vide l'affichage des totaux
+                ['totalAff', 'afficheLivraison', 'afficheDepos', 'sousTotal'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '';
+                });
+
+                toastr.info("Formulaire réinitialisé.");
+
+
+            }
+
+
+        });
+    </script>
+
+
+@endsection

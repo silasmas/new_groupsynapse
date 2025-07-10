@@ -1,14 +1,15 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CommandeController;
-use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ServiceUserController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,20 @@ Route::get('services', [ServiceController::class, 'index'])->name('services');
 
 Route::get('favories', [HomeController::class, 'favories'])->name('favories');
 // Route::get('/checkTransactionStatus', [CartController::class, 'checkTransactionStatus'])->name('checkTransactionStatus');
+
+// routes/web.php
+// routes/web.php
+Route::post('{type}/{id}/comments', [CommentController::class, 'storeComment'])
+     ->where('type', 'service|produit')
+     ->name('comments.store');
+
+// routes/web.php
+Route::get('{type}/{id}/comments/latest', [CommentController::class, 'latestComments'])
+     ->where('type', 'service|produit')
+     ->name('comments.latest');
+Route::get('{type}/{id}/comments/all', [CommentController::class, 'allComments'])
+     ->where('type', 'service|produit')
+     ->name('comments.all');
 
 Route::middleware(['auth'])->group(function () {
 

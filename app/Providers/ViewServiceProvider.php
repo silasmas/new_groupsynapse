@@ -4,6 +4,7 @@ namespace App\Providers;
 use App\Models\Branche;
 use App\Models\Category;
 use App\Models\Produit;
+use App\Models\Service;
 use App\Services\CartService;
 use App\Services\FavoriteService;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,7 @@ class ViewServiceProvider extends ServiceProvider
 
             // dd($branches[0]->categorie);
             $categories       = Category::where('isActive', true)->get();
+            $allServices       = Service::where('active', true)->with('comments')->get();
             $favoritesDetails = "";
 
             $groupedProducts = Produit::with('categories') // Charger les catégories associées
@@ -82,11 +84,12 @@ class ViewServiceProvider extends ServiceProvider
             }
             Session::put("cart", (new CartService())->getCartDetails());
             //    dd( isset($favoritesDetails) && !empty($favoritesDetails) ? $favoritesDetails[1]['favorites_count'] : 0 );
-        //    dd( $categories->where('type',2));
+        //   dd( $allServices->comments);
             $view->with('groupedProducts', $groupedProducts);
             $view->with('branches', $branches);
             $view->with('categories', $categories);
             $view->with('favorites', $favoritesDetails);
+            $view->with('allServices', $allServices);
         });
     }
 }

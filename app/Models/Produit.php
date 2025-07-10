@@ -100,5 +100,8 @@ class Produit extends Model
             ->withPivot('quantite', 'prix_unitaire', 'prix_total')
             ->withTimestamps();
     }
-
+public function comments()
+{
+    return $this->morphMany(\App\Models\Comment::class, 'commentable');
+}
 }
