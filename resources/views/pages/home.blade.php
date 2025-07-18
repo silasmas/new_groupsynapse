@@ -81,21 +81,26 @@
                             <div class="single-slider slider-bg" data-background="{{ asset('assets/img/slider/rep.jpg') }}">
                                 <div class="slider-content">
                                     <h5 data-animation="fadeInUp" data-delay=".3s">Réparation Express</h5>
-                                    <h2 data-animation="fadeInUp" data-delay=".6s">Donnez une seconde vie à votre smartphone !</h2>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">Donnez une seconde vie à votre smartphone
+                                        !</h2>
                                     <p data-animation="fadeInUp" data-delay=".9s">
                                         Écran cassé, batterie faible ou problème de performance ?
-                                        Nos experts réparent votre téléphone rapidement avec des pièces de qualité, pour une utilisation optimale.
+                                        Nos experts réparent votre téléphone rapidement avec des pièces de qualité, pour une
+                                        utilisation optimale.
                                     </p>
                                     <a href="services.html" class="btn yellow-btn" data-animation="fadeInUp"
                                         data-delay="1s">Voir nos services</a>
                                 </div>
                             </div>
-                            <div class="single-slider slider-bg" data-background="{{ asset('assets/img/slider/telp.jpg') }}">
+                            <div class="single-slider slider-bg"
+                                data-background="{{ asset('assets/img/slider/telp.jpg') }}">
                                 <div class="slider-content">
                                     <h5 data-animation="fadeInUp" data-delay=".3s">Smartphones & Accessoires</h5>
-                                    <h2 data-animation="fadeInUp" data-delay=".6s">Les meilleures marques, aux meilleurs prix !</h2>
+                                    <h2 data-animation="fadeInUp" data-delay=".6s">Les meilleures marques, aux meilleurs
+                                        prix !</h2>
                                     <p data-animation="fadeInUp" data-delay=".9s">
-                                        Découvrez notre sélection de smartphones dernier cri et d’accessoires indispensables.
+                                        Découvrez notre sélection de smartphones dernier cri et d’accessoires
+                                        indispensables.
                                         Qualité, performance et prix imbattables pour une expérience mobile sans compromis.
                                     </p>
                                     <a href="shop.html" class="btn yellow-btn" data-animation="fadeInUp"
@@ -137,7 +142,7 @@
         <!-- top-cat-banner-end -->
 
         <!-- exclusive-collection-area -->
-        <section class="exclusive-collection pt-100 pb-60">
+        {{-- <section class="exclusive-collection pt-100 pb-60">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
@@ -155,16 +160,12 @@
                                 <button
                                     data-filter="{{ '.' . Str::replaceFirst(' ', '-', $groupe) }}">{{ $groupe }}</button>
                             @endforeach
-                            {{-- <button class="" data-filter=".cat-one">A la une</button>
-                        <button class="" data-filter=".cat-two">Promotions</button>
-                        <button class="" data-filter=".cat-three">Explorer</button> --}}
                         </div>
                     </div>
                 </div>
                 <div class="row exclusive-active">
                     @foreach ($groupedProducts as $groupe => $products)
                         @foreach ($products->take(6) as $produit)
-                            {{-- @dd($produit->getImageUrlsAttribute()); --}}
                             <div
                                 class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer {{ Str::replaceFirst(' ', '-', $groupe) }}">
                                 <div class="mb-40 exclusive-item exclusive-item-two">
@@ -209,7 +210,7 @@
                     @endforeach
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- exclusive-collection-area-end -->
 
         <!-- deal-of-the-day -->
@@ -229,155 +230,51 @@
                                 <h4 class="title">Offre du jour</h4>
                             </div>
                             <div class="view-all-deal">
-                                <a href="shop-left-sidebar.html"><i class="flaticon-scroll"></i> Tout voir</a>
+                                <a href="{{ route('services') }}"><i class="flaticon-scroll"></i> Tout voir</a>
                             </div>
                         </div>
                         <div class="row deal-day-active">
-                            <div class="col-xl-3">
-                                <div class="most-popular-viewed-item mb-30">
-                                    <div class="viewed-item-top">
-                                        <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img
-                                                    src="{{ asset('assets/img/product/promo1.jpg') }}"
-                                                    alt=""></a>
+                            @forelse ($allServices as $cat)
+                                <div class="col-xl-3">
+                                    <div class="most-popular-viewed-item mb-30">
+                                        <div class="viewed-item-top">
+                                            <div class="mb-20 most--popular--item--thumb">
+                                                <a href="shop-details.html"><img
+                                                        src="{{ asset('assets/img/product/promo1.jpg') }}"
+                                                        alt=""></a>
+                                            </div>
+                                            <div class="super-deal-content">
+                                                <h6><a href="shop-details.html">{{ $cat->name }}</a></h6>
+                                                <p>
+                                                    {{ $cat->prix ? number_format($cat->prix, 2) . ' ' . $cat->currency : '' }}
+                                                </p>
+
+                                            </div>
                                         </div>
-                                        <div class="super-deal-content">
-                                            <h6><a href="shop-details.html">Vacuum Cleaner</a></h6>
-                                            <p>US $ 49.00<span>{ 50% off }</span></p>
-                                        </div>
-                                    </div>
-                                    <div class="viewed-item-bottom">
-                                        <ul>
+                                        <div class="viewed-item-bottom">
+                                            {{-- <ul>
                                             <li>Total Sold : 25</li>
                                             <li>Stocks : 3456</li>
                                         </ul>
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: 25%;"
                                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="viewed-offer-time">
-                                            <p><span>Dépêchez-vous</span> Offre à durée limitée</p>
-                                            <div class="coming-time" data-countdown="2020/9/20"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3">
-                                <div class="most-popular-viewed-item mb-30">
-                                    <div class="viewed-item-top">
-                                        <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html">
-                                                <img src="{{ asset('assets/img/product/promo1.jpg') }}"
-                                                    alt=""></a>
-                                        </div>
-                                        <div class="super-deal-content">
-                                            <h6><a href="shop-details.html">Stylish Smart Watch</a></h6>
-                                            <p>US $ 17.00<span>{ 50% off }</span></p>
-                                        </div>
-                                    </div>
-                                    <div class="viewed-item-bottom">
-                                        <ul>
-                                            <li>Total Sold : 35</li>
-                                            <li>Stocks : 3456</li>
-                                        </ul>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: 35%;"
-                                                aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="viewed-offer-time">
-                                            <p><span>Dépêchez-vous</span> Offre à durée limitée</p>
-                                            <div class="coming-time" data-countdown="2020/9/15"></div>
+                                        </div> --}}
+                                            <div class="viewed-offer-time">
+                                                <p><span>Dépêchez-vous</span> Offre à durée limitée</p>
+                                                {{-- <div class="coming-time" data-countdown="2020/9/20"></div> --}}
+                                                <form action="{{ route('getService', ['slug' => $cat->slug]) }}"
+                                                    method="GET">
+                                                    <button type="submit" class="btn"
+                                                        style="background: #FD0100">PROCEED TO CHECKOUT</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-xl-3">
-                                <div class="most-popular-viewed-item mb-30">
-                                    <div class="viewed-item-top">
-                                        <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html">
-                                                <img src="{{ asset('assets/img/product/promo2.jpg') }}"
-                                                    alt=""></a>
-                                        </div>
-                                        <div class="super-deal-content">
-                                            <h6><a href="shop-details.html">Fashion Party Dress</a></h6>
-                                            <p>US $ 17.00<span>{ 50% off }</span></p>
-                                        </div>
-                                    </div>
-                                    <div class="viewed-item-bottom">
-                                        <ul>
-                                            <li>Total Sold : 35</li>
-                                            <li>Stocks : 3456</li>
-                                        </ul>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: 55%;"
-                                                aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="viewed-offer-time">
-                                            <p><span>Dépêchez-vous</span> Offre à durée limitée</p>
-                                            <div class="coming-time" data-countdown="2020/9/11"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3">
-                                <div class="most-popular-viewed-item mb-30">
-                                    <div class="viewed-item-top">
-                                        <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img
-                                                    src="{{ asset('assets/img/product/promo3.jpg') }}"
-                                                    alt=""></a>
-                                        </div>
-                                        <div class="super-deal-content">
-                                            <h6><a href="shop-details.html">Vacuum Fashion Bag</a></h6>
-                                            <p>US $ 31.00<span>{ 50% off }</span></p>
-                                        </div>
-                                    </div>
-                                    <div class="viewed-item-bottom">
-                                        <ul>
-                                            <li>Total Sold : 35</li>
-                                            <li>Stocks : 3456</li>
-                                        </ul>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: 75%;"
-                                                aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="viewed-offer-time">
-                                            <p><span>Dépêchez-vous</span> Offre à durée limitée</p>
-                                            <div class="coming-time" data-countdown="2020/9/9"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3">
-                                <div class="most-popular-viewed-item mb-30">
-                                    <div class="viewed-item-top">
-                                        <div class="mb-20 most--popular--item--thumb">
-                                            <a href="shop-details.html"><img
-                                                    src="{{ asset('assets/img/product/promo2.jpg') }}"
-                                                    alt=""></a>
-                                        </div>
-                                        <div class="super-deal-content">
-                                            <h6><a href="shop-details.html">Stylish Smart Watch</a></h6>
-                                            <p>US $ 17.00<span>{ 50% off }</span></p>
-                                        </div>
-                                    </div>
-                                    <div class="viewed-item-bottom">
-                                        <ul>
-                                            <li>Total Sold : 35</li>
-                                            <li>Stocks : 3456</li>
-                                        </ul>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: 35%;"
-                                                aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <div class="viewed-offer-time">
-                                            <p><span>Dépêchez-vous</span> Offre à durée limitée</p>
-                                            <div class="coming-time" data-countdown="2020/9/15"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+                            @empty
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -386,7 +283,7 @@
         <!-- deal-of-the-day-end -->
 
         <!-- best-cat-area -->
-        <section class="best-cat-area">
+        {{-- <section class="best-cat-area">
             <div class="container">
                 <div class="best-cat-border pt-100 pb-45">
                     <div class="row justify-content-center">
@@ -455,11 +352,11 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- best-cat-area-end -->
 
         <!-- list-product-area -->
-        <section class="list-product-area pt-100 pb-30">
+        {{-- <section class="list-product-area pt-100 pb-30">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-4 col-md-6 mb-50">
@@ -588,7 +485,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
         <!-- list-product-area-end -->
 
         <!-- limited-offer-area -->

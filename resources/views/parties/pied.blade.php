@@ -609,6 +609,55 @@
         checkboxTerms.addEventListener("change", updateFormState);
     }
 </script>
+<script>
+document.getElementById('newsletter-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const successDiv = document.getElementById('newsletter-success');
+    const errorDiv = document.getElementById('newsletter-error');
+
+    // Réinitialise les messages
+    successDiv.style.display = 'none';
+    errorDiv.style.display = 'none';
+    errorDiv.innerHTML = '';
+
+    try {
+        const response = await fetch("{{ route('newsletter.subscribe') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            successDiv.innerText = result.message;
+            successDiv.style.display = 'block';
+            form.reset();
+        } else if (response.status === 422) {
+            // Validation errors
+            let messages = '';
+            for (let field in result.errors) {
+                messages += result.errors[field].join('<br>') + '<br>';
+            }
+            errorDiv.innerHTML = messages;
+            errorDiv.style.display = 'block';
+        } else {
+            errorDiv.innerText = result.message || 'Erreur inconnue.';
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.innerText = 'Une erreur réseau est survenue.';
+        errorDiv.style.display = 'block';
+    }
+});
+</script>
+
+
 @yield('script')
 
 

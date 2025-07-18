@@ -8,11 +8,17 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\CustomVerifyEmail;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+public function sendEmailVerificationNotification()
+{
+    $this->notify(new CustomVerifyEmail);
+}
     /**
      * The attributes that are mass assignable.
      *
@@ -59,17 +65,17 @@ public function service()
 
 	public function paniers()
 	{
-		
+
 		return $this->hasMany(\App\Models\Panier::class);
-	
+
 	}
 
 
 	public function commandes()
 	{
-		
+
 		return $this->belongsToMany(\App\Models\Commande::class);
-	
+
 	}
 
 }

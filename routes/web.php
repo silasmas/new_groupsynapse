@@ -1,15 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\CommandeController;
-use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ServiceUserController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,23 +37,61 @@ Route::get('showService/{slug}', [ServiceController::class, 'show'])->name('show
 Route::get('services', [ServiceController::class, 'index'])->name('services');
 
 Route::get('favories', [HomeController::class, 'favories'])->name('favories');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 // Route::get('/checkTransactionStatus', [CartController::class, 'checkTransactionStatus'])->name('checkTransactionStatus');
 
 // routes/web.php
 // routes/web.php
 Route::post('{type}/{id}/comments', [CommentController::class, 'storeComment'])
-     ->where('type', 'service|produit')
-     ->name('comments.store');
+    ->where('type', 'service|produit')
+    ->name('comments.store');
 
 // routes/web.php
 Route::get('{type}/{id}/comments/latest', [CommentController::class, 'latestComments'])
-     ->where('type', 'service|produit')
-     ->name('comments.latest');
+    ->where('type', 'service|produit')
+    ->name('comments.latest');
 Route::get('{type}/{id}/comments/all', [CommentController::class, 'allComments'])
-     ->where('type', 'service|produit')
-     ->name('comments.all');
+    ->where('type', 'service|produit')
+    ->name('comments.all');
 
-Route::middleware(['auth'])->group(function () {
+Route::post('/newsletter', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+
+use App\Http\Controllers\Auth\EmailVerificationController;
+
+Route::get('/email/verify', [EmailVerificationController::class, 'notice'])
+    ->middleware('auth')
+    ->name('verification.notice');
+
+// Route::get('/email/verify/{id}/{hash}', function (EmailVerificationController $request) {
+//     if (! $request->user() || $request->user()->id != $request->route('id')) {
+//         abort(403); // protection renforcée
+//     }
+
+//     if (! $request->user()->hasVerifiedEmail()) {
+//         $request->fulfill();
+//     }
+
+//     return redirect()->route('verification.success');
+// })->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
+
+Route::get('/email/verified/success', function () {
+    return view('auth.email-verified');
+})->name('verification.success');
+
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('addFavorie/{id}', [FavoriteController::class, 'addFavorite'])->name('addFavorie');
     Route::get('/favorit/details', [FavoriteController::class, 'getFavorites'])->name('favorit.details');
@@ -79,7 +121,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/edit-service', [ServiceUserController::class, 'modifier'])->name('edit.service');
 
     Route::post('/logTransactionAttempt', [ServiceUserController::class, 'store']);
-
 
     Route::get('/profil', [CartController::class, 'commandeStatus'])->name('profil');
     Route::patch('/editProfil', [CartController::class, 'commandeStatus'])->name('editProfil');

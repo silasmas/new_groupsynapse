@@ -120,7 +120,7 @@
                                     </li>
                                     <li class="{{ isActive('branches') }}"><a href="{{ route('shop') }}">Nos
                                             Produit</a></li>
-                                    <li class="{{ isActive('services') }}"><a href="{{ route('services') }}">Services bancaire</a>
+                                    <li class="{{ isActive('services') }}"><a href="{{ route('services') }}">Nos Services</a>
                                     </li>
                                     <li class="{{ isActive('contact') }}"><a
                                             href="{{ route('contact') }}">contacts</a></li>
@@ -418,4 +418,12 @@
     <!-- header-search-area-end -->
 
 </header>
+@if (Auth::check() && !Auth::user()->hasVerifiedEmail())
+    <div class="alert alert-warning">
+        Veuillez confirmer votre adresse email pour accéder aux fonctionnalités.
+        <a href="{{ route('verification.notice') }}">Renvoyer le lien</a>
+    </div>
+@endif
+
+
 <!-- header-area-end -->

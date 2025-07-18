@@ -6,19 +6,28 @@
                 <div class="row align-items-center">
                     <div class="col-xl-7 col-lg-6">
                         <div class="newsletter-title">
-                            <h4>Subscribe Now !</h4>
-                            <span>Venam By Signing Up To Our Newsletter.</span>
+                            <h4>Inscrivez-vous maintenant !</h4>
+                            <span>Recevez nos nouveautés en vous abonnant à la newsletter.</span>
                         </div>
                     </div>
                     <div class="col-xl-5 col-lg-6">
                         <div class="newsletter-form">
-                            <form action="#">
-                                <input type="email" placeholder="Enter Your Email....">
-                                <button class="btn yellow-btn">Subscribe</button>
+                            <form id="newsletter-form">
+                                @csrf
+                                <input type="email" name="email" placeholder="Entrez votre adresse email..."
+                                    required>
+                                <button class="btn yellow-btn" type="submit">S'abonner</button>
                             </form>
+                        </div>
+                        <!-- Message de succès -->
+                        <div id="newsletter-error" style="display:none;" class="alert alert-danger mt-3"></div>
+                        <div id="newsletter-success" style="display:none;" class="alert alert-success mt-3">
+                            Merci pour votre inscription !
                         </div>
                     </div>
                 </div>
+
+
             </div>
             {{-- <div class="footer-alphabet mb-55">
                 <div class="row">
@@ -61,23 +70,25 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-widget mb-50">
                         <div class="footer-logo mb-30">
-                            <a href="index.html"><img width="100" src="{{ asset('assets/img/logo/logosynapse.png') }}" alt=""></a>
+                            <a href="index.html"><img width="100"
+                                    src="{{ asset('assets/img/logo/logosynapse.png') }}" alt=""></a>
                         </div>
                         <div class="footer-text mb-35">
-                            <p>Nous visons à transformer les potentiels de la RDC et de l'Afrique en richesse stable et durable au travers nos différents secteurs d’activités. </p>
+                            <p>Nous visons à transformer les potentiels de la RDC et de l'Afrique en richesse stable et
+                                durable au travers nos différents secteurs d’activités. </p>
                         </div>
                         <div class="footer-social">
                             <ul>
                                 <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
                                 <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                                {{-- <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li> --}}
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-2 col-lg-3 col-sm-6">
+                {{-- <div class="col-xl-2 col-lg-3 col-sm-6">
                     <div class="footer-widget mb-50">
                         <div class="fw-title mb-35">
                             <h5>Service client</h5>
@@ -92,7 +103,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-xl-2 col-lg-3 col-sm-6">
                     <div class="footer-widget mb-50">
                         <div class="fw-title mb-35">
@@ -100,11 +111,10 @@
                         </div>
                         <div class="fw-link">
                             <ul>
-                                <li><a href="#">Return Policy</a></li>
-                                <li><a href="#">Terms Of Use</a></li>
-                                <li><a href="#">Security</a></li>
-                                <li><a href="#">Privacy</a></li>
-                                <li><a href="#">Store Pickup</a></li>
+                                <li><a href="{{ route('about') }}">Apropos</a></li>
+                                <li><a href="{{ route('shop') }}">Nos produits</a></li>
+                                <li><a href="{{ route('services') }}">Nos services</a></li>
+                                <li><a href="{{ route('contact') }}">Contact</a></li>
                             </ul>
                         </div>
                     </div>
@@ -112,7 +122,7 @@
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="footer-widget mb-50">
                         <div class="fw-title mb-35">
-                            <h5>Customer Service</h5>
+                            <h5>Nous avoir</h5>
                         </div>
                         <div class="footer-contact">
                             <ul>
@@ -133,7 +143,8 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6">
                     <div class="copyright-text">
-                        <p>Copyright © 2024 <a href="#">Groupsynapse</a> Tous droits réservés. Designed by <a href="silasmas.com" target="blank">SDEV</a></p>
+                        <p>Copyright © 2024 <a href="#">Groupsynapse</a> Tous droits réservés. Designed by <a
+                                href="silasmas.com" target="blank">SDEV</a></p>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 d-none d-md-block">
