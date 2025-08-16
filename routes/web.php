@@ -79,7 +79,8 @@ Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 've
     ->name('verification.verify');
 
 Route::get('/email/verified/success', function () {
-    return view('auth.email-verified');
+    return redirect()->route('home');
+    // return view('auth.email-verified');
 })->name('verification.success');
 
 
