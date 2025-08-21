@@ -15,20 +15,22 @@
                     <div class="header-top-left">
                         <ul>
                             <li>
-                                <div class="heder-top-guide">
-                                    <span>Quick Guide</span>
+                                <div class="header-top-guide">
+                                    <span>Guide rapide</span>
                                     <div class="dropdown">
                                         <button class="dropdown-toggle" type="button" id="dropdownMenuButton2"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Help
+                                            Aide
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                            <a class="dropdown-item" href="terms-conditios.html">Returns</a>
-                                            <a class="dropdown-item" href="terms-conditios.html">Privacy</a>
-                                            <a class="dropdown-item" href="terms-conditios.html">Terms</a>
+                                            <a class="dropdown-item" href="retours.html">Retours</a>
+                                            <a class="dropdown-item" href="politique-confidentialite.html">Politique de
+                                                confidentialité</a>
+                                            <a class="dropdown-item" href="conditions.html">Conditions d’utilisation</a>
                                         </div>
                                     </div>
                                 </div>
+
                             </li>
                             {{-- <li>
                                 <div class="heder-top-guide">
@@ -120,13 +122,14 @@
                                     </li>
                                     <li class="{{ isActive('branches') }}"><a href="{{ route('shop') }}">Nos
                                             Produit</a></li>
-                                    <li class="{{ isActive('services') }}"><a href="{{ route('services') }}">Nos Services</a>
+                                    <li class="{{ isActive('services') }}"><a href="{{ route('services') }}">Nos
+                                            Services</a>
                                     </li>
                                     <li class="{{ isActive('contact') }}"><a
                                             href="{{ route('contact') }}">contacts</a></li>
                                 </ul>
                             </div>
-                            <div class="header-action  d-md-block">
+                            <div class="header-action d-md-block">
                                 <ul>
                                     {{-- @dd(session()->get('cart_detail')) --}}
                                     <li class="header-shop-cart">
@@ -216,11 +219,15 @@
                             </div>
                             <div class="social-links">
                                 <ul class="clearfix">
-                                    <li><a href="#"><span class="fab fa-twitter"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-instagram"></span></a></li>
-                                    <li><a href="#"><span class="fab fa-youtube"></span></a></li>
+                                    <li><a href="https://www.facebook.com/share/19VybRAMhZ/" target="_blank">
+                                            <span class="fab fa-facebook-square"></span></a></li>
+
+                                    <li><a href="https://www.instagram.com/synapsegroupe4/profilecard/?igsh=dWE1bmpjcWs0dzV3"
+                                            target="_blank">
+                                            <span class="fab fa-instagram"></span></a></li>
+                                    <li><a href="https://youtube.com/@synapsegroupe4?si=HvROIEpTMpCmcr6R"
+                                            target="_blank">
+                                            <span class="fab fa-youtube"></span></a></li>
                                 </ul>
                             </div>
                         </nav>
@@ -263,30 +270,6 @@
                                     @endif
 
                                     @if ($b->categorie->isNotEmpty())
-                                        {{-- <ul class="mega-menu">
-                                        @forelse ($b->categorie->where('isActive', true) as $cat)
-                                            <li>
-                                                <ul>
-                                                    <li class="dropdown-title">{{ $cat->name }}</li>
-                                                    @if ($cat->type == 1)
-                                                           @forelse ($cat->produits->where('isAvalable', 1) as $p)
-                                                        <li><a href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
-                                                    @empty
-                                                    @endforelse
-                                                    @else
-                                                        @forelse ($cat->services->where('disponible', true)->where('active', true) as $p)
-                                                        <li><a href="{{ route('showService', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
-                                                    @empty
-                                                    @endforelse
-                                                    @endif
-
-                                                </ul>
-                                            </li>
-
-                                        @empty
-                                        @endforelse
-
-                                    </ul> --}}
                                         <ul class="mega-menu">
                                             @forelse ($b->categorie->where('isActive', true) as $cat)
                                                 <li class="mega-menu-column">
@@ -295,10 +278,10 @@
                                                         @if ($cat->type == 1)
                                                             @foreach ($cat->produits as $p)
                                                                 {{-- @if ($p->categorie_id == $cat->id) --}}
-                                                                    {{-- 🔐 sécurité --}}
-                                                                    <li><a
-                                                                            href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a>
-                                                                    </li>
+                                                                {{-- 🔐 sécurité --}}
+                                                                <li><a
+                                                                        href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a>
+                                                                </li>
                                                                 {{-- @endif --}}
                                                             @endforeach
                                                         @elseif ($cat->type == 2)
@@ -323,72 +306,7 @@
 
                             @endforelse
 
-                            {{-- <li class="has-dropdown"><a href="#"><div class="cat-menu-img"><img src="{{ asset('assets/img/product/category_menu_img02.png') }}" alt=""></div> TV, Appliances</a>
-                                        <ul class="mega-menu">
-                                            <li>
-                                                <ul>
-                                                    <li class="dropdown-title">Accessories & Parts</li>
-                                                    <li><a href="#">Cables & Adapters</a></li>
-                                                    <li><a href="#">Batteries</a></li>
-                                                    <li><a href="#">Chargers</a></li>
-                                                    <li><a href="#">Bags & Cases</a></li>
-                                                </ul>
-                                                <ul>
-                                                    <li class="dropdown-title">Electronic Cigarettes</li>
-                                                    <li><a href="#">Audio & Video</a></li>
-                                                    <li><a href="#">Televisions</a></li>
-                                                    <li><a href="#">TV Receivers</a></li>
-                                                    <li><a href="#">Projectors</a></li>
-                                                    <li><a href="#">Audio Amplifier Boards</a></li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                <ul>
-                                                    <li class="dropdown-title">Smart Electronics</li>
-                                                    <li><a href="#">Cables & Adapters</a></li>
-                                                    <li><a href="#">Batteries</a></li>
-                                                    <li><a href="#">Chargers</a></li>
-                                                    <li><a href="#">Bags & Cases</a></li>
-                                                </ul>
-                                                <ul>
-                                                    <li class="dropdown-title">Portable Audio & Video</li>
-                                                    <li><a href="#">Audio & Video</a></li>
-                                                    <li><a href="#">Televisions</a></li>
-                                                    <li><a href="#">TV Receivers</a></li>
-                                                    <li><a href="#">Projectors</a></li>
-                                                    <li><a href="#">Audio Amplifier Boards</a></li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                <ul>
-                                                    <li class="dropdown-title">Accessories & Parts</li>
-                                                    <li><a href="#">Cables & Adapters</a></li>
-                                                    <li><a href="#">Batteries</a></li>
-                                                    <li><a href="#">Chargers</a></li>
-                                                    <li><a href="#">Bags & Cases</a></li>
-                                                </ul>
-                                                <ul>
-                                                    <li class="dropdown-title">Audio & Video</li>
-                                                    <li class="mega-menu-banner"><a href="#"><img src="{{ asset('assets/img/images/megamenu_banner.jpg') }}" alt=""></a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop-left-sidebar.html"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img03.png" alt=""></div> Baby Product</a></li>
-                                    <li><a href="shop-left-sidebar.html"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img04.png" alt=""></div> Grocery Product</a></li>
-                                    <li><a href="shop-left-sidebar.html"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img05.png" alt=""></div> Beauty, Health Product</a></li>
-                                    <li><a href="shop-left-sidebar.html"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img06.png" alt=""></div> Industrial Product</a></li>
-                                    <li><a href="shop-left-sidebar.html"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img07.png" alt=""></div> Car, Motorbike</a></li>
-                                    <li><a href="shop-left-sidebar.html"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img08.png" alt=""></div> Club Sports</a></li>
-                                    <li>
-                                        <ul class="more_slide_open">
-                                            <li><a href="#"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img01.png" alt=""></div> Western woman</a></li>
-                                            <li><a href="#"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img02.png" alt=""></div> Health Product</a></li>
-                                            <li><a href="#"><div class="cat-menu-img"><img src="assets/img/product/category_menu_img03.png" alt=""></div> Industrial Product</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="more_categories">More Categories<i class="fas fa-angle-down"></i></li> --}}
+
                         </ul>
                     </div>
                 </div>

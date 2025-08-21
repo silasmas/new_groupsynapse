@@ -1,3 +1,35 @@
+   <!-- limited-offer-area -->
+        <section class="limited-offer-area" data-background="assets/img/bg/limited_offer_bg.jpg">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-xl-5 col-lg-6 col-md-7">
+                        <div class="limited-offer-left">
+                            <div class="limited-offer-title">
+                                {{-- <span class="sub-title">exclusive offer</span>
+                                <h2 class="title">Smart Watch Bracelet</h2> --}}
+                            </div>
+                            <div class="limited-offer-disc">
+                                {{-- <img src="assets/img/images/limited_offer_discount.png" alt=""> --}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4 col-md-5">
+                        <div class="limited-offer-action">
+                            {{-- <a href="shop-left-sidebar.html" class="btn">Offre à durée limitée</a>
+                            <div class="amount-info">
+                                <span class="upto">UPTO</span>
+                                <span class="amount">$ 50.00</span>
+                                <span class="off">OFF</span>
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- <h2 class="limited-overlay-title">Vanam Top Sale 35<span>%</span></h2>
+            <div class="limited-overlay-img"><img src="assets/img/images/limited_offer_img.png" alt=""></div> --}}
+        </section>
+        <!-- limited-offer-area-end -->
+
 <!-- footer-area -->
 <footer class="footer-area">
     <div class="footer-top pt-65 pb-25">
@@ -20,52 +52,13 @@
                             </form>
                         </div>
                         <!-- Message de succès -->
-                        <div id="newsletter-error" style="display:none;" class="alert alert-danger mt-3"></div>
-                        <div id="newsletter-success" style="display:none;" class="alert alert-success mt-3">
+                        <div id="newsletter-error" style="display:none;" class="mt-3 alert alert-danger"></div>
+                        <div id="newsletter-success" style="display:none;" class="mt-3 alert alert-success">
                             Merci pour votre inscription !
                         </div>
                     </div>
                 </div>
-
-
             </div>
-            {{-- <div class="footer-alphabet mb-55">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="mb-0 text-left newsletter-title">
-                            <h4>Find Out More :</h4>
-                            <span>Browse Alphabetically :</span>
-                            <span><a href="#">A</a></span>
-                            <span><a href="#">B</a></span>
-                            <span><a href="#">C</a></span>
-                            <span><a href="#">D</a></span>
-                            <span><a href="#">E</a></span>
-                            <span><a href="#">F</a></span>
-                            <span><a href="#">G</a></span>
-                            <span><a href="#">H</a></span>
-                            <span><a href="#">I</a></span>
-                            <span><a href="#">J</a></span>
-                            <span><a href="#">K</a></span>
-                            <span><a href="#">L</a></span>
-                            <span><a href="#">M</a></span>
-                            <span><a href="#">N</a></span>
-                            <span><a href="#">O</a></span>
-                            <span><a href="#">P</a></span>
-                            <span><a href="#">Q</a></span>
-                            <span><a href="#">R</a></span>
-                            <span><a href="#">S</a></span>
-                            <span><a href="#">T</a></span>
-                            <span><a href="#">U</a></span>
-                            <span><a href="#">V</a></span>
-                            <span><a href="#">W</a></span>
-                            <span><a href="#">X</a></span>
-                            <span><a href="#">Y</a></span>
-                            <span><a href="#">Z</a></span>
-                            <span><a href="#">0~9</a></span>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
             <div class="row justify-content-between">
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-widget mb-50">
@@ -79,11 +72,12 @@
                         </div>
                         <div class="footer-social">
                             <ul>
-                                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                <li><a href="#"><i class="fab fa-youtube"></i></a></li>
-                                {{-- <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li> --}}
+                                <li><a href="https://www.facebook.com/share/19VybRAMhZ/" target="_blank">
+                                    <i class="fab fa-facebook-f" ></i></a></li>
+                                <li><a href="https://www.instagram.com/synapsegroupe4/profilecard/?igsh=dWE1bmpjcWs0dzV3" target="_blank">
+                                    <i class="fab fa-instagram" ></i></a></li>
+                                <li><a href="https://youtube.com/@synapsegroupe4?si=HvROIEpTMpCmcr6R" target="_blank">
+                                    <i class="fab fa-youtube" ></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -126,11 +120,11 @@
                         </div>
                         <div class="footer-contact">
                             <ul>
-                                <li><i class="fas fa-map-marker-alt"></i> W898 RTower Stat, Suite 56
-                                    Brockland, CA 9622 United States</li>
-                                <li><i class="fas fa-headphones"></i> 458-965-3224</li>
-                                <li><i class="fas fa-envelope-open"></i>Support@info.Com</li>
-                                <li><i class="fas fa-fax"></i>458-965-3224</li>
+                                <li><i class="fas fa-map-marker-alt">
+                                    </i>Local 81, Immeuble Botour, Avenue  de la presse, Kinshasa / Gombe</li>
+                                <li><i class="fas fa-headphones"></i>+243 99 99 30 158</li>
+                                <li><i class="fas fa-envelope-open"></i>info@groupsynapse.ord</li>
+                                <li><i class="fas fa-fax"></i> +243 81 99 01 290</li>
                             </ul>
                         </div>
                     </div>
