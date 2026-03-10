@@ -29,12 +29,10 @@
                     <li>
                         @if ($currentProduit->favories->isNotEmpty())
                             <a href="{{ route('removeFavorie', ['id' => $currentProduit->id,'qty'=>1]) }}" class="remove-to-favorie">
-                                {{-- <i class="flaticon-heart text-danger"></i> --}}
-                                <i class="fas fa-heart  text-danger"></i>
+                                <i class="fas fa-heart text-danger"></i>
                             </a>
                         @else
                             <a href="{{ route('addFavorie', ['id' => $currentProduit->id]) }}" class="add-to-favorie">
-                                {{-- <i class="flaticon-heart-outline text-secondary"></i> --}}
                                 <i class="far fa-heart text-secondary"></i>
                             </a>
                         @endif
@@ -51,6 +49,24 @@
                 <div class="exclusive--item--price">
                     {!!  formatPrix3($currentProduit->isSpecialOffer ,$currentProduit->prix ,$currentProduit->soldePrice,$currentProduit->currency) !!}
                 </div>
+                <ul class="action action-mobile">
+                    <li>
+                        @if ($currentProduit->favories->isNotEmpty())
+                            <a href="{{ route('removeFavorie', ['id' => $currentProduit->id,'qty'=>1]) }}" class="remove-to-favorie">
+                                <i class="fas fa-heart text-danger"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('addFavorie', ['id' => $currentProduit->id]) }}" class="add-to-favorie">
+                                <i class="far fa-heart text-secondary"></i>
+                            </a>
+                        @endif
+                    </li>
+                    <li><a class="add-to-cart" href="{{ route('cart.add', ['id' => $currentProduit->id,"qty"=>1]) }}">
+                        <i class="flaticon-supermarket"></i></a></li>
+                    <li><a href="{{ route('showProduct', ['slug' => $currentProduit->slug]) }}">
+                        <i class="flaticon-witness"></i></a>
+                    </li>
+                </ul>
                 <div class="product-extra-info">
                     @if($currentProduit->categories->isNotEmpty())
                         <p class="mb-1 small text-muted"><strong>Catégories :</strong> {{ $currentProduit->categories->pluck('name')->take(3)->implode(', ') }}</p>

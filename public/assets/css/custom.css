@@ -1,0 +1,123 @@
+/* Menu Branches - mega menu dans la navbar */
+.branches-nav-dropdown {
+    position: relative;
+}
+.branches-mega-menu {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 999;
+    background: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    border-radius: 4px;
+    padding: 20px 25px;
+    min-width: 600px;
+    max-width: 90vw;
+    display: flex;
+    flex-wrap: wrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.25s, visibility 0.25s, transform 0.25s;
+    margin: 0;
+    list-style: none;
+    border: 1px solid #eee;
+}
+.branches-nav-dropdown:hover .branches-mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.branches-mega-menu .mega-menu-column {
+    flex: 1 1 200px;
+    min-width: 180px;
+    padding: 0 15px 0 0;
+}
+.branches-mega-menu .dropdown-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+}
+.branches-mega-menu .dropdown-title:hover {
+    color: #FD0100;
+}
+.branches-mega-menu .category-items {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+}
+.branches-mega-menu .category-items li a {
+    font-size: 13px;
+    color: #666;
+    padding: 4px 0;
+    display: block;
+    text-decoration: none;
+}
+.branches-mega-menu .category-items li a:hover {
+    color: #FD0100;
+    padding-left: 5px;
+}
+
+/* Mobile: menu Branches en liste verticale */
+@media (max-width: 991px) {
+    .mobile-menu .branches-mega-menu {
+        position: static !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        flex-direction: column;
+        min-width: auto !important;
+        max-width: none !important;
+        padding: 10px 0 10px 20px !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: #f8f9fa !important;
+    }
+    .mobile-menu .branches-mega-menu .mega-menu-column {
+        flex: 1 1 auto !important;
+        min-width: auto !important;
+        padding: 0 !important;
+    }
+}
+
+/* Produit: actions visibles sur mobile sous les prix */
+@media (max-width: 991px) {
+    .exclusive-item-three .action-mobile {
+        display: flex !important;
+        position: static !important;
+        opacity: 1 !important;
+        margin-top: 12px;
+        padding: 10px 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        justify-content: center;
+        gap: 12px;
+    }
+    .exclusive-item-three .action-mobile li {
+        margin: 0 !important;
+    }
+    .exclusive-item-three .action-mobile li a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: #f5f5f5;
+        color: #333;
+        font-size: 18px;
+    }
+    .exclusive-item-three .action-mobile li a:hover {
+        background: #FD0100;
+        color: #fff;
+    }
+    .exclusive-item-three .action {
+        display: none !important;
+    }
+}
+@media (min-width: 992px) {
+    .exclusive-item-three .action-mobile {
+        display: none !important;
+    }
+}

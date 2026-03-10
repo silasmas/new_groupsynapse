@@ -116,17 +116,56 @@
                             </div>
                             <div class="navbar-wrap main-menu d-none d-lg-flex">
                                 <ul class="navigation">
-                                    <li class="{{ isActive('home') }} dropdown"><a
-                                            href="{{ route('home') }}">Accueil</a></li>
-                                    <li class="{{ isActive('about') }}"><a href="{{ route('about') }}">A propos</a>
+                                    <li class="{{ isActive('home') }}"><a href="{{ route('home') }}">Accueil</a></li>
+                                    <li class="{{ isActive('about') }}"><a href="{{ route('about') }}">A propos</a></li>
+                                    <li class="{{ isActive('branches') || isActive('shop') || isActive('services') }} dropdown has-dropdown branches-nav-dropdown">
+                                        <a href="#">Branches</a>
+                                        <ul class="branches-mega-menu">
+                                            @forelse ($branches as $b)
+                                                <li class="mega-menu-column">
+                                                    @php
+                                                        $firstCategorie = $b->categorie->first();
+                                                        $hasVignette = !empty($b->vignette) && vignetteExists($b->vignette);
+                                                    @endphp
+                                                    <a href="{{ ($firstCategorie && $firstCategorie->type == 'service') ? route('services') : route('shop') }}" class="dropdown-title" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                                                        <div class="cat-menu-img" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#e9ecef;border-radius:4px;overflow:hidden;flex-shrink:0;">
+                                                            @if($hasVignette)
+                                                                <img src="{{ asset('storage/' . $b->vignette) }}" width="32" height="32" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                                                <span style="display:none;font-weight:bold;font-size:12px;color:#495057;">{{ getInitials($b->name) }}</span>
+                                                            @else
+                                                                <span style="font-weight:bold;font-size:12px;color:#495057;">{{ getInitials($b->name) }}</span>
+                                                            @endif
+                                                        </div>
+                                                        <span>{{ $b->name }}</span>
+                                                    </a>
+                                                    @foreach ($b->categorie->where('isActive', true) as $cat)
+                                                        <ul class="category-items" style="margin-bottom:15px;">
+                                                            <li><span class="dropdown-title" style="font-size:13px;font-weight:600;color:#333;display:block;margin-bottom:6px;">{{ $cat->name }}</span></li>
+                                                            @if ($cat->type == 'produit')
+                                                                @foreach ($cat->produits->where('isAvalable', true)->take(8) as $p)
+                                                                    <li><a href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
+                                                                @endforeach
+                                                                @if ($cat->produits->where('isAvalable', true)->count() > 8)
+                                                                    <li><a href="{{ route('shop', ['categorie' => $cat->id]) }}">Voir tout</a></li>
+                                                                @endif
+                                                            @elseif ($cat->type == 'service')
+                                                                @foreach ($cat->services->where('active', true)->where('disponible', true)->take(8) as $s)
+                                                                    <li><a href="{{ route('showService', ['slug' => $s->slug]) }}">{{ $s->name }}</a></li>
+                                                                @endforeach
+                                                                @if ($cat->services->where('active', true)->where('disponible', true)->count() > 8)
+                                                                    <li><a href="{{ route('services', ['categorie' => $cat->id]) }}">Voir tout</a></li>
+                                                                @endif
+                                                            @endif
+                                                        </ul>
+                                                    @endforeach
+                                                </li>
+                                            @empty
+                                                <li class="mega-menu-column"><a href="{{ route('shop') }}">Nos Produits</a></li>
+                                                <li class="mega-menu-column"><a href="{{ route('services') }}">Nos Services</a></li>
+                                            @endforelse
+                                        </ul>
                                     </li>
-                                    <li class="{{ isActive('branches') }}"><a href="{{ route('shop') }}">Nos
-                                            Produit</a></li>
-                                    <li class="{{ isActive('services') }}"><a href="{{ route('services') }}">Nos
-                                            Services</a>
-                                    </li>
-                                    <li class="{{ isActive('contact') }}"><a
-                                            href="{{ route('contact') }}">contacts</a></li>
+                                    <li class="{{ isActive('contact') }}"><a href="{{ route('contact') }}">Contacts</a></li>
                                 </ul>
                             </div>
                             <div class="header-action d-md-block">
