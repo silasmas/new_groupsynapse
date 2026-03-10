@@ -142,7 +142,7 @@
         <!-- top-cat-banner-end -->
 
         <!-- exclusive-collection-area -->
-        {{-- <section class="exclusive-collection pt-100 pb-60">
+        <section class="exclusive-collection pt-100 pb-60">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
@@ -166,17 +166,28 @@
                 <div class="row exclusive-active">
                     @foreach ($groupedProducts as $groupe => $products)
                         @foreach ($products->take(6) as $produit)
+                            @php
+                                $images = $produit->getImageUrlsAttribute();
+                                $img1 = $images[0] ?? null;
+                                $img2 = $images[1] ?? $img1;
+                                $initials = getInitials($produit->name);
+                            @endphp
                             <div
                                 class="col-xl-3 col-lg-4 col-sm-6 grid-item grid-sizer {{ Str::replaceFirst(' ', '-', $groupe) }}">
                                 <div class="mb-40 exclusive-item exclusive-item-two">
-                                    <div class="exclusive-item-thumb">
+                                    <div class="exclusive-item-thumb" style="position:relative;">
                                         <a href="{{ route('showProduct', ['slug' => $produit->slug]) }}">
-                                            <img src="{{ asset($produit->getImageUrlsAttribute()[0]) }}" alt=""
-                                                width="278" height="290">
-                                            <img class="overlay-product-thumb"
-                                                src="{{ asset($produit->getImageUrlsAttribute()[1]) }}" alt=""
-                                                width="278" height="290">
-
+                                            <div style="position:relative;width:100%;aspect-ratio:1;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                                                @if(!empty($img1))
+                                                    <img src="{{ $img1 }}" alt="{{ $produit->name }}" width="278" height="290" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                                    <span style="display:none;font-weight:bold;font-size:2.5rem;color:white;">{{ $initials }}</span>
+                                                @else
+                                                    <span style="font-weight:bold;font-size:2.5rem;color:white;">{{ $initials }}</span>
+                                                @endif
+                                                @if(!empty($img2) && $img2 !== $img1)
+                                                    <img class="overlay-product-thumb" src="{{ $img2 }}" alt="" width="278" height="290" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+                                                @endif
+                                            </div>
                                         </a>
                                         <span class="discount"{{ $produit->isSpecialOffer ? '' : ' hidden' }}>Solde</span>
                                         <span class="sd-meta"{{ $produit->isNewArivale ? '' : ' hidden' }}>New!</span>
@@ -210,7 +221,7 @@
                     @endforeach
                 </div>
             </div>
-        </section> --}}
+        </section>
         <!-- exclusive-collection-area-end -->
 
         <!-- deal-of-the-day -->

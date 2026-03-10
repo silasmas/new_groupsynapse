@@ -2,23 +2,24 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Service;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Notifications\CustomVerifyEmail;
 
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-public function sendEmailVerificationNotification()
-{
-    $this->notify(new CustomVerifyEmail);
-}
+
+    /**
+     * Vérification email désactivée - retourne toujours true.
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        return true;
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +29,11 @@ public function sendEmailVerificationNotification()
         'name',
         'email',
         'password',
+        'phone',
+        'sexe',
+        'pays',
+        'adresse',
+        'adresse_livraison',
     ];
 
     /**

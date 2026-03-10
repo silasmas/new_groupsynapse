@@ -28,14 +28,14 @@ class ProduitFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-            'slug' => $this->faker->slug,
+            'slug' => $this->faker->unique()->slug,
             'description' => $this->faker->paragraph,
             'moreDescription' => $this->faker->text,
             'additionalInfos' => json_encode($this->faker->words(5)), // Exemple : informations additionnelles
             'stock' => $this->faker->numberBetween(0, 100),
-            'prix' => $this->faker->randomFloat(2, 10, 500), // Prix entre 10 et 500
-            'currency' => 'USD',
-            'soldePrice' => $this->faker->optional()->randomFloat(2, 5, 300), // Prix soldé facultatif
+            'prix' => (string) $this->faker->randomFloat(2, 10, 500),
+            'currency' => $this->faker->randomElement(['USD', 'CDF']),
+            'soldePrice' => $this->faker->optional(0.3)->numberBetween(50, 300),
             'imageUrls' =>   json_encode($this->generateImageUrls()),
             // 'imageUrls' => json_encode([
             //     $this->faker->imageUrl(640, 480, 'product', true, 'Product'),

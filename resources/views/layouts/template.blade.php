@@ -10,3 +10,4 @@
 </main>
 @include("parties.footer")
 @include("parties.pied")
+@yield('script')

@@ -16,7 +16,7 @@ return new class extends Migration
         	$table->string('name');
 			$table->string('slug')->unique();
 			$table->text('description');
-			$table->int('type')->default('produit'); // 'default', 'service', 'product', etc.
+			$table->string('type')->default('produit'); // 'default', 'service', 'product', etc.
 			$table->string('vignette');
 			$table->boolean('isActive');
         	$table->timestamps();

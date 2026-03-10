@@ -25,7 +25,86 @@
             updateCartUI();
             updateFavorite();
         @endif
+
+        // Recherche temps réel
+        initGlobalSearch();
     });
+
+    function initGlobalSearch() {
+        var searchInput = document.getElementById('global-search-input');
+        var searchDropdown = document.getElementById('search-results-dropdown');
+        if (!searchInput || !searchDropdown) return;
+
+        var debounceTimer;
+        var loaderHtml = '<div class="p-3 text-center"><div class="spinner-border spinner-border-sm text-primary" role="status"><span class="sr-only">Chargement...</span></div><span class="ml-2">Recherche en cours...</span></div>';
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            var q = this.value.trim();
+            if (q.length < 2) {
+                searchDropdown.style.display = 'none';
+                return;
+            }
+            searchDropdown.innerHTML = loaderHtml;
+            searchDropdown.style.display = 'block';
+
+            debounceTimer = setTimeout(function() {
+                fetch('{{ route("search") }}?q=' + encodeURIComponent(q) + '&limit=8')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        var html = '';
+                        var produits = data.produits || [];
+                        var services = data.services || [];
+                        var useAlternatives = produits.length === 0 && services.length === 0 && data.alternatives;
+
+                        if (useAlternatives && data.suggestion) {
+                            html += '<div class="p-2 border-bottom bg-light"><small class="text-muted">' + data.suggestion + '</small></div>';
+                            produits = (data.alternatives.produits || []);
+                            services = (data.alternatives.services || []);
+                            if (data.alternatives.branches && data.alternatives.branches.length) {
+                                html += '<div class="p-2 border-bottom"><strong>Branches</strong></div>';
+                                data.alternatives.branches.forEach(function(b) {
+                                    html += '<a href="' + b.url + '" class="d-flex align-items-center p-2 text-dark text-decoration-none" style="gap:10px;"><span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:4px;color:#fff;font-weight:bold;">' + (b.name ? b.name.charAt(0).toUpperCase() : '?') + '</span><div><div>' + b.name + '</div><small class="text-muted">Branche</small></div></a>';
+                                });
+                            }
+                        }
+
+                        if (data.branches && data.branches.length) {
+                            html += '<div class="p-2 border-bottom"><strong>Branches</strong></div>';
+                            data.branches.forEach(function(b) {
+                                html += '<a href="' + b.url + '" class="d-flex align-items-center p-2 text-dark text-decoration-none" style="gap:10px;"><span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:4px;color:#fff;font-weight:bold;">' + (b.name ? b.name.charAt(0).toUpperCase() : '?') + '</span><div><div>' + b.name + '</div><small class="text-muted">Branche</small></div></a>';
+                            });
+                        }
+                        if (produits.length) {
+                            html += '<div class="p-2 border-bottom"><strong>Produits</strong></div>';
+                            produits.forEach(function(p) {
+                                var img = (p.imageUrls && p.imageUrls[0]) ? '<img src="' + p.imageUrls[0] + '" width="40" height="40" style="object-fit:cover;border-radius:4px;">' : '<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:4px;color:#fff;font-weight:bold;">' + (p.name ? p.name.charAt(0).toUpperCase() : '?') + '</span>';
+                                var prix = p.soldePrice ? p.soldePrice : p.prix;
+                                html += '<a href="' + p.url + '" class="d-flex align-items-center p-2 text-dark text-decoration-none" style="gap:10px;">' + img + '<div><div>' + p.name + '</div><small class="text-muted">' + (prix ? prix + ' ' + (p.currency || '$') : '') + '</small></div></a>';
+                            });
+                        }
+                        if (services.length) {
+                            html += '<div class="p-2 border-bottom"><strong>Services</strong></div>';
+                            services.forEach(function(s) {
+                                var img = s.image ? '<img src="' + s.image + '" width="40" height="40" style="object-fit:cover;border-radius:4px;">' : '<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:4px;color:#fff;font-weight:bold;">' + (s.name ? s.name.charAt(0).toUpperCase() : '?') + '</span>';
+                                html += '<a href="' + s.url + '" class="d-flex align-items-center p-2 text-dark text-decoration-none" style="gap:10px;">' + img + '<div><div>' + s.name + '</div><small class="text-muted">' + (s.prix ? s.prix + ' ' + (s.currency || '$') : '') + '</small></div></a>';
+                            });
+                        }
+                        if (!html) html = '<div class="p-3 text-muted">Aucun résultat</div>';
+                        searchDropdown.innerHTML = html;
+                        searchDropdown.style.display = 'block';
+                    })
+                    .catch(function() { searchDropdown.innerHTML = '<div class="p-3 text-muted">Erreur de recherche. Réessayez.</div>'; searchDropdown.style.display = 'block'; });
+            }, 300);
+        });
+
+        searchInput.addEventListener('focus', function() {
+            if (searchDropdown.innerHTML && searchDropdown.innerHTML.trim()) searchDropdown.style.display = 'block';
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#global-search-wrap')) searchDropdown.style.display = 'none';
+        });
+    }
 
     $(document).on("click", ".remove-to-favorie", function(e) {
         e.preventDefault();
@@ -236,7 +315,7 @@
                 let subTotal = response.data.reduce((total, item) => total + item.prixTotal, 0);
 
                 // Mettre à jour la quantité et le total
-                $(".count").text(response.data.length);
+                $(".count").text(cartCount);
                 $(".cart-total-price").text(subTotal.toFixed(2) + "$");
 
                 // Mettre à jour le contenu du panier
@@ -245,30 +324,16 @@
 
                 response.data.forEach(function(item) {
                     var currency = item.produit.currency === "CDF" ? "FC" : "$";
-                    let produit = item.produit; // Récupération des détails du produit
+                    let produit = item.produit;
 
-                    let images = [];
-
-                    // Vérifier si imageUrls est une chaîne JSON et la convertir en tableau
-                    if (typeof produit.imageUrls === "string") {
-                        try {
-                            images = JSON.parse(produit.imageUrls);
-                        } catch (error) {
-                            console.error("Erreur de parsing JSON pour imageUrls :", error);
-                            images = []; // Si erreur, on utilise un tableau vide
-                        }
-                    } else if (Array.isArray(produit.imageUrls)) {
-                        images = produit.imageUrls; // Déjà un tableau
-                    }
-                    const imageUrl = images.length > 0 ? images[0] :
-                        "assets/img/default.png"; // Récupérer la première image ou une par défaut
-
-                    console.log(imageUrl); // Vérifie dans la console si l'URL est correcte
+                    // Initiales du produit (max 2 caractères)
+                    let initials = (produit.name || '').trim().split(/\s+/).slice(0, 2)
+                        .map(w => (w.charAt(0) || '').toUpperCase()).join('') || (produit.name || '?').charAt(0).toUpperCase();
 
                     $minicart.append(`<li class="d-flex align-items-start">
-                                <div class="cart-img">
-                                    <a href="/produit/${produit.id}">
-                                        <img src="../${imageUrl}" width="100" height="100" alt="">
+                                <div class="cart-img" style="width:80px;height:80px;flex-shrink:0;border-radius:6px;overflow:hidden;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;">
+                                    <a href="/showProduct/${produit.slug}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-decoration:none;">
+                                        <span style="font-weight:bold;font-size:1.2rem;color:white;">${initials}</span>
                                     </a>
                                 </div>
                                 <div class="cart-content">

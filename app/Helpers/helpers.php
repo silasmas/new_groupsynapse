@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Panier;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Produit;
 use App\Models\Commande;
 use Illuminate\Support\Str;
@@ -179,6 +180,43 @@ if (!function_exists('reduction')) {
         return (number_format((($produit->prix - $produit->soldePrice) / $produit->prix) * 100, 0));
     }
 }
+if (!function_exists('getInitials')) {
+    function getInitials(string $name, int $maxChars = 2): string
+    {
+        $words = preg_split('/\s+/', trim($name), -1, PREG_SPLIT_NO_EMPTY);
+        if (empty($words)) {
+            return strtoupper(substr($name, 0, min($maxChars, strlen($name))));
+        }
+        $initials = '';
+        foreach (array_slice($words, 0, $maxChars) as $word) {
+            $initials .= mb_strtoupper(mb_substr($word, 0, 1));
+        }
+        return $initials ?: mb_strtoupper(mb_substr($name, 0, 1));
+    }
+}
+
+if (!function_exists('vignetteExists')) {
+    function vignetteExists(?string $path): bool
+    {
+        if (empty($path)) {
+            return false;
+        }
+        $fullPath = str_starts_with($path, 'http') ? $path : storage_path('app/public/' . $path);
+        if (str_starts_with($path, 'http')) {
+            return true;
+        }
+        return file_exists($fullPath);
+    }
+}
+
+if (!function_exists('produitImageUrl')) {
+    function produitImageUrl($produit, int $index = 0): ?string
+    {
+        $images = $produit->getImageUrlsAttribute();
+        return $images[$index] ?? null;
+    }
+}
+
 if (!function_exists('titre_site')) {
 
     function titre_site()

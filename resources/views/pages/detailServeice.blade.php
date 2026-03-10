@@ -252,6 +252,16 @@
 
                             @csrf
 
+                            {{-- Note (étoiles) --}}
+                            <div class="mb-3">
+                                <label class="d-block mb-2">Votre note</label>
+                                <div class="rating-input" data-rating="0">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star fa-lg text-muted" data-value="{{ $i }}" style="cursor:pointer;"></i>
+                                    @endfor
+                                </div>
+                                <input type="hidden" name="rating" id="comment-rating" value="0">
+                            </div>
                             {{-- Texte du commentaire --}}
                             <textarea name="body" id="comment-message" placeholder="Votre commentaire" required></textarea>
 
@@ -382,8 +392,13 @@
                 const li = document.createElement('li');
                 li.innerHTML = `
                         <div class="single-comment">
-                            <div class="comment-avatar-img">
-                            <img src="${c.avatar_url}" alt="avatar">
+                            <div class="comment-avatar-img" style="width:50px;height:50px;min-width:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                            ${(function(){
+                                const initials = c.initials || (c.author_name ? c.author_name.slice(0,2).toUpperCase() : '?');
+                                return c.has_avatar
+                                    ? '<img src="'+c.avatar_url+'" alt="'+c.author_name+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><span style="display:none;width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">'+initials+'</span>'
+                                    : '<span style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">'+initials+'</span>';
+                            })()}
                             </div>
                             <div class="comment-text">
                             <div class="comment-avatar-info">
@@ -468,6 +483,26 @@
                 }
             }
 
+            // ─── Gestion des étoiles de notation ─────────────────────────────────
+            const ratingInput = document.querySelector('.rating-input');
+            const ratingHidden = document.getElementById('comment-rating');
+            if (ratingInput) {
+                const stars = ratingInput.querySelectorAll('i[data-value]');
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const val = parseInt(this.dataset.value);
+                        ratingHidden.value = val;
+                        ratingInput.dataset.rating = val;
+                        stars.forEach((s, i) => {
+                            s.classList.toggle('fa-star', i < val);
+                            s.classList.toggle('fa-star-o', i >= val);
+                            s.classList.toggle('text-warning', i < val);
+                            s.classList.toggle('text-muted', i >= val);
+                        });
+                    });
+                });
+            }
+
             // Appel initial pour précharger les 5 derniers dès le chargement de la page
             loadLastFiveComments();
 
@@ -490,8 +525,10 @@
                 const url = `${window.location.origin}/${type}/${id}/comments`;
 
                 // 3. Préparation du payload
+                const rating = parseInt(document.getElementById('comment-rating')?.value || 0);
                 const payload = {
-                    body: body
+                    body: body,
+                    rating: rating >= 1 && rating <= 5 ? rating : null
                 }; @guest payload.guest_name = guestName; payload.guest_email = guestEmail;
             @endguest
 
@@ -520,6 +557,16 @@
 
                     // 🔟 Réinitialisation du formulaire
                     form.reset();
+                    const rh = document.getElementById('comment-rating');
+                    const ri = document.querySelector('.rating-input');
+                    if (rh) rh.value = 0;
+                    if (ri) {
+                        ri.dataset.rating = '0';
+                        ri.querySelectorAll('i[data-value]').forEach((s, i) => {
+                            s.classList.remove('fa-star', 'text-warning');
+                            s.classList.add('fa-star-o', 'text-muted');
+                        });
+                    }
                     // Affichage du toast de succès
                     toastr.success('Commentaire publié sans recharger la page !');
                     // TODO : mettre à jour dynamiquement la liste des commentaires

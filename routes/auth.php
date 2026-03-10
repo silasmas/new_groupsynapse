@@ -17,10 +17,18 @@ Route::middleware('guest')->group(function () {
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
+    Route::get('login', [\App\Http\Controllers\Auth\LoginCodeController::class, 'create'])
                 ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login/send-code', [\App\Http\Controllers\Auth\LoginCodeController::class, 'sendCode'])
+                ->middleware('throttle:5,1')
+                ->name('login.send-code');
+
+    Route::post('login/verify-code', [\App\Http\Controllers\Auth\LoginCodeController::class, 'verifyCode'])
+                ->name('login.verify-code');
+
+    Route::get('login/back', [\App\Http\Controllers\Auth\LoginCodeController::class, 'backToEmail'])
+                ->name('login.back');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->name('password.request');

@@ -11,6 +11,8 @@ class Comment extends Model
     use HasFactory;
       protected $guarded = [];
 
+    protected $fillable = ['user_id', 'guest_name', 'guest_email', 'body', 'rating', 'commentable_id', 'commentable_type'];
+
     public function commentable()
     {
         return $this->morphTo();

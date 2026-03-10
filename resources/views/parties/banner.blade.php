@@ -7,8 +7,18 @@
                     <h2>{{ $page }}</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Accuiel</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ $page }}</li>
+                            @if(!empty($breadcrumb) && is_array($breadcrumb))
+                                @foreach($breadcrumb as $item)
+                                    @if(!empty($item['url']))
+                                        <li class="breadcrumb-item"><a href="{{ $item['url'] }}">{{ $item['label'] }}</a></li>
+                                    @else
+                                        <li class="breadcrumb-item active" aria-current="page">{{ $item['label'] }}</li>
+                                    @endif
+                                @endforeach
+                            @else
+                                <li class="breadcrumb-item"><a href="{{ route('home') }}">Accueil</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ $page }}</li>
+                            @endif
                         </ol>
                     </nav>
                 </div>

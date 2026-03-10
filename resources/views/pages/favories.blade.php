@@ -23,7 +23,11 @@
                                 </thead>
                                 <tbody>
                                     @forelse (session()->get("favories") as $fav)
-                                 {{-- @dump($fav->imageUrls[1]) --}}
+                                        @php
+                                            $favImages = $fav->getImageUrlsAttribute();
+                                            $favImg = $favImages[0] ?? null;
+                                            $favInitials = getInitials($fav->name);
+                                        @endphp
                                         <tr id="fav-row-{{ $fav->id }}">
                                             <td class="product-thumbnail">
                                                 <a href="{{ route('removeFavorie', ['id' => $fav->id]) }}"
@@ -31,8 +35,16 @@
                                                     class="wishlist-remove remove-favorie-btn">
                                                     <i class="flaticon-cancel-1"></i>
                                                 </a>
-                                                <a href="{{ route('showProduct', ['slug' => $fav->slug]) }}"><img
-                                                        src="{{ asset('storage/'.$fav->imageUrls[0]) }}" alt=""></a>
+                                                <a href="{{ route('showProduct', ['slug' => $fav->slug]) }}">
+                                                    <div style="width:80px;height:80px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                                                        @if(!empty($favImg))
+                                                            <img src="{{ $favImg }}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                                            <span style="display:none;font-weight:bold;font-size:1.2rem;color:white;">{{ $favInitials }}</span>
+                                                        @else
+                                                            <span style="font-weight:bold;font-size:1.2rem;color:white;">{{ $favInitials }}</span>
+                                                        @endif
+                                                    </div>
+                                                </a>
                                             </td>
                                             <td class="product-name">
                                                 <h4><a

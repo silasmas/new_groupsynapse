@@ -20,13 +20,13 @@ class Category extends Model
 	}
 
 
-	protected $fillable = ['name', 'slug', 'description', 'vignette', 'isActive', 'branche_id'];
+	protected $fillable = ['name', 'slug', 'description', 'type', 'vignette', 'isActive', 'branche_id'];
 
 	public function produits()
 	{
 
 		// return $this->belongsToMany(Produit::class);
-        return $this->belongsToMany(Produit::class, 'category_produit', 'produit_id', 'category_id');
+        return $this->belongsToMany(Produit::class, 'category_produit', 'category_id', 'produit_id');
 
 
 	}

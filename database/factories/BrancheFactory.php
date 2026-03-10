@@ -19,12 +19,14 @@ class BrancheFactory extends Factory
 
     public function definition()
     {
+        $name = $this->faker->company;
         return [
-            'name' => $this->faker->company,
-            'slug' => $this->faker->slug,
+            'name' => $name,
+            'slug' => \Illuminate\Support\Str::slug($name),
+            'position' => $this->faker->numberBetween(1, 10),
             'description' => $this->faker->paragraph,
-            'isActive' => $this->faker->boolean,
-            'vignette' => $this->faker->imageUrl(640, 480, 'business', true, 'Branch'),
+            'isActive' => $this->faker->boolean(80),
+            'vignette' => 'branches/' . $this->faker->uuid . '.png',
         ];
     }
 }

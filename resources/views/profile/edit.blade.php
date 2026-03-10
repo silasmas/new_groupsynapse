@@ -1,29 +1,72 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.template')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
+@section('style')
+<style>
+    .profile-btn {
+        background-color: #FD0101 !important;
+        color: #000 !important;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+    .profile-btn:hover {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+    .btn-danger.profile-btn {
+        background-color: #FD0101 !important;
+        color: #000 !important;
+    }
+    .btn-danger.profile-btn:hover {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+</style>
+@endsection
+
+@section('content')
+    @include('parties.banner', ['page' => 'Mon profil'])
+    <!-- profile-area -->
+    <section class="shop-details-area pt-100 pb-100">
+        <div class="container">
+            @if (session()->has('retour'))
+                <div class="alert {{ session()->get('retour')['reponse'] == true ? 'alert-success' : 'alert-danger' }}">
+                    {{ session()->get('retour')['message'] }}
                 </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
+            @endif
+            @if (session('status') === 'profile-updated')
+                <div class="alert alert-success">
+                    {{ __('Profil mis à jour avec succès.') }}
                 </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
+            @endif
+            @if (session('status') === 'password-updated')
+                <div class="alert alert-success">
+                    {{ __('Mot de passe mis à jour avec succès.') }}
+                </div>
+            @endif
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-10">
+                    <div class="shop-details-content">
+                        @include('profile.partials.update-profile-information-form')
+                        <hr class="my-5">
+                        @include('profile.partials.update-password-form')
+                        <hr class="my-5">
+                        @include('profile.partials.delete-user-form')
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</x-app-layout>
+    </section>
+    <!-- profile-area-end -->
+@endsection
+
+@section('script')
+@if($errors->userDeletion->isNotEmpty())
+<script>
+    $(document).ready(function() {
+        $('#confirmUserDeletionModal').modal('show');
+    });
+</script>
+@endif
+@endsection

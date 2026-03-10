@@ -1,64 +1,74 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Profile Information') }}
-        </h2>
+<section class="mb-5">
+    <h4 class="mb-3">{{ __('Informations du profil') }}</h4>
+    <p class="text-muted mb-4">
+        {{ __('Mettez à jour vos informations de profil et votre adresse e-mail.') }}
+    </p>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Mettez à jour vos informations de profil et votre adresse e-mail.") }}
-        </p>
-    </header>
-
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
-
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}">
         @csrf
         @method('patch')
 
-        <div>
-            <x-input-label for="name" :value="__('Nom')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        <div class="form-group mb-3">
+            <label for="name" class="form-label">{{ __('Nom') }}</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
+            @error('name')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
         </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ __('Un nouveau lien de vérification a été envoyé à votre adresse e-mail.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
+        <div class="form-group mb-3">
+            <label for="email" class="form-label">{{ __('Email') }}</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required autocomplete="username">
+            @error('email')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Enregistrer') }}</x-primary-button>
-
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Enregistrer') }}</p>
-            @endif
+        <div class="form-group mb-3">
+            <label for="phone" class="form-label">{{ __('Téléphone') }}</label>
+            <input type="text" id="phone" name="phone" class="form-control" value="{{ old('phone', $user->phone) }}" placeholder="+243 99 99 30 158">
+            @error('phone')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
         </div>
+
+        <div class="form-group mb-3">
+            <label for="sexe" class="form-label">{{ __('Sexe') }}</label>
+            <select id="sexe" name="sexe" class="form-control">
+                <option value="">{{ __('-- Sélectionner --') }}</option>
+                <option value="M" {{ old('sexe', $user->sexe) == 'M' ? 'selected' : '' }}>{{ __('Masculin') }}</option>
+                <option value="F" {{ old('sexe', $user->sexe) == 'F' ? 'selected' : '' }}>{{ __('Féminin') }}</option>
+                <option value="Autre" {{ old('sexe', $user->sexe) == 'Autre' ? 'selected' : '' }}>{{ __('Autre') }}</option>
+            </select>
+            @error('sexe')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="pays" class="form-label">{{ __('Pays') }}</label>
+            <input type="text" id="pays" name="pays" class="form-control" value="{{ old('pays', $user->pays) }}" placeholder="RD Congo">
+            @error('pays')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="adresse" class="form-label">{{ __('Adresse') }}</label>
+            <textarea id="adresse" name="adresse" class="form-control" rows="2" placeholder="{{ __('Votre adresse principale') }}">{{ old('adresse', $user->adresse) }}</textarea>
+            @error('adresse')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="adresse_livraison" class="form-label">{{ __('Adresse de livraison') }}</label>
+            <textarea id="adresse_livraison" name="adresse_livraison" class="form-control" rows="2" placeholder="{{ __('Adresse pour les livraisons') }}">{{ old('adresse_livraison', $user->adresse_livraison) }}</textarea>
+            @error('adresse_livraison')
+                <div class="text-danger small mt-1">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn profile-btn btn-sm">{{ __('Enregistrer') }}</button>
     </form>
 </section>

@@ -14,14 +14,18 @@ class CategoryFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = \App\Models\Category::class;
+
     public function definition(): array
     {
+        $name = $this->faker->word;
         return [
-            'name' => $this->faker->word,
-            'slug' => $this->faker->slug,
+            'name' => $name,
+            'slug' => \Illuminate\Support\Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 9999),
             'description' => $this->faker->paragraph,
-            'vignette' => $this->faker->imageUrl(640, 480, 'category', true, 'Category'),
-            'isActive' => $this->faker->boolean,
+            'type' => $this->faker->randomElement(['produit', 'service']),
+            'vignette' => 'https://via.placeholder.com/640x480.png/00aa66?text=category',
+            'isActive' => $this->faker->boolean(80),
         ];
     }
 }

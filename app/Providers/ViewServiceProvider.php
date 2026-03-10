@@ -5,7 +5,7 @@ use App\Models\Branche;
 use App\Models\Category;
 use App\Models\Produit;
 use App\Models\Service;
-use App\Services\CartService;
+use App\Services\PanierService;
 use App\Services\FavoriteService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -53,6 +53,7 @@ class ViewServiceProvider extends ServiceProvider
             $favoritesDetails = "";
 
             $groupedProducts = Produit::with('categories') // Charger les catégories associées
+                ->where('isAvalable', true)
                 ->where(function ($query) {
                     $query->Where('isBestseler', true)
                         ->orWhere('isNewArivale', true)
@@ -82,7 +83,11 @@ class ViewServiceProvider extends ServiceProvider
                 $favoritesDetails = $favoriteService->getFavoritesDetails();
                 //   dd(session()->get("favories")[0]->imageUrls[2]);
             }
-            Session::put("cart", (new CartService())->getCartDetails());
+            $cartCount = 0;
+            if (Auth::check()) {
+                $panierResult = (new PanierService())->obtenirPanier();
+                $cartCount = $panierResult['quantite'] ?? 0;
+            }
             //    dd( isset($favoritesDetails) && !empty($favoritesDetails) ? $favoritesDetails[1]['favorites_count'] : 0 );
         //   dd( $allServices->comments);
             $view->with('groupedProducts', $groupedProducts);
@@ -90,6 +95,7 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('categories', $categories);
             $view->with('favorites', $favoritesDetails);
             $view->with('allServices', $allServices);
+            $view->with('cartCount', $cartCount);
         });
     }
 }

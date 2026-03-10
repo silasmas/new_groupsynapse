@@ -133,7 +133,7 @@
                                 <ul>
                                     {{-- @dd(session()->get('cart_detail')) --}}
                                     <li class="header-shop-cart">
-                                        <a href="{{ route('favories') }}">
+                                        <a href="{{ route('favories') }}" style="display:inline-flex;align-items:center;justify-content:center;">
                                             <i class="flaticon-heart"></i>
                                             <span class="cart-count favoriteCount" style="background: green">
                                                 {{ isset($favorites) && !empty($favorites) ? $favorites[1]['favorites_count'] : 0 }}
@@ -141,14 +141,9 @@
                                         </a>
                                     </li>
                                     <li class="header-shop-cart">
-                                        <a href="{{ route('cart') }}">
+                                        <a href="{{ route('cart') }}" style="display:inline-flex;align-items:center;justify-content:center;">
                                             <i class="flaticon-shopping-bag"></i>
-                                            <span class="cart-count count">
-                                                @if (!Auth::check())
-                                                    0
-                                                @endif
-                                                {{-- {{ count(session()->get('cart')['items']) }} --}}
-                                            </span>
+                                            <span class="cart-count count">{{ Auth::check() ? ($cartCount ?? 0) : 0 }}</span>
                                         </a>
                                         <span class="cart-total-price">
                                             {{-- {{!empty(session()->get('cart_detail'))?formatPrix(session()->get('cart_detail')['sub_total']):"" }} --}}
@@ -251,21 +246,32 @@
                                 <li class="has-dropdown">
                                     @php
                                         $firstCategorie = $b->categorie->first();
+                                        $hasVignette = !empty($b->vignette) && vignetteExists($b->vignette);
                                     @endphp
 
-                                    @if ($firstCategorie && $firstCategorie->type == 2)
-                                        <a href="{{ route('services') }}">
-                                            <div class="cat-menu-img">
-                                                <img src="{{ asset('storage/' . $b->vignette) }}" width="38"
-                                                    height="38" alt="">
-                                            </div> {{ $b->name }}
+                                    @if ($firstCategorie && $firstCategorie->type == 'service')
+                                        <a href="{{ route('services') }}" style="display:flex;align-items:center;gap:8px;">
+                                            <div class="cat-menu-img" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:#e9ecef;border-radius:4px;overflow:hidden;flex-shrink:0;">
+                                                @if($hasVignette)
+                                                    <img src="{{ asset('storage/' . $b->vignette) }}" width="38" height="38" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                                    <span style="display:none;font-weight:bold;font-size:14px;color:#495057;">{{ getInitials($b->name) }}</span>
+                                                @else
+                                                    <span style="font-weight:bold;font-size:14px;color:#495057;">{{ getInitials($b->name) }}</span>
+                                                @endif
+                                            </div>
+                                            <span>{{ $b->name }}</span>
                                         </a>
                                     @else
-                                        <a href="#">
-                                            <div class="cat-menu-img">
-                                                <img src="{{ asset('storage/' . $b->vignette) }}" width="38"
-                                                    height="38" alt="">
-                                            </div> {{ $b->name }}
+                                        <a href="{{ route('shop') }}" style="display:flex;align-items:center;gap:8px;">
+                                            <div class="cat-menu-img" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:#e9ecef;border-radius:4px;overflow:hidden;flex-shrink:0;">
+                                                @if($hasVignette)
+                                                    <img src="{{ asset('storage/' . $b->vignette) }}" width="38" height="38" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                                    <span style="display:none;font-weight:bold;font-size:14px;color:#495057;">{{ getInitials($b->name) }}</span>
+                                                @else
+                                                    <span style="font-weight:bold;font-size:14px;color:#495057;">{{ getInitials($b->name) }}</span>
+                                                @endif
+                                            </div>
+                                            <span>{{ $b->name }}</span>
                                         </a>
                                     @endif
 
@@ -275,7 +281,7 @@
                                                 <li class="mega-menu-column">
                                                     <span class="dropdown-title">{{ $cat->name }}</span>
                                                     <ul class="category-items">
-                                                        @if ($cat->type == 1)
+                                                        @if ($cat->type == 'produit')
                                                             @foreach ($cat->produits as $p)
                                                                 {{-- @if ($p->categorie_id == $cat->id) --}}
                                                                 {{-- 🔐 sécurité --}}
@@ -284,7 +290,7 @@
                                                                 </li>
                                                                 {{-- @endif --}}
                                                             @endforeach
-                                                        @elseif ($cat->type == 2)
+                                                        @elseif ($cat->type == 'service')
                                                             @foreach ($cat->services as $s)
                                                                 {{-- 🔐 sécurité --}}
                                                                 <li><a
@@ -312,18 +318,12 @@
                 </div>
                 <div class="col-xl-9 col-lg-8">
                     <div class="d-flex align-items-center justify-content-center justify-content-lg-end">
-                        <div class="header-search-wrap">
-                            <form action="#">
-                                <input type="text" placeholder="Search for your item's type.....">
-                                <select class="custom-select">
-                                    <option selected="">Toutes Categories</option>
-                                    @forelse ($categories->take(10) as $cat)
-                                        <option value="{{ $cat->name }}">{{ $cat->name }}</option>
-                                    @empty
-                                    @endforelse
-                                </select>
-                                <button><i class="flaticon-magnifying-glass-1"></i></button>
+                        <div class="header-search-wrap" id="global-search-wrap" style="position:relative;">
+                            <form action="{{ route('shop') }}" method="get" id="search-form">
+                                <input type="text" id="global-search-input" name="q" placeholder="Rechercher produits, services..." autocomplete="off">
+                                <button type="submit"><i class="flaticon-magnifying-glass-1"></i></button>
                             </form>
+                            <div id="search-results-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,0.15);max-height:400px;overflow-y:auto;z-index:9999;margin-top:4px;"></div>
                         </div>
                         <div class="header-free-shopping">
                             <p>Livraison gratuite à partir de <span>$10+</span></p>
@@ -336,12 +336,4 @@
     <!-- header-search-area-end -->
 
 </header>
-@if (Auth::check() && !Auth::user()->hasVerifiedEmail())
-    <div class="alert alert-warning">
-        Veuillez confirmer votre adresse email pour accéder aux fonctionnalités.
-        <a href="{{ route('verification.notice') }}">Renvoyer le lien</a>
-    </div>
-@endif
-
-
 <!-- header-area-end -->

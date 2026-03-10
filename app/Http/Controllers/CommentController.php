@@ -23,6 +23,7 @@ class CommentController extends Controller
             //    - si invité (guest), guest_name et guest_email sont requis
             $rules = [
                 'body' => 'required|string',
+                'rating' => 'nullable|integer|min:1|max:5',
             ];
             if (auth()->guest()) {
                 $rules['guest_name']  = 'required|string|max:100';
@@ -35,6 +36,7 @@ class CommentController extends Controller
             // 4️⃣ Préparation des données à insérer
             $commentData = [
                 'body'         => $data['body'],
+                'rating'       => $data['rating'] ?? null,
                 'user_id'      => auth()->id(),                     // null pour les invités
                 'guest_name'   => $data['guest_name']   ?? null,    // nom de l’invité
                 'guest_email'  => $data['guest_email']  ?? null,    // e-mail de l’invité
@@ -90,13 +92,21 @@ class CommentController extends Controller
 
             // 3️⃣ On transforme la collection en tableau de données simples
             $data = $comments->map(function($c) {
+                $name = $c->user ? $c->user->name : $c->guest_name;
+                $avatarUrl = $c->user && !empty($c->user->avatar_url ?? null)
+                    ? $c->user->avatar_url
+                    : null;
+                $initials = $name ? preg_replace('/\s+/', ' ', trim($name)) : '?';
+                $initials = preg_match('/\s/', $initials)
+                    ? strtoupper(substr($initials, 0, 1) . substr($initials, strpos($initials, ' ') + 1, 1))
+                    : strtoupper(substr($initials, 0, 2));
                 return [
                     'body'        => $c->body,
-                    'author_name' => $c->user ? $c->user->name : $c->guest_name,
+                    'author_name' => $name,
                     'date'        => $c->created_at->locale('fr')->diffForHumans(),
-                    'avatar_url'  => $c->user
-                        ? $c->user->avatar_url
-                        : asset('assets/img/default.jpg'),
+                    'avatar_url'  => $avatarUrl ?? asset('assets/img/default.jpg'),
+                    'has_avatar'  => (bool) $avatarUrl,
+                    'initials'    => $initials ?: '?',
                 ];
             });
 
@@ -117,13 +127,21 @@ class CommentController extends Controller
                             ->get();
 
             $data = $comments->map(function($c){
+                $name = $c->user ? $c->user->name : $c->guest_name;
+                $avatarUrl = $c->user && !empty($c->user->avatar_url ?? null)
+                    ? $c->user->avatar_url
+                    : null;
+                $initials = $name ? preg_replace('/\s+/', ' ', trim($name)) : '?';
+                $initials = preg_match('/\s/', $initials)
+                    ? strtoupper(substr($initials, 0, 1) . substr($initials, strpos($initials, ' ') + 1, 1))
+                    : strtoupper(substr($initials, 0, 2));
                 return [
                     'body'        => $c->body,
-                    'author_name' => $c->user ? $c->user->name : $c->guest_name,
+                    'author_name' => $name,
                     'date'        => $c->created_at->locale('fr')->diffForHumans(),
-                    'avatar_url'  => $c->user
-                                    ? $c->user->avatar_url
-                                    : asset('assets/img/default.jpg'),
+                    'avatar_url'  => $avatarUrl ?? asset('assets/img/default.jpg'),
+                    'has_avatar'  => (bool) $avatarUrl,
+                    'initials'    => $initials ?: '?',
                 ];
             });
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceUserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -55,6 +56,7 @@ Route::get('{type}/{id}/comments/all', [CommentController::class, 'allComments']
     ->name('comments.all');
 
 Route::post('/newsletter', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 use App\Http\Controllers\Auth\EmailVerificationController;
 
@@ -92,7 +94,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     Route::get('addFavorie/{id}', [FavoriteController::class, 'addFavorite'])->name('addFavorie');
     Route::get('/favorit/details', [FavoriteController::class, 'getFavorites'])->name('favorit.details');
@@ -137,7 +139,7 @@ Route::get('/commandeStatus', [CartController::class, 'commandeStatus'])->name('
 Route::get('/dashboard', function () {
     return redirect()->route('home');
     // return view('pages.home');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
