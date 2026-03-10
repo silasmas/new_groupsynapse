@@ -54,6 +54,12 @@ Route::get('{type}/{id}/comments/latest', [CommentController::class, 'latestComm
 Route::get('{type}/{id}/comments/all', [CommentController::class, 'allComments'])
     ->where('type', 'service|produit')
     ->name('comments.all');
+Route::delete('{type}/{id}/comments/{commentId}', [CommentController::class, 'destroy'])
+    ->where('type', 'service|produit')
+    ->name('comments.destroy');
+Route::put('{type}/{id}/comments/{commentId}', [CommentController::class, 'update'])
+    ->where('type', 'service|produit')
+    ->name('comments.update');
 
 Route::post('/newsletter', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 Route::get('/search', [SearchController::class, 'search'])->name('search');

@@ -256,7 +256,7 @@
 
             let type = $(this).data("type");
             let qty = $(this).data("qty");
-            if (type == "moins" && qty - 1 < 1) {
+            if (type == "moins" && qty <= 1) {
                 swal({
                     title: "La quantité ne peut être inferieur à 1",
                     icon: 'error'

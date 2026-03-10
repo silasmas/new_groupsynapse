@@ -4,14 +4,18 @@
     $img1 = $images[0] ?? null;
     $img2 = $images[1] ?? $img1;
     $initials = getInitials($currentProduit->name);
+    $inSlider = $inSlider ?? false;
+    $colClass = $colClass ?? 'col-xl-4 col-lg-6 col-md-4 col-sm-6';
+    $extraClasses = $extraClasses ?? '';
+    $wrapperClass = $inSlider ? 'related-product-slide' : $colClass . ' ' . $extraClasses;
 @endphp
-    <div class="col-xl-4 col-lg-6 col-md-4 col-sm-6" id="product-{{  $currentProduit->id }}">
+    <div class="{{ $wrapperClass }}" id="product-{{  $currentProduit->id }}">
         <div class="exclusive-item exclusive-item-three text-center mb-50">
             <div class="exclusive-item-thumb" style="position:relative;">
                 <a href="{{ route('showProduct', ['slug' => $currentProduit->slug]) }}">
                     <div style="position:relative;width:100%;aspect-ratio:1;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
                         @if(!empty($img1))
-                            <img src="{{ $img1 }}" alt="{{ $currentProduit->name }}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                            <img src="{{ $img1 }}" alt="{{ $currentProduit->name }}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" onload="this.parentElement.style.background='#fff'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
                             <span style="display:none;font-weight:bold;font-size:2.5rem;color:white;">{{ $initials }}</span>
                         @else
                             <span style="font-weight:bold;font-size:2.5rem;color:white;">{{ $initials }}</span>

@@ -11,7 +11,7 @@
             ]
         ])
           <!-- shop-details-area -->
-          <section class="shop-details-area pt-100 pb-100">
+          <section class="shop-details-area pt-100 pb-50">
             <div class="container">
                 <div class="row mb-95">
                     <div class="col-xl-7 col-lg-6">
@@ -134,7 +134,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="val-tab" data-toggle="tab" href="#val" role="tab"
-                                        aria-controls="val" aria-selected="false">Commentaires</a>
+                                        aria-controls="val" aria-selected="false">Commentaires <span id="service-comment-badge" class="badge bg-success ms-1" style="display:none;">0</span></a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
@@ -176,16 +176,16 @@
                                     <div class="product-desc-content">
                                         <h4 class="title mb-4">Commentaires</h4>
                                         <ul id="service-comment-list" class="comment-list mb-4"></ul>
-                                        <button id="service-show-all-comments" class="btn btn-sm mb-4" style="background:#FD0100;color:#fff;">Voir tous les commentaires</button>
+                                        <div id="service-comment-actions" class="mb-4"></div>
                                         <div class="comment-reply-box mt-4">
                                             <h5 class="b-details-inner-title mb-35">Laisser un commentaire et noter</h5>
                                             <form id="service-comment-form" data-type="produit" data-id="{{ $produit->id }}" class="comment-form">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label class="d-block mb-2">Votre note</label>
-                                                    <div class="rating-input" data-rating="0">
+                                                    <label class="d-inline-block mb-2 mr-2">Votre note</label>
+                                                    <div class="rating-input d-inline-flex" data-rating="0" style="vertical-align:middle;">
                                                         @for ($i = 1; $i <= 5; $i++)
-                                                            <i class="fas fa-star-o fa-lg text-muted" data-value="{{ $i }}" style="cursor:pointer;"></i>
+                                                            <i class="fas fa-star-o" data-value="{{ $i }}" style="cursor:pointer;font-size:1.5rem;color:#d4a017;"></i>
                                                         @endfor
                                                     </div>
                                                     <input type="hidden" name="rating" id="service-comment-rating" value="0">
@@ -207,7 +207,7 @@
                         <div class="shop-details-add mb-95">
                             <a href="#"><img src="img/product/shop_details_add.jpg" alt=""></a>
                         </div>
-                        <div class="related-product-wrap pb-30">
+                        <div class="related-product-wrap pb-0">
                             <div class="deal-day-top">
                                 <div class="deal-day-title">
                                     <h4 class="title">Produits similaires et suggestions</h4>
@@ -219,7 +219,7 @@
                             @if(($similarProducts ?? collect())->isNotEmpty())
                             <div class="related-product-active">
                                 @foreach($similarProducts as $sim)
-                                    @include('parties.listeProd', ['p' => $sim])
+                                    @include('parties.listeProd', ['p' => $sim, 'inSlider' => true])
                                 @endforeach
                             </div>
                             @else
@@ -235,15 +235,18 @@
         </section>
         <!-- shop-details-area-end -->
         {{-- Modal pour commentaires service --}}
-        <div class="modal fade" id="serviceAllCommentsModal" tabindex="-1" aria-labelledby="serviceAllCommentsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal fade" id="serviceAllCommentsModal" tabindex="-1" aria-labelledby="serviceAllCommentsModalLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="serviceAllCommentsModalLabel">Tous les commentaires</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer" style="font-size:1.5rem;opacity:.7;"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <ul id="service-all-comment-list" class="list-unstyled mb-0"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -261,7 +264,7 @@
         ])
 
         <!-- shop-details-area -->
-        <section class="shop-details-area pt-100 pb-100">
+        <section class="shop-details-area pt-100 pb-50">
             <div class="container">
                 <div class="row mb-95">
                     <div class="col-xl-7 col-lg-6">
@@ -385,7 +388,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="val-tab" data-toggle="tab" href="#val" role="tab"
-                                        aria-controls="val" aria-selected="false">Commentaires</a>
+                                        aria-controls="val" aria-selected="false">Commentaires <span id="product-comment-badge" class="badge bg-success ms-1" style="display:none;">0</span></a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">
@@ -427,16 +430,16 @@
                                     <div class="product-desc-content">
                                         <h4 class="title mb-4">Commentaires</h4>
                                         <ul id="product-comment-list" class="comment-list mb-4"></ul>
-                                        <button id="product-show-all-comments" class="btn btn-sm mb-4" style="background:#FD0100;color:#fff;">Voir tous les commentaires</button>
+                                        <div id="product-comment-actions" class="mb-4"></div>
                                         <div class="comment-reply-box mt-4">
                                             <h5 class="b-details-inner-title mb-35">Laisser un commentaire et noter</h5>
                                             <form id="product-comment-form" data-type="produit" data-id="{{ $produit->id }}" class="comment-form">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label class="d-block mb-2">Votre note</label>
-                                                    <div class="rating-input" data-rating="0">
+                                                    <label class="d-inline-block mb-2 mr-2">Votre note</label>
+                                                    <div class="rating-input d-inline-flex" data-rating="0" style="vertical-align:middle;">
                                                         @for ($i = 1; $i <= 5; $i++)
-                                                            <i class="fas fa-star-o fa-lg text-muted" data-value="{{ $i }}" style="cursor:pointer;"></i>
+                                                            <i class="fas fa-star-o" data-value="{{ $i }}" style="cursor:pointer;font-size:1.5rem;color:#d4a017;"></i>
                                                         @endfor
                                                     </div>
                                                     <input type="hidden" name="rating" id="product-comment-rating" value="0">
@@ -458,7 +461,7 @@
                         <div class="shop-details-add mb-95">
                             <a href="#"><img src="img/product/shop_details_add.jpg" alt=""></a>
                         </div>
-                        <div class="related-product-wrap pb-30">
+                        <div class="related-product-wrap pb-0">
                             <div class="deal-day-top">
                                 <div class="deal-day-title">
                                     <h4 class="title">Produits similaires et suggestions</h4>
@@ -470,7 +473,7 @@
                             @if(($similarProducts ?? collect())->isNotEmpty())
                             <div class="related-product-active">
                                 @foreach($similarProducts as $sim)
-                                    @include('parties.listeProd', ['p' => $sim])
+                                    @include('parties.listeProd', ['p' => $sim, 'inSlider' => true])
                                 @endforeach
                             </div>
                             @else
@@ -485,16 +488,20 @@
             </div>
         </section>
         <!-- shop-details-area-end -->
+        <div id="comment-loader-overlay"><div class="comment-loader-spinner"></div></div>
         {{-- Modal pour tous les commentaires produit --}}
-        <div class="modal fade" id="productAllCommentsModal" tabindex="-1" aria-labelledby="productAllCommentsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal fade" id="productAllCommentsModal" tabindex="-1" aria-labelledby="productAllCommentsModalLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="productAllCommentsModalLabel">Tous les commentaires</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer" style="font-size:1.5rem;opacity:.7;"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <ul id="product-all-comment-list" class="list-unstyled mb-0"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -506,6 +513,19 @@
 
 @section('style')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        .related-product-slide { padding: 0 10px; }
+        .related-product-active .exclusive-item-three { margin-bottom: 0; }
+        .modal.fade .modal-dialog { transition: transform 0.3s ease-out; transform: scale(0.8); }
+        .modal.show .modal-dialog { transform: scale(1); }
+        .modal-dialog-centered { display: flex; align-items: center; min-height: calc(100% - 1rem); }
+        #comment-loader-overlay { position:fixed;inset:0;background:rgba(255,255,255,0.7);display:none;align-items:center;justify-content:center;z-index:9999; }
+        #comment-loader-overlay.show { display:flex; }
+        .comment-loader-spinner { border:4px solid #f3f3f3;border-top:4px solid #FD0100;border-radius:50%;width:40px;height:40px;animation:comment-spin .8s linear infinite; }
+        @keyframes comment-spin { to { transform:rotate(360deg); } }
+        .btn-loading { position:relative;pointer-events:none; }
+        .btn-loading .btn-spinner { display:inline-block;width:1em;height:1em;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:comment-spin .6s linear infinite;margin-right:6px;vertical-align:middle; }
+    </style>
 @endsection
 
 @section('script')
@@ -669,22 +689,98 @@
                 const avatarHtml = c.has_avatar
                     ? `<img src="${c.avatar_url}" alt="${c.author_name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="comment-avatar-initials" style="display:none;width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">${initials}</span>`
                     : `<span class="comment-avatar-initials" style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">${initials}</span>`;
+                const ellipsisHtml = (c.can_delete && c.id) ? `<div class="comment-options-dropdown" style="position:relative;"><button type="button" class="comment-ellipsis-btn" title="Options" aria-label="Options"><i class="fas fa-ellipsis-h"></i></button><div class="comment-dropdown-menu" style="display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:100;min-width:140px;margin-top:4px;"><a href="#" class="comment-opt-modifier d-block px-3 py-2 text-dark" style="text-decoration:none;border-radius:4px;"><i class="fas fa-edit mr-2"></i>Modifier</a><a href="#" class="comment-opt-supprimer d-block px-3 py-2 text-danger" style="text-decoration:none;border-radius:4px;"><i class="fas fa-trash mr-2"></i>Supprimer</a></div></div>` : '';
+                const headerHtml = ellipsisHtml ? `<div class="d-flex justify-content-between align-items-start w-100"><h5 class="mb-1">${c.author_name} <span class="comment-date text-muted small">${c.date}</span></h5>${ellipsisHtml}</div>` : `<h5 class="mb-1">${c.author_name} <span class="comment-date text-muted small">${c.date}</span></h5>`;
                 const li = document.createElement('li');
-                li.innerHTML = `<div class="single-comment"><div class="comment-avatar-img" style="width:50px;height:50px;min-width:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;">${avatarHtml}</div><div class="comment-text"><div class="comment-avatar-info"><h5>${c.author_name} <span class="comment-date">${c.date}</span></h5></div><p class="comment-body">${text}${truncated ? '<a href="#" class="read-more">Voir plus</a>' : ''}</p></div></div>`;
-                if (truncated) {
-                    li.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); li.querySelector('.comment-body').textContent = c.body; });
+                if (c.id) li.dataset.commentId = c.id;
+                li.innerHTML = `<div class="single-comment d-flex" style="align-items:flex-start;"><div class="comment-avatar-img flex-shrink-0" style="width:50px;height:50px;min-width:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:12px;">${avatarHtml}</div><div class="flex-grow-1" style="min-width:0;">${headerHtml}<p class="comment-body mb-0">${text}${truncated ? '<a href="#" class="read-more">Voir plus</a>' : ''}</p></div></div>`;
+                const bodyEl = li.querySelector('.comment-body');
+                const shortText = text;
+                function showMore() {
+                    bodyEl.innerHTML = c.body.replace(/</g,'&lt;').replace(/>/g,'&gt;') + ' <a href="#" class="read-less">Voir moins</a>';
+                    bodyEl.querySelector('.read-less').addEventListener('click', function(e) { e.preventDefault(); showLess(); });
+                }
+                function showLess() {
+                    bodyEl.innerHTML = shortText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + ' <a href="#" class="read-more">Voir plus</a>';
+                    bodyEl.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); showMore(); });
+                }
+                if (truncated) li.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); showMore(); });
+                if (c.can_delete && c.id) {
+                    const btn = li.querySelector('.comment-ellipsis-btn');
+                    const menu = li.querySelector('.comment-dropdown-menu');
+                    btn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const isOpen = menu.style.display === 'block'; menu.style.display = isOpen ? 'none' : 'block'; if (!isOpen) setTimeout(() => { const h = (ev) => { if (!li.contains(ev.target)) { menu.style.display = 'none'; document.removeEventListener('click', h); } }; document.addEventListener('click', h); }, 0); });
+                    li.querySelector('.comment-opt-modifier').addEventListener('click', function(e) {
+                        e.preventDefault(); menu.style.display = 'none';
+                        const savedScrollY = window.scrollY || window.pageYOffset;
+                        const oldHtml = bodyEl.innerHTML;
+                        const oldText = c.body;
+                        bodyEl.innerHTML = '<textarea class="form-control comment-edit-textarea" rows="5" style="width:100%;min-height:80px;">' + oldText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea><div class="mt-2"><button type="button" class="btn btn-sm btn-success comment-save-edit">Enregistrer</button> <button type="button" class="btn btn-sm btn-secondary comment-cancel-edit">Annuler</button></div>';
+                        const textarea = bodyEl.querySelector('.comment-edit-textarea');
+                        setTimeout(function(){ window.scrollTo(0, savedScrollY); }, 0);
+                        bodyEl.querySelector('.comment-cancel-edit').onclick = () => { bodyEl.innerHTML = oldHtml; if (truncated) { const moreLink = bodyEl.querySelector('.read-more'); if (moreLink) moreLink.addEventListener('click', function(ev) { ev.preventDefault(); showMore(); }); } };
+                        bodyEl.querySelector('.comment-save-edit').onclick = () => {
+                            const newBody = textarea.value.trim();
+                            if (!newBody) return;
+                            const saveBtn = bodyEl.querySelector('.comment-save-edit');
+                            const origText = saveBtn.innerHTML;
+                            saveBtn.disabled = true;
+                            saveBtn.innerHTML = '<span class="btn-spinner"></span> Enregistrement...';
+                            fetch(`${window.location.origin}/${form.dataset.type}/${form.dataset.id}/comments/${c.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' }, body: JSON.stringify({ body: newBody }) })
+                                .then(r => r.json()).then(data => {
+                                    saveBtn.disabled = false;
+                                    saveBtn.innerHTML = origText;
+                                    if (data.success) {
+                                        c.body = data.body;
+                                        const shortT = data.body.length > 100 ? data.body.slice(0,100) + '... ' : data.body;
+                                        bodyEl.innerHTML = shortT + (data.body.length > 100 ? '<a href="#" class="read-more">Voir plus</a>' : '');
+                                        if (data.body.length > 100) { const ml = bodyEl.querySelector('.read-more'); if (ml) ml.addEventListener('click', function(ev) { ev.preventDefault(); showMore(); }); }
+                                        toastr.success('Commentaire modifié.');
+                                    } else toastr.error(data.message || 'Erreur');
+                                }).catch(() => { saveBtn.disabled = false; saveBtn.innerHTML = origText; toastr.error('Erreur.'); });
+                        };
+                    });
+                    li.querySelector('.comment-opt-supprimer').addEventListener('click', function(e) {
+                        e.preventDefault(); menu.style.display = 'none';
+                        swal({ title: "Supprimer ce commentaire ?", text: "Cette action est irréversible.", icon: "warning", buttons: { cancel: "Annuler", confirm: "Supprimer" }, dangerMode: true }).then((willDelete) => {
+                            if (willDelete) {
+                                const loader = document.getElementById('comment-loader-overlay');
+                                if (loader) loader.classList.add('show');
+                                fetch(`${window.location.origin}/${form.dataset.type}/${form.dataset.id}/comments/${c.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' } })
+                                    .then(r => r.json()).then(data => {
+                                        if (loader) loader.classList.remove('show');
+                                        if (data.success) { li.remove(); loadProductComments(); toastr.success('Commentaire supprimé.'); } else toastr.error(data.message || 'Erreur');
+                                    }).catch(() => { if (loader) loader.classList.remove('show'); toastr.error('Erreur lors de la suppression.'); });
+                            }
+                        });
+                    });
                 }
                 return li;
             }
+
+            const actionsEl = document.getElementById('product-comment-actions');
+            const badgeEl = document.getElementById('product-comment-badge');
 
             async function loadProductComments() {
                 try {
                     const type = form.dataset.type, id = form.dataset.id;
                     const res = await fetch(`${window.location.origin}/${type}/${id}/comments/latest`, { headers: { 'Accept': 'application/json' } });
                     if (!res.ok) throw new Error('Erreur ' + res.status);
-                    const comments = await res.json();
+                    const data = await res.json();
+                    const comments = Array.isArray(data) ? data : (data.comments || []);
+                    const total = data.total ?? comments.length;
                     list.innerHTML = '';
                     comments.forEach(c => list.appendChild(createCommentItem(c)));
+                    if (badgeEl) { badgeEl.textContent = total; badgeEl.style.display = total > 0 ? 'inline' : 'none'; }
+                    if (actionsEl) {
+                        if (total > 7) {
+                            actionsEl.innerHTML = '<p class="mb-0">Vos avis comptent ! <a href="#" id="product-show-all-comments" class="text-decoration-none font-weight-bold" style="color:#FD0100;">Découvrir l\'ensemble des avis</a></p>';
+                            actionsEl.querySelector('#product-show-all-comments').addEventListener('click', function(e){ e.preventDefault(); var o=document.getElementById('comment-loader-overlay');if(o){o.classList.add('show');} loadAllProductComments(); });
+                        } else if (total === 0) {
+                            actionsEl.innerHTML = '<p class="text-muted mb-0">Aucun commentaire pour le moment. Soyez le premier à donner votre avis !</p>';
+                        } else {
+                            actionsEl.innerHTML = '';
+                        }
+                    }
                 } catch (err) {
                     console.error(err);
                     toastr.error('Impossible de charger les commentaires.');
@@ -692,6 +788,7 @@
             }
 
             async function loadAllProductComments() {
+                const loader = document.getElementById('comment-loader-overlay');
                 try {
                     const type = form.dataset.type, id = form.dataset.id;
                     const res = await fetch(`${window.location.origin}/${type}/${id}/comments/all`, { headers: { 'Accept': 'application/json' } });
@@ -699,10 +796,12 @@
                     const comments = await res.json();
                     allList.innerHTML = '';
                     comments.forEach(c => allList.appendChild(createCommentItem(c)));
-                    new bootstrap.Modal(document.getElementById('productAllCommentsModal')).show();
+                    $('#productAllCommentsModal').modal('show');
                 } catch (err) {
                     console.error(err);
                     toastr.error('Impossible de charger tous les commentaires.');
+                } finally {
+                    if (loader) loader.classList.remove('show');
                 }
             }
 
@@ -724,11 +823,14 @@
                 });
             }
 
-            if (btnAll) btnAll.addEventListener('click', loadAllProductComments);
             loadProductComments();
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn && submitBtn.disabled) return;
+                const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+                if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<span class="btn-spinner"></span> Envoi...'; }
                 const type = form.dataset.type, id = form.dataset.id;
                 const body = document.getElementById('product-comment-message').value.trim();
                 const rating = parseInt(ratingHidden?.value || 0);
@@ -744,6 +846,7 @@
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken || '' },
                     body: JSON.stringify(payload)
                 }).then(r => r.json()).then(data => {
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
                     if (data.success) {
                         toastr.success('Commentaire publié !');
                         form.reset();
@@ -758,7 +861,7 @@
                         }
                         loadProductComments();
                     } else toastr.error(data.message || 'Erreur');
-                }).catch(err => { console.error(err); toastr.error('Erreur lors de l\'envoi.'); });
+                }).catch(err => { if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; } console.error(err); toastr.error('Erreur lors de l\'envoi.'); });
             });
         })();
 
@@ -769,7 +872,8 @@
 
             const list = document.getElementById('service-comment-list');
             const allList = document.getElementById('service-all-comment-list');
-            const btnAll = document.getElementById('service-show-all-comments');
+            const actionsEl = document.getElementById('service-comment-actions');
+            const badgeEl = document.getElementById('service-comment-badge');
             if (!toastr.options) toastr.options = { closeButton: true, progressBar: true, positionClass: "toast-top-right", timeOut: "5000" };
 
             function createCommentItem(c) {
@@ -781,10 +885,69 @@
                 const avatarHtml = c.has_avatar
                     ? `<img src="${c.avatar_url}" alt="${c.author_name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><span class="comment-avatar-initials" style="display:none;width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">${initials}</span>`
                     : `<span class="comment-avatar-initials" style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">${initials}</span>`;
+                const ellipsisHtml = (c.can_delete && c.id) ? `<div class="comment-options-dropdown" style="position:relative;"><button type="button" class="comment-ellipsis-btn" title="Options" aria-label="Options"><i class="fas fa-ellipsis-h"></i></button><div class="comment-dropdown-menu" style="display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:100;min-width:140px;margin-top:4px;"><a href="#" class="comment-opt-modifier d-block px-3 py-2 text-dark" style="text-decoration:none;"><i class="fas fa-edit mr-2"></i>Modifier</a><a href="#" class="comment-opt-supprimer d-block px-3 py-2 text-danger" style="text-decoration:none;"><i class="fas fa-trash mr-2"></i>Supprimer</a></div></div>` : '';
+                const headerHtml = ellipsisHtml ? `<div class="d-flex justify-content-between align-items-start w-100"><h5 class="mb-1">${c.author_name} <span class="comment-date text-muted small">${c.date}</span></h5>${ellipsisHtml}</div>` : `<h5 class="mb-1">${c.author_name} <span class="comment-date text-muted small">${c.date}</span></h5>`;
                 const li = document.createElement('li');
-                li.innerHTML = `<div class="single-comment"><div class="comment-avatar-img" style="width:50px;height:50px;min-width:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;">${avatarHtml}</div><div class="comment-text"><div class="comment-avatar-info"><h5>${c.author_name} <span class="comment-date">${c.date}</span></h5></div><p class="comment-body">${text}${truncated ? '<a href="#" class="read-more">Voir plus</a>' : ''}</p></div></div>`;
-                if (truncated) {
-                    li.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); li.querySelector('.comment-body').textContent = c.body; });
+                if (c.id) li.dataset.commentId = c.id;
+                li.innerHTML = `<div class="single-comment d-flex" style="align-items:flex-start;"><div class="comment-avatar-img flex-shrink-0" style="width:50px;height:50px;min-width:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:12px;">${avatarHtml}</div><div class="flex-grow-1" style="min-width:0;">${headerHtml}<p class="comment-body mb-0">${text}${truncated ? '<a href="#" class="read-more">Voir plus</a>' : ''}</p></div></div>`;
+                const bodyEl = li.querySelector('.comment-body');
+                const shortText = text;
+                function showMore() {
+                    bodyEl.innerHTML = c.body.replace(/</g,'&lt;').replace(/>/g,'&gt;') + ' <a href="#" class="read-less">Voir moins</a>';
+                    bodyEl.querySelector('.read-less').addEventListener('click', function(e) { e.preventDefault(); showLess(); });
+                }
+                function showLess() {
+                    bodyEl.innerHTML = shortText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + ' <a href="#" class="read-more">Voir plus</a>';
+                    bodyEl.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); showMore(); });
+                }
+                if (truncated) li.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); showMore(); });
+                if (c.can_delete && c.id) {
+                    const btn = li.querySelector('.comment-ellipsis-btn');
+                    const menu = li.querySelector('.comment-dropdown-menu');
+                    btn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const isOpen = menu.style.display === 'block'; menu.style.display = isOpen ? 'none' : 'block'; if (!isOpen) setTimeout(() => { const h = (ev) => { if (!li.contains(ev.target)) { menu.style.display = 'none'; document.removeEventListener('click', h); } }; document.addEventListener('click', h); }, 0); });
+                    li.querySelector('.comment-opt-modifier').addEventListener('click', function(e) {
+                        e.preventDefault(); menu.style.display = 'none';
+                        const savedScrollY = window.scrollY || window.pageYOffset;
+                        const oldHtml = bodyEl.innerHTML;
+                        bodyEl.innerHTML = '<textarea class="form-control comment-edit-textarea" rows="5" style="width:100%;min-height:80px;">' + c.body.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea><div class="mt-2"><button type="button" class="btn btn-sm btn-success comment-save-edit">Enregistrer</button> <button type="button" class="btn btn-sm btn-secondary comment-cancel-edit">Annuler</button></div>';
+                        const textarea = bodyEl.querySelector('.comment-edit-textarea');
+                        setTimeout(function(){ window.scrollTo(0, savedScrollY); }, 0);
+                        bodyEl.querySelector('.comment-cancel-edit').onclick = () => { bodyEl.innerHTML = oldHtml; if (truncated) { const moreLink = bodyEl.querySelector('.read-more'); if (moreLink) moreLink.addEventListener('click', function(ev) { ev.preventDefault(); showMore(); }); } };
+                        bodyEl.querySelector('.comment-save-edit').onclick = () => {
+                            const newBody = textarea.value.trim();
+                            if (!newBody) return;
+                            const saveBtn = bodyEl.querySelector('.comment-save-edit');
+                            const origText = saveBtn.innerHTML;
+                            saveBtn.disabled = true;
+                            saveBtn.innerHTML = '<span class="btn-spinner"></span> Enregistrement...';
+                            fetch(`${window.location.origin}/${form.dataset.type}/${form.dataset.id}/comments/${c.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' }, body: JSON.stringify({ body: newBody }) })
+                                .then(r => r.json()).then(data => {
+                                    saveBtn.disabled = false;
+                                    saveBtn.innerHTML = origText;
+                                    if (data.success) {
+                                        c.body = data.body;
+                                        const shortT = data.body.length > 100 ? data.body.slice(0,100) + '... ' : data.body;
+                                        bodyEl.innerHTML = shortT + (data.body.length > 100 ? '<a href="#" class="read-more">Voir plus</a>' : '');
+                                        if (data.body.length > 100) { const ml = bodyEl.querySelector('.read-more'); if (ml) ml.addEventListener('click', function(ev) { ev.preventDefault(); showMore(); }); }
+                                        toastr.success('Commentaire modifié.');
+                                    } else toastr.error(data.message || 'Erreur');
+                                }).catch(() => { saveBtn.disabled = false; saveBtn.innerHTML = origText; toastr.error('Erreur.'); });
+                        };
+                    });
+                    li.querySelector('.comment-opt-supprimer').addEventListener('click', function(e) {
+                        e.preventDefault(); menu.style.display = 'none';
+                        swal({ title: "Supprimer ce commentaire ?", text: "Cette action est irréversible.", icon: "warning", buttons: { cancel: "Annuler", confirm: "Supprimer" }, dangerMode: true }).then((willDelete) => {
+                            if (willDelete) {
+                                const loader = document.getElementById('comment-loader-overlay');
+                                if (loader) loader.classList.add('show');
+                                fetch(`${window.location.origin}/${form.dataset.type}/${form.dataset.id}/comments/${c.id}`, { method: 'DELETE', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' } })
+                                    .then(r => r.json()).then(data => {
+                                        if (loader) loader.classList.remove('show');
+                                        if (data.success) { li.remove(); loadServiceComments(); toastr.success('Commentaire supprimé.'); } else toastr.error(data.message || 'Erreur');
+                                    }).catch(() => { if (loader) loader.classList.remove('show'); toastr.error('Erreur lors de la suppression.'); });
+                            }
+                        });
+                    });
                 }
                 return li;
             }
@@ -794,9 +957,22 @@
                     const type = form.dataset.type, id = form.dataset.id;
                     const res = await fetch(`${window.location.origin}/${type}/${id}/comments/latest`, { headers: { 'Accept': 'application/json' } });
                     if (!res.ok) throw new Error('Erreur ' + res.status);
-                    const comments = await res.json();
+                    const data = await res.json();
+                    const comments = Array.isArray(data) ? data : (data.comments || []);
+                    const total = data.total ?? comments.length;
                     list.innerHTML = '';
                     comments.forEach(c => list.appendChild(createCommentItem(c)));
+                    if (badgeEl) { badgeEl.textContent = total; badgeEl.style.display = total > 0 ? 'inline' : 'none'; }
+                    if (actionsEl) {
+                        if (total > 7) {
+                            actionsEl.innerHTML = '<p class="mb-0">Vos avis comptent ! <a href="#" id="service-show-all-comments" class="text-decoration-none font-weight-bold" style="color:#FD0100;">Découvrir l\'ensemble des avis</a></p>';
+                            actionsEl.querySelector('#service-show-all-comments').addEventListener('click', function(e){ e.preventDefault(); var o=document.getElementById('comment-loader-overlay');if(o){o.classList.add('show');} loadAllServiceComments(); });
+                        } else if (total === 0) {
+                            actionsEl.innerHTML = '<p class="text-muted mb-0">Aucun commentaire pour le moment. Soyez le premier à donner votre avis !</p>';
+                        } else {
+                            actionsEl.innerHTML = '';
+                        }
+                    }
                 } catch (err) {
                     console.error(err);
                     toastr.error('Impossible de charger les commentaires.');
@@ -804,6 +980,7 @@
             }
 
             async function loadAllServiceComments() {
+                const loader = document.getElementById('comment-loader-overlay');
                 try {
                     const type = form.dataset.type, id = form.dataset.id;
                     const res = await fetch(`${window.location.origin}/${type}/${id}/comments/all`, { headers: { 'Accept': 'application/json' } });
@@ -811,10 +988,12 @@
                     const comments = await res.json();
                     allList.innerHTML = '';
                     comments.forEach(c => allList.appendChild(createCommentItem(c)));
-                    new bootstrap.Modal(document.getElementById('serviceAllCommentsModal')).show();
+                    $('#serviceAllCommentsModal').modal('show');
                 } catch (err) {
                     console.error(err);
                     toastr.error('Impossible de charger tous les commentaires.');
+                } finally {
+                    if (loader) loader.classList.remove('show');
                 }
             }
 
@@ -836,11 +1015,14 @@
                 });
             }
 
-            if (btnAll) btnAll.addEventListener('click', loadAllServiceComments);
             loadServiceComments();
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn && submitBtn.disabled) return;
+                const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+                if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<span class="btn-spinner"></span> Envoi...'; }
                 const type = form.dataset.type, id = form.dataset.id;
                 const body = document.getElementById('service-comment-message').value.trim();
                 const rating = parseInt(ratingHidden?.value || 0);
@@ -856,6 +1038,7 @@
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken || '' },
                     body: JSON.stringify(payload)
                 }).then(r => r.json()).then(data => {
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
                     if (data.success) {
                         toastr.success('Commentaire publié !');
                         form.reset();
@@ -870,7 +1053,7 @@
                         }
                         loadServiceComments();
                     } else toastr.error(data.message || 'Erreur');
-                }).catch(err => { console.error(err); toastr.error('Erreur lors de l\'envoi.'); });
+                }).catch(err => { if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; } console.error(err); toastr.error('Erreur lors de l\'envoi.'); });
             });
         })();
     </script>

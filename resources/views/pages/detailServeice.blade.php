@@ -41,6 +41,12 @@
             }
         }
 
+        #comment-loader-overlay { position:fixed;inset:0;background:rgba(255,255,255,0.7);display:none;align-items:center;justify-content:center;z-index:9999; }
+        #comment-loader-overlay.show { display:flex; }
+        .comment-loader-spinner { border:4px solid #f3f3f3;border-top:4px solid #FD0100;border-radius:50%;width:40px;height:40px;animation:spin .8s linear infinite; }
+        .btn-loading { position:relative;pointer-events:none; }
+        .btn-loading .btn-spinner { display:inline-block;width:1em;height:1em;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;vertical-align:middle; }
+
         .input-error {
             border: 2px dashed red !important;
             background-color: #fff6f6;
@@ -219,9 +225,7 @@
 
                         </ul>
                         {{-- Bouton “Voir tous” --}}
-                        <button id="show-all-comments-btn" class="btn mt-10" style="background: #FD0100;">
-                            Voir tous les commentaires
-                        </button>
+                        <div id="service-comment-actions" class="mt-4"></div>
                     </div>
                     {{-- <div class="comment-reply-box">
                         <h5 class="b-details-inner-title mb-35">Leave a comment</h5>
@@ -254,10 +258,10 @@
 
                             {{-- Note (étoiles) --}}
                             <div class="mb-3">
-                                <label class="d-block mb-2">Votre note</label>
-                                <div class="rating-input" data-rating="0">
+                                <label class="d-inline-block mb-2 mr-2">Votre note</label>
+                                <div class="rating-input d-inline-flex" data-rating="0" style="vertical-align:middle;">
                                     @for ($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star fa-lg text-muted" data-value="{{ $i }}" style="cursor:pointer;"></i>
+                                        <i class="fas fa-star-o" data-value="{{ $i }}" style="cursor:pointer;font-size:1.5rem;color:#d4a017;"></i>
                                     @endfor
                                 </div>
                                 <input type="hidden" name="rating" id="comment-rating" value="0">
@@ -331,19 +335,23 @@
                 </div>
             </div>
         </div>
+        <div id="comment-loader-overlay"><div class="comment-loader-spinner"></div></div>
         {{-- Modal Bootstrap pour afficher tous les commentaires --}}
         <div class="modal fade" id="allCommentsModal" tabindex="-1" aria-labelledby="allCommentsModalLabel"
-            aria-hidden="true">
+            aria-hidden="true" data-backdrop="true" data-keyboard="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="allCommentsModalLabel">Tous les commentaires</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer" style="font-size:1.5rem;opacity:.7;"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <ul id="all-comment-list" class="list-unstyled mb-0">
                             {{-- JS injectera ici la liste complète --}}
                         </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -363,7 +371,6 @@
             const form = document.getElementById('comment-form');
             const list = document.getElementById('comment-list'); // la <ul> des commentaires
             const allList = document.getElementById('all-comment-list');
-            const btnAll = document.getElementById('show-all-comments-btn');
             const btnAll2 = document.getElementById('show-all-comments-btn2');
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -388,41 +395,77 @@
                     truncated = true;
                 }
 
-                // 2) construction du <li>
+                // 2) construction du <li> - contenu aligné avec le nom (pas sous l'avatar)
+                const initials = c.initials || (c.author_name ? c.author_name.slice(0,2).toUpperCase() : '?');
+                const avatarHtml = c.has_avatar
+                    ? '<img src="'+c.avatar_url+'" alt="'+c.author_name+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><span style="display:none;width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">'+initials+'</span>'
+                    : '<span style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">'+initials+'</span>';
+                const ellipsisHtml = (c.can_delete && c.id) ? '<div class="comment-options-dropdown" style="position:relative;"><button type="button" class="comment-ellipsis-btn" title="Options" aria-label="Options"><i class="fas fa-ellipsis-h"></i></button><div class="comment-dropdown-menu" style="display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:100;min-width:140px;margin-top:4px;"><a href="#" class="comment-opt-modifier d-block px-3 py-2 text-dark" style="text-decoration:none;"><i class="fas fa-edit mr-2"></i>Modifier</a><a href="#" class="comment-opt-supprimer d-block px-3 py-2 text-danger" style="text-decoration:none;"><i class="fas fa-trash mr-2"></i>Supprimer</a></div></div>' : '';
+                const headerHtml = ellipsisHtml ? '<div class="d-flex justify-content-between align-items-start w-100"><h5 class="mb-1">'+c.author_name+' <span class="comment-date text-muted small">'+c.date+'</span></h5>'+ellipsisHtml+'</div>' : '<h5 class="mb-1">'+c.author_name+' <span class="comment-date text-muted small">'+c.date+'</span></h5>';
                 const li = document.createElement('li');
-                li.innerHTML = `
-                        <div class="single-comment">
-                            <div class="comment-avatar-img" style="width:50px;height:50px;min-width:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-                            ${(function(){
-                                const initials = c.initials || (c.author_name ? c.author_name.slice(0,2).toUpperCase() : '?');
-                                return c.has_avatar
-                                    ? '<img src="'+c.avatar_url+'" alt="'+c.author_name+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';"><span style="display:none;width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">'+initials+'</span>'
-                                    : '<span style="width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;font-size:0.9rem;">'+initials+'</span>';
-                            })()}
-                            </div>
-                            <div class="comment-text">
-                            <div class="comment-avatar-info">
-                                <h5>${c.author_name}
-                                <span class="comment-date">${c.date}</span>
-                                </h5>
-                            </div>
-                            <p class="comment-body">
-                                ${text}
-                                ${truncated ? '<a href="#" class="read-more">Voir plus</a>' : ''}
-                            </p>
-                            </div>
-                        </div>`;
-
-                // 3) gestion du “Voir plus”
-                if (truncated) {
-                    const moreLink = li.querySelector('.read-more');
-                    moreLink.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        // on remplace tout par le texte complet
-                        li.querySelector('.comment-body').textContent = c.body;
+                if (c.id) li.dataset.commentId = c.id;
+                li.innerHTML = '<div class="single-comment d-flex" style="align-items:flex-start;"><div class="comment-avatar-img flex-shrink-0" style="width:50px;height:50px;min-width:50px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-right:12px;">'+avatarHtml+'</div><div class="flex-grow-1" style="min-width:0;">'+headerHtml+'<p class="comment-body mb-0">'+text+(truncated ? '<a href="#" class="read-more">Voir plus</a>' : '')+'</p></div></div>';
+                const bodyEl = li.querySelector('.comment-body');
+                const shortText = text;
+                function showMore() {
+                    bodyEl.innerHTML = c.body.replace(/</g,'&lt;').replace(/>/g,'&gt;') + ' <a href="#" class="read-less">Voir moins</a>';
+                    bodyEl.querySelector('.read-less').addEventListener('click', function(e) { e.preventDefault(); showLess(); });
+                }
+                function showLess() {
+                    bodyEl.innerHTML = shortText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + ' <a href="#" class="read-more">Voir plus</a>';
+                    bodyEl.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); showMore(); });
+                }
+                if (truncated) li.querySelector('.read-more').addEventListener('click', function(e) { e.preventDefault(); showMore(); });
+                if (c.can_delete && c.id) {
+                    const btn = li.querySelector('.comment-ellipsis-btn');
+                    const menu = li.querySelector('.comment-dropdown-menu');
+                    btn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); const isOpen = menu.style.display === 'block'; menu.style.display = isOpen ? 'none' : 'block'; if (!isOpen) setTimeout(() => { const h = (ev) => { if (!li.contains(ev.target)) { menu.style.display = 'none'; document.removeEventListener('click', h); } }; document.addEventListener('click', h); }, 0); });
+                    li.querySelector('.comment-opt-modifier').addEventListener('click', function(e) {
+                        e.preventDefault(); menu.style.display = 'none';
+                        const savedScrollY = window.scrollY || window.pageYOffset;
+                        const oldHtml = bodyEl.innerHTML;
+                        bodyEl.innerHTML = '<textarea class="form-control comment-edit-textarea" rows="5" style="width:100%;min-height:80px;">' + c.body.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</textarea><div class="mt-2"><button type="button" class="btn btn-sm btn-success comment-save-edit">Enregistrer</button> <button type="button" class="btn btn-sm btn-secondary comment-cancel-edit">Annuler</button></div>';
+                        const textarea = bodyEl.querySelector('.comment-edit-textarea');
+                        setTimeout(function(){ window.scrollTo(0, savedScrollY); }, 0);
+                        bodyEl.querySelector('.comment-cancel-edit').onclick = () => { bodyEl.innerHTML = oldHtml; if (truncated) { const moreLink = bodyEl.querySelector('.read-more'); if (moreLink) moreLink.addEventListener('click', function(ev) { ev.preventDefault(); showMore(); }); } };
+                        bodyEl.querySelector('.comment-save-edit').onclick = () => {
+                            const newBody = textarea.value.trim();
+                            if (!newBody) return;
+                            const saveBtn = bodyEl.querySelector('.comment-save-edit');
+                            const origText = saveBtn.innerHTML;
+                            saveBtn.disabled = true;
+                            saveBtn.innerHTML = '<span class="btn-spinner"></span> Enregistrement...';
+                            fetch(window.location.origin+'/'+form.dataset.type+'/'+form.dataset.id+'/comments/'+c.id, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' }, body: JSON.stringify({ body: newBody }) })
+                                .then(r => r.json()).then(data => {
+                                    saveBtn.disabled = false;
+                                    saveBtn.innerHTML = origText;
+                                    if (data.success) {
+                                        c.body = data.body;
+                                        const shortT = data.body.length > 100 ? data.body.slice(0,100) + '... ' : data.body;
+                                        bodyEl.innerHTML = shortT + (data.body.length > 100 ? '<a href="#" class="read-more">Voir plus</a>' : '');
+                                        if (data.body.length > 100) { const ml = bodyEl.querySelector('.read-more'); if (ml) ml.addEventListener('click', function(ev) { ev.preventDefault(); showMore(); }); }
+                                        toastr.success('Commentaire modifié.');
+                                    } else toastr.error(data.message || 'Erreur');
+                                }).catch(() => { saveBtn.disabled = false; saveBtn.innerHTML = origText; toastr.error('Erreur.'); });
+                        };
+                    });
+                    li.querySelector('.comment-opt-supprimer').addEventListener('click', function(e) {
+                        e.preventDefault(); menu.style.display = 'none';
+                        swal({ title: "Supprimer ce commentaire ?", text: "Cette action est irréversible.", icon: "warning", buttons: { cancel: "Annuler", confirm: "Supprimer" }, dangerMode: true }).then((willDelete) => {
+                            if (willDelete) {
+                                const loader = document.getElementById('comment-loader-overlay');
+                                if (loader) loader.classList.add('show');
+                                fetch(window.location.origin+'/'+form.dataset.type+'/'+form.dataset.id+'/comments/'+c.id, { method: 'DELETE', headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' } })
+                                    .then(r => r.json()).then(data => {
+                                        if (loader) loader.classList.remove('show');
+                                        if (data.success) { li.remove(); loadLastFiveComments(); toastr.success('Commentaire supprimé.'); } else toastr.error(data.message || 'Erreur');
+                                    }).catch(() => { if (loader) loader.classList.remove('show'); toastr.error('Erreur lors de la suppression.'); });
+                            }
+                        });
                     });
                 }
 
+                // 3) gestion du “Voir plus”
                 return li;
             }
             // Fonction qui va récupérer et afficher les 5 derniers commentaires
@@ -444,13 +487,25 @@
                     }
 
                     // 3. Lecture du JSON
-                    const comments = await res.json();
+                    const data = await res.json();
+                    const comments = Array.isArray(data) ? data : (data.comments || []);
+                    const total = data.total ?? comments.length;
 
                     // 4. Vide la liste actuelle
                     list.innerHTML = '';
 
                     // 5. Pour chaque commentaire, on crée un <li> et on l’ajoute
                     comments.forEach(c => list.appendChild(createCommentItem(c)));
+
+                    const actionsEl = document.getElementById('service-comment-actions');
+                    if (actionsEl) {
+                        if (total > 7) {
+                            actionsEl.innerHTML = '<p class="mb-0">Vos avis comptent ! <a href="#" id="service-show-all-link" class="text-decoration-none font-weight-bold" style="color:#FD0100;">Découvrir l\'ensemble des avis</a></p>';
+                            actionsEl.querySelector('#service-show-all-link').addEventListener('click', function(e){ e.preventDefault(); var o=document.getElementById('comment-loader-overlay');if(o){o.classList.add('show');} loadAllComments(); });
+                        } else {
+                            actionsEl.innerHTML = '';
+                        }
+                    }
                 } catch (err) {
                     console.error(err);
                     toastr.error('Impossible de charger les commentaires.');
@@ -458,6 +513,7 @@
             }
             // ─── Charger **tous** les commentaires dans le modal ──────────
             async function loadAllComments() {
+                const loader = document.getElementById('comment-loader-overlay');
                 try {
                     const type = form.dataset.type;
                     const id = form.dataset.id;
@@ -473,13 +529,13 @@
                     allList.innerHTML = '';
                     comments.forEach(c => allList.appendChild(createCommentItem(c)));
 
-                    // affiche le modal Bootstrap
-                    const modal = new bootstrap.Modal(document.getElementById('allCommentsModal'));
-                    modal.show();
+                    $('#allCommentsModal').modal('show');
 
                 } catch (err) {
                     console.error(err);
                     toastr.error('Impossible de charger tous les commentaires.');
+                } finally {
+                    if (loader) loader.classList.remove('show');
                 }
             }
 
@@ -508,6 +564,10 @@
 
             form.addEventListener('submit', function(e) {
                     e.preventDefault();
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn && submitBtn.disabled) return;
+                    const origBtnText = submitBtn ? submitBtn.innerHTML : '';
+                    if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<span class="btn-spinner"></span> Envoi...'; }
 
                     // 1. Lecture des données du formulaire
                     const type = form.dataset.type; // "service" ou "product"
@@ -552,6 +612,7 @@
                 })
                 .then(data => {
                     console.log(data);
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
                     // 2️⃣ Recharge les 5 derniers commentaires pour voir immédiatement le nouveau
                     loadLastFiveComments();
 
@@ -572,6 +633,7 @@
                     // TODO : mettre à jour dynamiquement la liste des commentaires
                 })
                 .catch(err => {
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = origBtnText; }
                     if (err.errors) {
                         // Affichage des messages de validation
                         for (let field in err.errors) {
@@ -583,8 +645,7 @@
                 });
         });
         // ─── Click sur “Voir tous” ───────────────────────────────────
-        btnAll.addEventListener('click', loadAllComments);
-        btnAll2.addEventListener('click', loadAllComments);
+        if (btnAll2) btnAll2.addEventListener('click', function(){ var o=document.getElementById('comment-loader-overlay');if(o){o.classList.add('show');} loadAllComments(); });
 
         // Appel initial au chargement de la page
         loadLastFiveComments();

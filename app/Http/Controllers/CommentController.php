@@ -91,6 +91,7 @@ class CommentController extends Controller
                 ->get();
 
             // 3️⃣ On transforme la collection en tableau de données simples
+            $total = $model->comments()->count();
             $data = $comments->map(function($c) {
                 $name = $c->user ? $c->user->name : $c->guest_name;
                 $avatarUrl = $c->user && !empty($c->user->avatar_url ?? null)
@@ -100,18 +101,25 @@ class CommentController extends Controller
                 $initials = preg_match('/\s/', $initials)
                     ? strtoupper(substr($initials, 0, 1) . substr($initials, strpos($initials, ' ') + 1, 1))
                     : strtoupper(substr($initials, 0, 2));
+                $canDelete = auth()->check() && (
+                    auth()->id() === $c->user_id ||
+                    auth()->user()->isSuperAdmin()
+                );
                 return [
+                    'id'          => $c->id,
+                    'user_id'     => $c->user_id,
                     'body'        => $c->body,
                     'author_name' => $name,
                     'date'        => $c->created_at->locale('fr')->diffForHumans(),
                     'avatar_url'  => $avatarUrl ?? asset('assets/img/default.jpg'),
                     'has_avatar'  => (bool) $avatarUrl,
                     'initials'    => $initials ?: '?',
+                    'can_delete'  => $canDelete,
                 ];
             });
 
-            // 4️⃣ On renvoie le JSON
-            return response()->json($data);
+            // 4️⃣ On renvoie le JSON avec total
+            return response()->json(['comments' => $data, 'total' => $total]);
         }
         // Et ajoutez aussi, pour le modal, une route ALL Comments :
         // Route::get('{type}/{id}/comments/all', [CommentController::class,'allComments']);
@@ -135,16 +143,70 @@ class CommentController extends Controller
                 $initials = preg_match('/\s/', $initials)
                     ? strtoupper(substr($initials, 0, 1) . substr($initials, strpos($initials, ' ') + 1, 1))
                     : strtoupper(substr($initials, 0, 2));
+                $canDelete = auth()->check() && (
+                    auth()->id() === $c->user_id ||
+                    auth()->user()->isSuperAdmin()
+                );
                 return [
+                    'id'          => $c->id,
+                    'user_id'     => $c->user_id,
                     'body'        => $c->body,
                     'author_name' => $name,
                     'date'        => $c->created_at->locale('fr')->diffForHumans(),
                     'avatar_url'  => $avatarUrl ?? asset('assets/img/default.jpg'),
                     'has_avatar'  => (bool) $avatarUrl,
                     'initials'    => $initials ?: '?',
+                    'can_delete'  => $canDelete,
                 ];
             });
 
             return response()->json($data);
+        }
+
+        /** Supprime un commentaire (auteur ou super_admin uniquement) */
+        public function destroy(Request $request, $type, $id, $commentId)
+        {
+            $model = $type === 'service'
+                ? Service::findOrFail($id)
+                : Produit::findOrFail($id);
+
+            $comment = $model->comments()->findOrFail($commentId);
+
+            $canDelete = auth()->check() && (
+                auth()->id() === $comment->user_id ||
+                auth()->user()->isSuperAdmin()
+            );
+
+            if (!$canDelete) {
+                return response()->json(['success' => false, 'message' => 'Non autorisé'], 403);
+            }
+
+            $comment->delete();
+
+            return response()->json(['success' => true]);
+        }
+
+        /** Met à jour un commentaire (auteur ou super_admin uniquement) */
+        public function update(Request $request, $type, $id, $commentId)
+        {
+            $model = $type === 'service'
+                ? Service::findOrFail($id)
+                : Produit::findOrFail($id);
+
+            $comment = $model->comments()->findOrFail($commentId);
+
+            $canEdit = auth()->check() && (
+                auth()->id() === $comment->user_id ||
+                auth()->user()->isSuperAdmin()
+            );
+
+            if (!$canEdit) {
+                return response()->json(['success' => false, 'message' => 'Non autorisé'], 403);
+            }
+
+            $data = $request->validate(['body' => 'required|string']);
+            $comment->update(['body' => $data['body']]);
+
+            return response()->json(['success' => true, 'body' => $comment->body]);
         }
 }

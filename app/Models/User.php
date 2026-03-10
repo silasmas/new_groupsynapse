@@ -84,4 +84,11 @@ public function service()
 
 	}
 
+	/** Vérifie si l'utilisateur est super_admin (peut supprimer tout commentaire) */
+	public function isSuperAdmin(): bool
+	{
+		$emails = array_filter(array_map('trim', explode(',', (string) config('app.super_admin_emails', ''))));
+		return !empty($emails) && in_array($this->email, $emails);
+	}
+
 }

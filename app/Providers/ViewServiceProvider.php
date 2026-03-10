@@ -52,7 +52,8 @@ class ViewServiceProvider extends ServiceProvider
             $allServices       = Service::where('active', true)->with('comments')->get();
             $favoritesDetails = "";
 
-            $groupedProducts = Produit::with('categories') // Charger les catégories associées
+            $groupedProducts = Produit::with(['categories', 'favories'])
+                ->withAvg('comments as avg_rating', 'rating')
                 ->where('isAvalable', true)
                 ->where(function ($query) {
                     $query->Where('isBestseler', true)
