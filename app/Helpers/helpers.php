@@ -165,10 +165,10 @@ if (!function_exists('formatPrix3')) {
             // Retourne le prix soldé avec l'ancien prix barré
             return
                 " <del class='old-price'>" . number_format($prix, 0, ',', " ") . " " . $currencySymbol . "</del>" .
-                "<span class='new-price'>" . number_format($soldePrice, 2, ',', " ") . " " . $currencySymbol . " </span'>";
+                "<span class='new-price'>" . number_format($soldePrice, 2, ',', " ") . " " . $currencySymbol . "</span>";
         } elseif ($mode == false) {
             // Retourne le prix sans solde
-            return "<span class='new-price'>" . number_format($prix, 2, ',', " ") . " " . $currencySymbol . " </span'>";;
+            return "<span class='new-price'>" . number_format($prix, 2, ',', " ") . " " . $currencySymbol . "</span>";
         }
 
         return $retour;  // Retourne une valeur vide si aucun mode valide n'est fourni

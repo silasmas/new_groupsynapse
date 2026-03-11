@@ -46,7 +46,7 @@
             </div>
             <div class="exclusive-item-content">
                 <h5><a href="{{ route('showProduct', ['slug' => $currentProduit->slug]) }}">{{ $currentProduit->name }}</a></h5>
-                <div class="exclusive--item--price">
+                <div class="exclusive--item--price product-price-block">
                     {!!  formatPrix3($currentProduit->isSpecialOffer ,$currentProduit->prix ,$currentProduit->soldePrice,$currentProduit->currency) !!}
                 </div>
                 <ul class="action action-mobile">
