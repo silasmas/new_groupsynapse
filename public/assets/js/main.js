@@ -107,10 +107,11 @@
     var mobileMenuContent = $(".menu-area .main-menu").html();
     $(".mobile-menu .menu-box .menu-outer").append(mobileMenuContent);
 
-    //Dropdown Button
-    $(".mobile-menu li.dropdown .dropdown-btn").on("click", function() {
+    //Dropdown Button (pour le menu gauche "Produit et Service" si présent)
+    $(".mobile-menu li.dropdown .dropdown-btn").on("click", function(e) {
+      e.preventDefault();
       $(this).toggleClass("open");
-      $(this).prev("ul").slideToggle(500);
+      $(this).siblings("ul").slideToggle(500);
     });
     //Menu Toggle Btn
     $(".mobile-nav-toggler").on("click", function() {

@@ -118,57 +118,12 @@
                                 <ul class="navigation">
                                     <li class="{{ isActive('home') }}"><a href="{{ route('home') }}">Accueil</a></li>
                                     <li class="{{ isActive('about') }}"><a href="{{ route('about') }}">A propos</a></li>
-                                    <li class="{{ isActive('branches') || isActive('shop') || isActive('services') }} dropdown has-dropdown branches-nav-dropdown">
-                                        <a href="#">Branches</a>
-                                        <ul class="branches-mega-menu">
-                                            @forelse ($branches as $b)
-                                                <li class="mega-menu-column">
-                                                    @php
-                                                        $firstCategorie = $b->categorie->first();
-                                                        $hasVignette = !empty($b->vignette) && vignetteExists($b->vignette);
-                                                    @endphp
-                                                    <a href="{{ ($firstCategorie && $firstCategorie->type == 'service') ? route('services') : route('shop') }}" class="dropdown-title" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-                                                        <div class="cat-menu-img" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:#e9ecef;border-radius:4px;overflow:hidden;flex-shrink:0;">
-                                                            @if($hasVignette)
-                                                                <img src="{{ asset('storage/' . $b->vignette) }}" width="32" height="32" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                                                <span style="display:none;font-weight:bold;font-size:12px;color:#495057;">{{ getInitials($b->name) }}</span>
-                                                            @else
-                                                                <span style="font-weight:bold;font-size:12px;color:#495057;">{{ getInitials($b->name) }}</span>
-                                                            @endif
-                                                        </div>
-                                                        <span>{{ $b->name }}</span>
-                                                    </a>
-                                                    @foreach ($b->categorie->where('isActive', true) as $cat)
-                                                        <ul class="category-items" style="margin-bottom:15px;">
-                                                            <li><span class="dropdown-title" style="font-size:13px;font-weight:600;color:#333;display:block;margin-bottom:6px;">{{ $cat->name }}</span></li>
-                                                            @if ($cat->type == 'produit')
-                                                                @foreach ($cat->produits->where('isAvalable', true)->take(8) as $p)
-                                                                    <li><a href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
-                                                                @endforeach
-                                                                @if ($cat->produits->where('isAvalable', true)->count() > 8)
-                                                                    <li><a href="{{ route('shop', ['categorie' => $cat->id]) }}">Voir tout</a></li>
-                                                                @endif
-                                                            @elseif ($cat->type == 'service')
-                                                                @foreach ($cat->services->where('active', true)->where('disponible', true)->take(8) as $s)
-                                                                    <li><a href="{{ route('showService', ['slug' => $s->slug]) }}">{{ $s->name }}</a></li>
-                                                                @endforeach
-                                                                @if ($cat->services->where('active', true)->where('disponible', true)->count() > 8)
-                                                                    <li><a href="{{ route('services', ['categorie' => $cat->id]) }}">Voir tout</a></li>
-                                                                @endif
-                                                            @endif
-                                                        </ul>
-                                                    @endforeach
-                                                </li>
-                                            @empty
-                                                <li class="mega-menu-column"><a href="{{ route('shop') }}">Nos Produits</a></li>
-                                                <li class="mega-menu-column"><a href="{{ route('services') }}">Nos Services</a></li>
-                                            @endforelse
-                                        </ul>
-                                    </li>
+                                    <li class="{{ isActive('shop') }}"><a href="{{ route('shop') }}">Produits</a></li>
+                                    <li class="{{ isActive('services') }}"><a href="{{ route('services') }}">Services</a></li>
                                     <li class="{{ isActive('contact') }}"><a href="{{ route('contact') }}">Contacts</a></li>
                                 </ul>
                             </div>
-                            <div class="header-action d-md-block">
+                            <div class="header-action">
                                 <ul>
                                     {{-- @dd(session()->get('cart_detail')) --}}
                                     <li class="header-shop-cart">
@@ -244,12 +199,70 @@
                         <div class="close-btn"><i class="fas fa-times"></i></div>
 
                         <nav class="menu-box">
-                            <div class="nav-logo"><a href="index.html"><img
+                            <div class="nav-logo"><a href="{{ route('home') }}"><img
                                         src="{{ asset('assets/img/logo/logosynapse.png') }}" alt=""
                                         title=""></a>
                             </div>
+                            <div class="mobile-menu-actions">
+                                <a href="{{ route('favories') }}" class="mobile-menu-action-link">
+                                    <i class="flaticon-heart"></i>
+                                    <span>Favoris</span>
+                                    <span class="cart-count favoriteCount" style="background: green">{{ isset($favorites) && !empty($favorites) ? $favorites[1]['favorites_count'] : 0 }}</span>
+                                </a>
+                                <a href="{{ route('cart') }}" class="mobile-menu-action-link">
+                                    <i class="flaticon-shopping-bag"></i>
+                                    <span>Panier</span>
+                                    <span class="cart-count count">{{ Auth::check() ? ($cartCount ?? 0) : 0 }}</span>
+                                </a>
+                            </div>
                             <div class="menu-outer">
                                 <!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header-->
+                            </div>
+                            <div class="mobile-menu-category">
+                                <div class="mobile-cat-title">Produit et Service</div>
+                                <ul class="mobile-cat-list">
+                                    @forelse ($branches as $b)
+                                        <li class="dropdown">
+                                            @php
+                                                $firstCategorie = $b->categorie->first();
+                                                $hasVignette = !empty($b->vignette) && vignetteExists($b->vignette);
+                                            @endphp
+                                            <a href="{{ ($firstCategorie && $firstCategorie->type == 'service') ? route('services') : route('shop') }}">{{ $b->name }}</a>
+                                            @if ($b->categorie->where('isActive', true)->isNotEmpty())
+                                                <div class="dropdown-btn"><span class="fas fa-angle-down"></span></div>
+                                                <ul class="mobile-cat-sublist">
+                                                    @foreach ($b->categorie->where('isActive', true) as $cat)
+                                                        <li><span class="mobile-cat-name">{{ $cat->name }}</span></li>
+                                                        @if ($cat->type == 'produit')
+                                                            @foreach ($cat->produits->where('isAvalable', true)->take(6) as $p)
+                                                                <li><a href="{{ route('showProduct', ['slug' => $p->slug]) }}">{{ $p->name }}</a></li>
+                                                            @endforeach
+                                                            @if ($cat->produits->where('isAvalable', true)->count() > 6)
+                                                                <li><a href="{{ route('shop', ['categorie' => $cat->id]) }}">Voir tout</a></li>
+                                                            @endif
+                                                        @elseif ($cat->type == 'service')
+                                                            @foreach ($cat->services->where('active', true)->where('disponible', true)->take(6) as $s)
+                                                                <li><a href="{{ route('showService', ['slug' => $s->slug]) }}">{{ $s->name }}</a></li>
+                                                            @endforeach
+                                                            @if ($cat->services->where('active', true)->where('disponible', true)->count() > 6)
+                                                                <li><a href="{{ route('services', ['categorie' => $cat->id]) }}">Voir tout</a></li>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </li>
+                                    @empty
+                                        <li><a href="{{ route('shop') }}">Nos Produits</a></li>
+                                        <li><a href="{{ route('services') }}">Nos Services</a></li>
+                                    @endforelse
+                                </ul>
+                            </div>
+                            <div class="mobile-menu-search">
+                                <form action="{{ route('shop') }}" method="get">
+                                    <input type="text" name="q" placeholder="Rechercher...">
+                                    <button type="submit"><i class="flaticon-magnifying-glass-1"></i></button>
+                                </form>
                             </div>
                             <div class="social-links">
                                 <ul class="clearfix">
@@ -279,7 +292,7 @@
             <div class="row align-items-center">
                 <div class="col-xl-3 col-lg-4 d-none d-lg-block">
                     <div class="header-category d-none d-lg-block">
-                        <a href="#" class="cat-toggle"><i class="flaticon-menu"></i>Branches</a>
+                        <a href="#" class="cat-toggle"><i class="flaticon-menu"></i>Produit et Service</a>
                         <ul class="category-menu">
                             @forelse ($branches as $b)
                                 <li class="has-dropdown">

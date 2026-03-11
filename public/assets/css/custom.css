@@ -59,7 +59,124 @@
     padding-left: 5px;
 }
 
-/* Mobile: menu Branches en liste verticale */
+/* Mobile menu: mêmes actions que desktop (favoris, panier, recherche) */
+.mobile-menu-actions {
+    display: flex;
+    gap: 15px;
+    padding: 15px 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.mobile-menu-action-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+}
+.mobile-menu-action-link:hover {
+    color: #FD0100;
+}
+.mobile-menu-action-link .cart-count {
+    background: #FD0100;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+.mobile-menu-search {
+    padding: 15px 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.mobile-menu-search form {
+    display: flex;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+.mobile-menu-search input {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+}
+.mobile-menu-search input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+.mobile-menu-search button {
+    padding: 10px 15px;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Mobile: menu Produit et Service (hiérarchique) */
+.mobile-menu-category {
+    padding: 15px 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.mobile-cat-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.mobile-cat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.mobile-cat-list > li {
+    position: relative;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.mobile-cat-list > li > a {
+    display: block;
+    padding: 12px 40px 12px 0;
+    color: #fff;
+    font-size: 15px;
+}
+.mobile-cat-list > li.dropdown .dropdown-btn {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    color: #fff;
+    cursor: pointer;
+}
+.mobile-cat-sublist {
+    display: none;
+    list-style: none;
+    padding: 0 0 10px 15px;
+    margin: 0;
+    background: rgba(0,0,0,0.2);
+}
+.mobile-cat-sublist .mobile-cat-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    padding: 8px 0 4px;
+}
+.mobile-cat-sublist li a {
+    display: block;
+    padding: 6px 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    margin-left: 10px;
+}
+.mobile-cat-sublist li a:hover {
+    color: #FD0100;
+}
+
+/* Mobile: menu Branches en liste verticale (legacy) */
 @media (max-width: 991px) {
     .mobile-menu .branches-mega-menu {
         position: static !important;
@@ -81,39 +198,32 @@
     }
 }
 
-/* Produit: actions visibles sur mobile sous les prix */
+/* Produit: actions (favoris, panier, voir) toujours visibles sur mobile */
 @media (max-width: 991px) {
-    .exclusive-item-three .action-mobile {
+    /* Sur mobile: afficher les actions sur l'image (toujours visibles, pas au survol) */
+    .exclusive-item-three .exclusive-item-thumb .action {
         display: flex !important;
-        position: static !important;
         opacity: 1 !important;
-        margin-top: 12px;
-        padding: 10px 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
-        justify-content: center;
-        gap: 12px;
+        visibility: visible !important;
+        bottom: 0 !important;
+        padding: 10px 15px !important;
+        background: rgba(255,255,255,0.95) !important;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1) !important;
     }
-    .exclusive-item-three .action-mobile li {
-        margin: 0 !important;
+    .exclusive-item-three .exclusive-item-thumb .action li a {
+        width: 40px !important;
+        min-width: 40px !important;
+        height: 40px !important;
+        font-size: 16px !important;
     }
-    .exclusive-item-three .action-mobile li a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        border-radius: 8px;
-        background: #f5f5f5;
-        color: #333;
-        font-size: 18px;
-    }
-    .exclusive-item-three .action-mobile li a:hover {
-        background: #FD0100;
-        color: #fff;
-    }
-    .exclusive-item-three .action {
+    /* Masquer action-mobile (doublon) - on garde les actions sur l'image */
+    .exclusive-item-three .action-mobile {
         display: none !important;
+    }
+    /* Éviter que les cartes masquent le contenu */
+    .exclusive-item-three .exclusive-item-content,
+    #listeP .exclusive-item-three {
+        overflow: visible !important;
     }
 }
 @media (min-width: 992px) {

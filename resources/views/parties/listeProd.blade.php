@@ -11,17 +11,17 @@
 @endphp
     <div class="{{ $wrapperClass }}" id="product-{{  $currentProduit->id }}">
         <div class="exclusive-item exclusive-item-three text-center mb-50">
-            <div class="exclusive-item-thumb" style="position:relative;">
+            <div class="exclusive-item-thumb product-thumb-stack">
                 <a href="{{ route('showProduct', ['slug' => $currentProduit->slug]) }}">
-                    <div style="position:relative;width:100%;aspect-ratio:1;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                    <div class="product-thumb-inner">
                         @if(!empty($img1))
-                            <img src="{{ $img1 }}" alt="{{ $currentProduit->name }}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" onload="this.parentElement.style.background='#fff'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                            <span style="display:none;font-weight:bold;font-size:2.5rem;color:white;">{{ $initials }}</span>
+                            <img src="{{ $img1 }}" alt="{{ $currentProduit->name }}" class="product-thumb-main" onload="this.parentElement.style.background='#fff'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                            <span class="product-thumb-initials">{{ $initials }}</span>
                         @else
-                            <span style="font-weight:bold;font-size:2.5rem;color:white;">{{ $initials }}</span>
+                            <span class="product-thumb-initials">{{ $initials }}</span>
                         @endif
                         @if(!empty($img2) && $img2 !== $img1)
-                            <img class="overlay-product-thumb" src="{{ $img2 }}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+                            <img class="overlay-product-thumb" src="{{ $img2 }}" alt="">
                         @endif
                     </div>
                 </a>
