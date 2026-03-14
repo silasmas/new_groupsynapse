@@ -39,8 +39,11 @@ class ServiceController extends Controller
      */
     public function show($slug)
     {
-        $services = Service::where("slug", $slug)->first();
-        return view("pages.detailServeice", compact("services"));
+        $services = Service::where("slug", $slug)->firstOrFail();
+        $titre = $services->name;
+        $metaDescription = \Illuminate\Support\Str::limit(strip_tags($services->description ?? ''), 160) ?: config('seo.defaults.description');
+        $metaImage = $services->image ? asset('storage/' . $services->image) : asset('assets/img/logo/logosynapse.png');
+        return view("pages.detailServeice", compact("services", "titre", "metaDescription", "metaImage"));
     }
 
     /**

@@ -121,7 +121,11 @@ class HomeController extends Controller
                 ->get();
             $similarProducts = $similarProducts->merge($extra);
         }
-        return view('pages.produit', compact('produit', 'similarProducts'));
+        $metaDescription = \Illuminate\Support\Str::limit(strip_tags($produit->description ?? ''), 160) ?: config('seo.defaults.description');
+        $images = $produit->getImageUrlsAttribute();
+        $metaImage = $images[0] ?? asset('assets/img/logo/logosynapse.png');
+        $titre = $produit->name;
+        return view('pages.produit', compact('produit', 'similarProducts', 'metaDescription', 'metaImage', 'titre'));
     }
     public function addFavorie($id) {
         // dd(Auth::user()->id);

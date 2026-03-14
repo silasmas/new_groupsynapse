@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Service;
+use Filament\Models\Contracts\HasAvatar;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasAvatar
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
@@ -28,6 +29,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'prenom',
+        'profil',
         'email',
         'password',
         'phone',
@@ -83,6 +86,17 @@ public function service()
 
 		return $this->belongsToMany(\App\Models\Commande::class);
 
+	}
+
+	public function connectionLogs()
+	{
+		return $this->hasMany(ConnectionLog::class);
+	}
+
+	/** URL de l'avatar pour le menu Filament */
+	public function getFilamentAvatarUrl(): ?string
+	{
+		return $this->profil ? asset('storage/' . $this->profil) : null;
 	}
 
 	/** Vérifie si l'utilisateur est super_admin (peut supprimer tout commentaire) */

@@ -37,4 +37,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google_analytics' => [
+        'measurement_id' => env('GA4_MEASUREMENT_ID'),
+    ],
+
 ];

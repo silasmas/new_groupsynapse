@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->profile(\App\Filament\Pages\Auth\EditProfile::class)
             ->brandName('Dashboard Groupsynapse')
             ->brandLogo(asset('assets/img/logo/logosynapse.png'))
             ->brandLogoHeight(fn() => auth()->check() ? '3rem' : '7rem')

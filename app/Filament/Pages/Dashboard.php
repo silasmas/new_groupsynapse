@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\ActiveConnectionsWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -15,6 +16,13 @@ class Dashboard extends BaseDashboard
             'lg' => 6,
             'xl' => 12,
             '2xl' => 12,
+        ];
+    }
+
+    public function getHeaderWidgets(): array
+    {
+        return [
+            ActiveConnectionsWidget::class,
         ];
     }
 }

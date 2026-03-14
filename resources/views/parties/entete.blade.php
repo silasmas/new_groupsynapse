@@ -4,9 +4,35 @@
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{config('app.name') }} | {{isset($titre)?$titre:""}}</title>
-        <meta name="description" content="">
+        <title>{{ config('app.name') }} | {{ $titre ?? '' }}</title>
+        @php
+            $metaTitle = ($titre ?? '') ? config('app.name') . ' | ' . $titre : config('app.name');
+            $metaDescription = $metaDescription ?? config('seo.defaults.description');
+            $metaImage = $metaImage ?? asset('assets/img/logo/logosynapse.png');
+            $metaUrl = $metaUrl ?? url()->current();
+        @endphp
+        <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags($metaDescription), 160) }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="canonical" href="{{ $metaUrl }}">
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="{{ $metaType ?? config('seo.defaults.type') }}">
+        <meta property="og:url" content="{{ $metaUrl }}">
+        <meta property="og:title" content="{{ $metaTitle }}">
+        <meta property="og:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($metaDescription), 200) }}">
+        <meta property="og:image" content="{{ $metaImage }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:site_name" content="{{ config('app.name') }}">
+        <meta property="og:locale" content="{{ str_replace('-', '_', app()->getLocale()) }}">
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="{{ $twitterCard ?? config('seo.defaults.twitter_card') }}">
+        <meta name="twitter:url" content="{{ $metaUrl }}">
+        <meta name="twitter:title" content="{{ $metaTitle }}">
+        <meta name="twitter:description" content="{{ \Illuminate\Support\Str::limit(strip_tags($metaDescription), 200) }}">
+        <meta name="twitter:image" content="{{ $metaImage }}">
+        <meta name="twitter:image:alt" content="{{ $metaTitle }}">
 
 		<link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/logo/logosynapse.png') }}">
         <!-- Place favicon.ico in the root directory -->
@@ -29,6 +55,16 @@
         <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }} ">
         <link rel="stylesheet" type="text/css" href="{{ asset('assets/js/sweetalert/sweetalert.css') }}">
         @yield("style")
+        @if($gaId = config('services.google_analytics.measurement_id'))
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $gaId }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '{{ $gaId }}');
+        </script>
+        @endif
     </head>
     <body>
 

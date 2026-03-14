@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "bezhansalleh/filament-google-analytics": "^2.1",
         "bezhansalleh/filament-shield": "^3.9",
         "espero-soft/artisan": "dev-main",
         "filament/filament": "^3.2",
