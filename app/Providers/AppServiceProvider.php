@@ -25,6 +25,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Carbon::setLocale('fr');
-          service_user::observe(ServiceUserObserver::class);
+        service_user::observe(ServiceUserObserver::class);
     }
 }

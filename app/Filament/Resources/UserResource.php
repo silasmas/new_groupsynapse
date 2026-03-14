@@ -41,6 +41,13 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'phone'];
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -84,15 +91,8 @@ class UserResource extends Resource
                                     ->columnSpan(4)
                                     ->previewable(true),
 
-                                Select::make('roles')
-                                    ->label('Roles')
-                                    ->columnSpan(4)
-                                    ->preload()
-                                    ->multiple() // Permet de sélectionner plusieurs rôles
-                                    ->searchable()
-                                    ->required()
-                                    ->relationship('role', 'name'), // 'roles' est la méthode du modèle User, 'name' est l'attribut à afficher
                                 CheckboxList::make('roles')
+                                    ->label('Rôles')
                                     ->columnSpan(4)
                                     ->relationship('roles', 'name')
                                     ->searchable()
@@ -137,8 +137,8 @@ class UserResource extends Resource
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
-                TextColumn::make('role.name')
-                    ->label('Rôle')
+                TextColumn::make('roles.name')
+                    ->label('Rôles')
                     ->badge()->color('success')
                     ->searchable(),
                 TextColumn::make('created_at')

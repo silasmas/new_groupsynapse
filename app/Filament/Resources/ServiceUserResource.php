@@ -19,6 +19,15 @@ class ServiceUserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Ventes';
+
+    protected static ?string $recordTitleAttribute = 'reference';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['reference', 'etat'];
+    }
+
     public static function form(Form $form): Form
     {
         return $form
